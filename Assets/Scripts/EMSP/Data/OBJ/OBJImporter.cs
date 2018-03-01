@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Numba.Geometry;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -40,10 +41,17 @@ namespace EMSP.Data.OBJ
 		#region Methods
         public GameObject Import(string pathToOBJ)
         {
-            GameObject objObject = ObjImporter.Import(File.ReadAllText(pathToOBJ));
-            objObject.name = string.Format("Model [{0}]", Path.GetFileNameWithoutExtension(pathToOBJ));
+            GameObject modelObject = new GameObject("Model");
 
-            return objObject;
+            GameObject obj = ObjImporter.Import(File.ReadAllText(pathToOBJ));
+            obj.name = Path.GetFileNameWithoutExtension(pathToOBJ);
+
+            Bounds bounds = BoundsUtility.GetGlobalBounds(obj, BoundsUtility.BoundsCreateOption.Mesh);
+
+            modelObject.transform.position = bounds.center;
+            obj.transform.SetParent(modelObject.transform);
+
+            return modelObject;
         }
 		#endregion
 		

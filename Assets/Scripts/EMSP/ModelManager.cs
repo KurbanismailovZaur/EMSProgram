@@ -1,8 +1,10 @@
 ﻿using EMSP.Data.OBJ;
 using Numba;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP
 {
@@ -19,6 +21,11 @@ namespace EMSP
         #endregion
 
         #region Classes
+        [Serializable]
+        public class ModelCreated : UnityEvent<Model> { }
+
+        [Serializable]
+        public class ModelDestroyed : UnityEvent<Model> { }
         #endregion
 
         #region Interfaces
@@ -45,7 +52,23 @@ namespace EMSP
         #region Methods
         public void CreateNewModel(string pathToOBJ)
         {
-            _importer.Import(pathToOBJ);
+            DestroyModel();
+
+            Model.Factory modelFactory = new Model.Factory();
+            _model = modelFactory.MakeFactory(_importer.Import(pathToOBJ));
+
+            _model.transform.position = Vector3.zero;
+            _model.transform.SetParent(transform);
+        }
+
+        public void DestroyModel()
+        {
+            if (!_model)
+            {
+                return;
+            }
+
+            Destroy(_model.gameObject);
         }
         #endregion
 

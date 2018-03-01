@@ -6,17 +6,24 @@ namespace EMSP
 {
 	public class Model : MonoBehaviour 
 	{
-		#region Entities
-		#region Enums
-		#endregion
-		
-		#region Delegates
-		#endregion
-		
-		#region Structures
-		#endregion
-		
-		#region Classes
+        #region Entities
+        #region Enums
+        #endregion
+
+        #region Delegates
+        #endregion
+
+        #region Structures
+        #endregion
+
+        #region Classes
+        public class Factory
+        {
+            public Model MakeFactory(GameObject obj)
+            {
+                return obj.AddComponent<Model>();
+            }
+        }
 		#endregion
 		
 		#region Interfaces

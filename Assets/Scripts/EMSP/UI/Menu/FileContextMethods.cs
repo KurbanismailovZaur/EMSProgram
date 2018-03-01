@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Windows.Forms;
+using Numba.UI.Menu;
 
 namespace EMSP.UI.Menu
 {
+    [RequireComponent(typeof(Context))]
     public class FileContextMethods : MonoBehaviour
     {
         #region Entities
@@ -25,7 +27,11 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Fields
-        private OpenFileDialog _openFileDialog = new OpenFileDialog();
+        private Context _context;
+
+        private OpenFileDialog _openModelFileDialog = new OpenFileDialog();
+
+        private OpenFileDialog _openWiringFileDialog = new OpenFileDialog();
         #endregion
 
         #region Events
@@ -39,10 +45,15 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Methods
-        private void Start()
+        private void Awake()
         {
-            _openFileDialog.Filter = "3D Model (*.obj)|*.obj";
-            _openFileDialog.FilterIndex = 1;
+            _context = GetComponent<Context>();
+
+            _openModelFileDialog.Filter = "3D Model (*.obj)|*.obj";
+            _openModelFileDialog.FilterIndex = 1;
+
+            _openWiringFileDialog.Filter = "Excel Worksheets 2003 (*.xls)|*.xls";
+            _openWiringFileDialog.FilterIndex = 1;
         }
 
         public void NewProject()
@@ -62,17 +73,24 @@ namespace EMSP.UI.Menu
 
         public void ImportModel()
         {
-            if (_openFileDialog.ShowDialog() != DialogResult.OK)
+            if (_openModelFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            ModelManager.Instance.CreateNewModel(_openFileDialog.FileName);
+            ModelManager.Instance.CreateNewModel(_openModelFileDialog.FileName);
+            _context.Hide();
         }
 
         public void ImportWiring()
         {
-            print("Import Wiring");
+            if (_openWiringFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            WiringManager.Instance.CreateNewWiring(_openWiringFileDialog.FileName);
+            _context.Hide();
         }
 
         public void Exit()
