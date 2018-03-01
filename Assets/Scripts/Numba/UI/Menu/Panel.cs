@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace HoloGroup.UI.Menu
+namespace Numba.UI.Menu
 {
     public class Panel : MonoBehaviour
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Windows.Forms;
 
 namespace EMSP.UI.Menu
 {
@@ -24,6 +25,7 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Fields
+        private OpenFileDialog _openFileDialog = new OpenFileDialog();
         #endregion
 
         #region Events
@@ -37,14 +39,20 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Methods
+        private void Start()
+        {
+            _openFileDialog.Filter = "3D Model (*.obj)|*.obj";
+            _openFileDialog.FilterIndex = 1;
+        }
+
         public void NewProject()
         {
-            
+            print("new Project");
         }
 
         public void OpenProject()
         {
-            print("Open project");
+            print("Open Project");
         }
 
         public void SaveProject()
@@ -54,7 +62,12 @@ namespace EMSP.UI.Menu
 
         public void ImportModel()
         {
-            print("Import Model");
+            if (_openFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            ModelManager.Instance.CreateNewModel(_openFileDialog.FileName);
         }
 
         public void ImportWiring()

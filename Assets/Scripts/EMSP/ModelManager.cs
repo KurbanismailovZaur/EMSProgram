@@ -1,11 +1,12 @@
 ﻿using EMSP.Data.OBJ;
+using Numba;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace EMSP
 {
-	public class ModelManager : MonoBehaviour 
+	public class ModelManager : MonoSingleton<ModelManager> 
 	{
         #region Entities
         #region Enums
@@ -25,7 +26,7 @@ namespace EMSP
         #endregion
 
         #region Fields
-        private ObjModelImporter _importer = new ObjModelImporter();
+        private OBJImporter _importer = new OBJImporter();
 
         private Model _model;
         #endregion
@@ -42,6 +43,10 @@ namespace EMSP
         #endregion
 
         #region Methods
+        public void CreateNewModel(string pathToOBJ)
+        {
+            _importer.Import(pathToOBJ);
+        }
         #endregion
 
         #region Indexers

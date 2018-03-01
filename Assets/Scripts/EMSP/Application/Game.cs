@@ -40,7 +40,7 @@ namespace EMSP.Application
         #region Methods
         private void Start()
         {
-            
+            MoveToEmptyState();
         }
 
         private void MoveToState(GameState state)
@@ -55,6 +55,10 @@ namespace EMSP.Application
         }
 
         #region Transitions between states
+        public void MoveToEmptyState()
+        {
+            MoveToState(_statesPool.EmptyState);
+        }
         #endregion
         #endregion
 

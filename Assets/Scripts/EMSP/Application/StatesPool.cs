@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using EMSP.Application.States;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace EMSP.Application
         #endregion
 
         #region Fields
+        [SerializeField]
+        private EmptyState _emptyState;
         #endregion
 
         #region Events
@@ -31,6 +34,7 @@ namespace EMSP.Application
 
         #region Behaviour
         #region Properties
+        public EmptyState EmptyState { get { return _emptyState; } }
         #endregion
 
         #region Methods

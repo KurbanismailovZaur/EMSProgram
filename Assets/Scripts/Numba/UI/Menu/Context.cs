@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace HoloGroup.UI.Menu
+namespace Numba.UI.Menu
 {
     public class Context : MonoBehaviour
     {

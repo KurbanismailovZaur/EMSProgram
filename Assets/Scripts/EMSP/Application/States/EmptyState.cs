@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using EMSP.Application;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace HoloGroup.UI.Menu
+namespace EMSP.Application.States
 {
-    public abstract class ContextContainer : MonoBehaviour
-    {
+	public class EmptyState : GameState 
+	{
         #region Entities
         #region Enums
         #endregion
@@ -24,6 +26,11 @@ namespace HoloGroup.UI.Menu
         #endregion
 
         #region Fields
+        [SerializeField]
+        private Button _newProjectButton;
+
+        [SerializeField]
+        private Button _saveProjectButton;
         #endregion
 
         #region Events
@@ -37,6 +44,14 @@ namespace HoloGroup.UI.Menu
         #endregion
 
         #region Methods
+        public override void OnEnter()
+        {
+            _newProjectButton.interactable = false;
+            _saveProjectButton.interactable = false;
+        }
+        #endregion
+
+        #region Indexers
         #endregion
 
         #region Events handlers

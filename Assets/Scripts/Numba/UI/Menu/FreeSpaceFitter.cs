@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoloGroup.UI.Menu
+namespace Numba.UI.Menu
 {
     public class FreeSpaceFitter : MonoBehaviour, ILayoutSelfController, ILayoutElement
     {

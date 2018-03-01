@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.Application
+namespace Numba.UI.Menu
 {
-    public abstract class GameState : MonoBehaviour
+    public abstract class ContextContainer : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -24,7 +24,6 @@ namespace EMSP.Application
         #endregion
 
         #region Fields
-        protected Game _game;
         #endregion
 
         #region Events
@@ -34,18 +33,13 @@ namespace EMSP.Application
         #region Properties
         #endregion
 
-        #region Methods
-        protected virtual void Awake()
-        {
-            _game = GetComponentInParent<Game>();
-        }
-
-        public virtual void OnEnter() { }
-
-        public virtual void OnExit() { }
+        #region Constructors
         #endregion
 
-        #region Event Handlers
+        #region Methods
+        #endregion
+
+        #region Events handlers
         #endregion
         #endregion
     }

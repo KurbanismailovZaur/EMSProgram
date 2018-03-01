@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace HoloGroup.UI.Menu
+namespace Numba.UI.Menu
 {
-    public class ItemGroup : Item
+    public class Item : ContextContainer
     {
         #region Entities
         #region Enums
@@ -19,6 +21,8 @@ namespace HoloGroup.UI.Menu
         #endregion
 
         #region Classes
+        [Serializable]
+        public class PointerEnterEvent : UnityEvent<Item> { }
         #endregion
 
         #region Interfaces
@@ -27,39 +31,34 @@ namespace HoloGroup.UI.Menu
 
         #region Fields
         [SerializeField]
-        private Context _context;
+        private Context _baseContext;
+
+        [SerializeField]
+        private Text _text;
         #endregion
 
         #region Events
+        public PointerEnterEvent PointerEnter = new PointerEnterEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public Context Context { get { return _context; } }
+        public Context BaseContext { get { return _baseContext; } }
+
+        public Text Text { get { return _text; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-        public void ShowContext()
-        {
-            _context.Show();
-        }
-
-        public void HideContext()
-        {
-            _context.Hide();
-        }
-
-        public override void EventTrigger_PointerEnter(BaseEventData baseEventData)
-        {
-            base.EventTrigger_PointerEnter(baseEventData);
-            ShowContext();
-        }
         #endregion
 
         #region Events handlers
+        public virtual void EventTrigger_PointerEnter(BaseEventData baseEventData)
+        {
+            PointerEnter.Invoke(this);
+        }
         #endregion
         #endregion
     }
