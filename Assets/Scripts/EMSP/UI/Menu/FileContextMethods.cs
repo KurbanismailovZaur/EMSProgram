@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Windows.Forms;
 using Numba.UI.Menu;
+using SFB;
 using EMSP.Communication;
 
 namespace EMSP.UI.Menu
@@ -30,9 +30,9 @@ namespace EMSP.UI.Menu
         #region Fields
         private Context _context;
 
-        private OpenFileDialog _openModelFileDialog = new OpenFileDialog();
+        private ExtensionFilter[] _modelExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("3D Model", "obj") };
 
-        private OpenFileDialog _openWiringFileDialog = new OpenFileDialog();
+        private ExtensionFilter[] _wiringExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("Excel Worksheets 2003", "xls") };
         #endregion
 
         #region Events
@@ -49,12 +49,6 @@ namespace EMSP.UI.Menu
         private void Awake()
         {
             _context = GetComponent<Context>();
-
-            _openModelFileDialog.Filter = "3D Model (*.obj)|*.obj";
-            _openModelFileDialog.FilterIndex = 1;
-
-            _openWiringFileDialog.Filter = "Excel Worksheets 2003 (*.xls)|*.xls";
-            _openWiringFileDialog.FilterIndex = 1;
         }
 
         public void NewProject()
@@ -74,23 +68,27 @@ namespace EMSP.UI.Menu
 
         public void ImportModel()
         {
-            if (_openModelFileDialog.ShowDialog() != DialogResult.OK)
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Model", string.Empty, _modelExtensionFilter, false);
+
+            if (results.Length == 0)
             {
                 return;
             }
 
-            ModelManager.Instance.CreateNewModel(_openModelFileDialog.FileName);
+            ModelManager.Instance.CreateNewModel(results[0]);
             ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
         }
 
         public void ImportWiring()
         {
-            if (_openWiringFileDialog.ShowDialog() != DialogResult.OK)
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Wiring", string.Empty, _wiringExtensionFilter, false);
+
+            if (results.Length == 0)
             {
                 return;
             }
 
-            WiringManager.Instance.CreateNewWiring(_openWiringFileDialog.FileName);
+            WiringManager.Instance.CreateNewWiring(results[0]);
             ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
         }
 
@@ -99,7 +97,7 @@ namespace EMSP.UI.Menu
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_STANDALONE
-            Application.Quit();
+            UnityEngine.Application.Quit();
 #endif
         }
         #endregion

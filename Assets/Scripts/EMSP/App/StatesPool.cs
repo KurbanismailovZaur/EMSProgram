@@ -1,13 +1,12 @@
-﻿using EMSP.Application;
+﻿using EMSP.App.States;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace EMSP.Application.States
+namespace EMSP.App
 {
-	public class EmptyState : GameState 
-	{
+    public class StatesPool : MonoBehaviour
+    {
         #region Entities
         #region Enums
         #endregion
@@ -27,10 +26,7 @@ namespace EMSP.Application.States
 
         #region Fields
         [SerializeField]
-        private Button _newProjectButton;
-
-        [SerializeField]
-        private Button _saveProjectButton;
+        private EmptyState _emptyState;
         #endregion
 
         #region Events
@@ -38,23 +34,13 @@ namespace EMSP.Application.States
 
         #region Behaviour
         #region Properties
-        #endregion
-
-        #region Constructors
+        public EmptyState EmptyState { get { return _emptyState; } }
         #endregion
 
         #region Methods
-        public override void OnEnter()
-        {
-            _newProjectButton.interactable = false;
-            _saveProjectButton.interactable = false;
-        }
         #endregion
 
-        #region Indexers
-        #endregion
-
-        #region Events handlers
+        #region Event Handlers
         #endregion
         #endregion
     }

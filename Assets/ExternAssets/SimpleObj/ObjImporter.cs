@@ -13,6 +13,7 @@ using System.Threading;
 
 using OrbCreationExtensions;
 using System.IO;
+using EMSP;
 
 public class ObjException : ApplicationException
 {
@@ -612,10 +613,12 @@ public class ObjImporter
             topLevelName = geometry.GetString("topLevelName");
             if (topLevelName.Length <= 0) topLevelName = "Imported OBJ file";
         }
+
         if (geometries.Count > 1)
         {
             importedGameObject = new GameObject(topLevelName);
         }
+
         for (int i = 0; i < geometries.Count; i++)
         {
             Hashtable geometry = geometries[i];
@@ -626,11 +629,13 @@ public class ObjImporter
             List<Vector3> normals = (List<Vector3>)geometry["normals"];
             List<Vector2> uvs = (List<Vector2>)geometry["uvs"];
             List<Hashtable> subMeshes = (List<Hashtable>)geometry["subMeshes"];
+
             if (usesRightHandedCoordinates)
             {
                 FlipXAxis(ref vertices);
                 if (normals != null) FlipXAxis(ref normals);
             }
+
             if (rotate != Quaternion.identity) RotateVertices(ref vertices, rotate);
             if (scale != Vector3.zero) ScaleVertices(ref vertices, scale);
             if (translate != Vector3.zero) TranslateVertices(ref vertices, translate);
@@ -639,6 +644,7 @@ public class ObjImporter
             int triangleIdx = 0;
             int meshPart = 0;
             bool hasMultipleParts = false;
+
             while (true)
             {
                 bool sizeLimitReached = false;
@@ -660,11 +666,13 @@ public class ObjImporter
                         int t0 = subMeshTriangles[triangleIdx];
                         int t1 = subMeshTriangles[triangleIdx + 1];
                         int t2 = subMeshTriangles[triangleIdx + 2];
+
                         if (usesRightHandedCoordinates)
                         {
                             t1 = t0;
                             t0 = subMeshTriangles[triangleIdx + 1];
                         }
+
                         if (o2n[t0] < 0)
                         {
                             if (n2o.Count > maxVertices - 3)
@@ -675,6 +683,7 @@ public class ObjImporter
                             o2n[t0] = n2o.Count;
                             n2o.Add(t0);
                         }
+
                         if (o2n[t1] < 0)
                         {
                             if (n2o.Count > maxVertices - 2)
@@ -685,6 +694,7 @@ public class ObjImporter
                             o2n[t1] = n2o.Count;
                             n2o.Add(t1);
                         }
+
                         if (o2n[t2] < 0)
                         {
                             if (n2o.Count > maxVertices - 1)
@@ -695,6 +705,7 @@ public class ObjImporter
                             o2n[t2] = n2o.Count;
                             n2o.Add(t2);
                         }
+
                         meshTrianglesForSubMesh.Add(o2n[t0]);
                         meshTrianglesForSubMesh.Add(o2n[t1]);
                         meshTrianglesForSubMesh.Add(o2n[t2]);
@@ -703,7 +714,8 @@ public class ObjImporter
 
                     if (meshTrianglesForSubMesh.Count > 0)
                     {
-                        Material mat = new Material(Shader.Find("Standard"));
+                        //Material mat = new Material(Shader.Find("Standard"));
+                        Material mat = MaterialManager.Instance.DefaultMaterialForModel;
                         mat.SetColor("_Color", Color.white);
                         mat.name = (string)subMeshData["name"];
                         if (mat.name.Length <= 0) mat.name = "mat" + meshMaterials.Count;
@@ -711,10 +723,12 @@ public class ObjImporter
                         PutMaterialSpecsInMaterial(mat, matSpecs);
                         meshTriangles.Add(meshTrianglesForSubMesh);
                     }
+
                     triangleIdx += 3;
                     if (triangleIdx >= subMeshTriangles.Count) triangleIdx = 0;
                     else break;  // this submesh will continue in the next mesh
                 }
+
                 if (sizeLimitReached) hasMultipleParts = sizeLimitReached;
 
                 if (n2o.Count > 0)
@@ -725,12 +739,14 @@ public class ObjImporter
                     {
                         importedGameObject = new GameObject(goName);
                     }
+
                     Mesh mesh = new Mesh();
                     Vector3[] meshVertices = new Vector3[n2o.Count];
                     for (int j = 0; j < n2o.Count; j++)
                     {
                         meshVertices[j] = vertices[n2o[j]];
                     }
+
                     mesh.vertices = meshVertices;
                     if (normals.Count > 0)
                     {
@@ -741,6 +757,7 @@ public class ObjImporter
                         }
                         mesh.normals = meshNormals;
                     }
+
                     if (uvs.Count > 0)
                     {
                         Vector2[] meshUvs = new Vector2[n2o.Count];
@@ -750,11 +767,13 @@ public class ObjImporter
                         }
                         mesh.uv = meshUvs;
                     }
+
                     mesh.subMeshCount = meshTriangles.Count;
                     for (int j = 0; j < meshTriangles.Count; j++)
                     {
                         mesh.SetTriangles(meshTriangles[j].ToArray(), j);
                     }
+
                     if (normals.Count <= 0)
                     {
                         mesh.RecalculateNormals();
@@ -785,6 +804,7 @@ public class ObjImporter
                 meshPart++;
             }
         }
+
         return importedGameObject;
     }
 

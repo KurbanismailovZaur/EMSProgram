@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.Application
+namespace EMSP.App
 {
     public class Game : MonoBehaviour
     {

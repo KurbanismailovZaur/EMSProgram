@@ -44,6 +44,7 @@ namespace EMSP.Data.OBJ
             GameObject modelObject = new GameObject("Model");
 
             GameObject obj = ObjImporter.Import(File.ReadAllText(pathToOBJ));
+            
             obj.name = Path.GetFileNameWithoutExtension(pathToOBJ);
 
             Bounds bounds = BoundsUtility.GetGlobalBounds(obj, BoundsUtility.BoundsCreateOption.Mesh);
