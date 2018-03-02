@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Windows.Forms;
 using Numba.UI.Menu;
+using EMSP.Communication;
 
 namespace EMSP.UI.Menu
 {
@@ -79,7 +80,7 @@ namespace EMSP.UI.Menu
             }
 
             ModelManager.Instance.CreateNewModel(_openModelFileDialog.FileName);
-            _context.Hide();
+            ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
         }
 
         public void ImportWiring()
@@ -90,7 +91,7 @@ namespace EMSP.UI.Menu
             }
 
             WiringManager.Instance.CreateNewWiring(_openWiringFileDialog.FileName);
-            _context.Hide();
+            ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
         }
 
         public void Exit()

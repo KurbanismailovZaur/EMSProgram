@@ -1,9 +1,10 @@
-﻿using Numba;
+﻿using EMSP.Data.XLS;
+using Numba;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP
+namespace EMSP.Communication
 {
 	public class WiringManager : MonoSingleton<WiringManager>
     {
@@ -25,6 +26,7 @@ namespace EMSP
         #endregion
 
         #region Fields
+        private WiringDataReader _wiringDataReader = new WiringDataReader();
         #endregion
 
         #region Events
@@ -40,7 +42,7 @@ namespace EMSP
         #region Methods
         public void CreateNewWiring(string pathToXLS)
         {
-            
+            List<Wire> wires = _wiringDataReader.ReadWiringFromFile(pathToXLS);
         }
 		#endregion
 		
