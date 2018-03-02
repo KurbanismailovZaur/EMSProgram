@@ -584,7 +584,7 @@ Prefab:
     - target: {fileID: 224146460354540700, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 224146460354540700, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -954,7 +954,7 @@ Prefab:
     - target: {fileID: 224231710007936880, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 224231710007936880, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1034,7 +1034,7 @@ Prefab:
     - target: {fileID: 224507230563517116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 224507230563517116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1054,7 +1054,7 @@ Prefab:
     - target: {fileID: 224882096448263616, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 224882096448263616, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1074,7 +1074,7 @@ Prefab:
     - target: {fileID: 224355144634427212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -60
       objectReference: {fileID: 0}
     - target: {fileID: 224355144634427212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1094,7 +1094,7 @@ Prefab:
     - target: {fileID: 224793672282183838, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 224793672282183838, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1234,7 +1234,7 @@ Prefab:
     - target: {fileID: 224855869430252314, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 224855869430252314, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1259,7 +1259,7 @@ Prefab:
     - target: {fileID: 224072763840711682, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 224072763840711682, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1274,7 +1274,7 @@ Prefab:
     - target: {fileID: 224492696368533116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 224510147581313466, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1748,46 +1748,48 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &1895668690
-GameObject:
+--- !u!1001 &1867092204
+Prefab:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1895668692}
-  - component: {fileID: 1895668691}
-  m_Layer: 0
-  m_Name: WiringManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1895668691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1895668690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d95b1194d960fb418343163a7751b8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1895668692
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1895668690}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997152082581414, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 6fc874fca985e3240b9aa729488ef849, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1936241330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,4 +1922,4 @@ MonoBehaviour:
   yMinLimit: -80
   yMaxLimit: 80
   distanceMin: 1
-  distanceMax: 4
+  distanceMax: 64

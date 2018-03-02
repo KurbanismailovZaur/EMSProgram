@@ -44,6 +44,22 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
+        public List<Vector3> GetSequentialPoints()
+        {
+            List<Vector3> points = new List<Vector3>();
+
+            foreach (Segment segment in Segments)
+            {
+                points.Add(segment.pointA);
+            }
+
+            if (Segments.Count != 0)
+            {
+                points.Add(Segments[Segments.Count - 1].pointB);
+            }
+
+            return points;
+        }
         #endregion
 
         #region Indexers

@@ -62,6 +62,11 @@ namespace EMSP.Data.XLS
                 {
                     IRow row = sheet.GetRow(j);
 
+                    if (!IsCorrectRow(row))
+                    {
+                        break;
+                    }
+
                     Segment segment = ReadSegment(row);
                     wire.Segments.Add(segment);
                 }
@@ -85,6 +90,21 @@ namespace EMSP.Data.XLS
             segment.pointB.z = (float)row.GetCell(5).NumericCellValue;
 
             return segment;
+        }
+
+        private bool IsCorrectRow(IRow row)
+        {
+            for (int i = 0; i <= 5; i++)
+            {
+                ICell cell = row.GetCell(i);
+
+                if (cell.CellType != CellType.Numeric && cell.CellType != CellType.Formula)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 		#endregion
 		
