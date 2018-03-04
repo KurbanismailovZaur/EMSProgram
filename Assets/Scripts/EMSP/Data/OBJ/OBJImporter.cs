@@ -69,10 +69,10 @@ namespace EMSP.Data.OBJ
                 if (line.StartsWith(mtlLibKeyword))
                 {
                     mtlPath = line.Substring(mtlLibKeyword.Length + 1);
-                    if (!mtlPath.Contains(Path.PathSeparator.ToString()))
+                    if (!mtlPath.Contains("/") && !mtlPath.Contains("\\"))
                     {
                         mtlPath = Path.Combine(Path.GetDirectoryName(pathToOBJ), mtlPath);
-                        if(!File.Exists(mtlPath))
+                        if (!File.Exists(mtlPath))
                         {
                             Debug.LogError("Incorrect path to MTL file. Start importing without materials.");
                             materials = new Material[0];
@@ -85,7 +85,7 @@ namespace EMSP.Data.OBJ
             reader.Dispose();
 
 
-            string mtlText = File.ReadAllText(mtlPath); 
+            string mtlText = File.ReadAllText(mtlPath);
             List<Texture2D> TexturesList = new List<Texture2D>();
 
             reader = new StringReader(mtlText);
@@ -96,10 +96,22 @@ namespace EMSP.Data.OBJ
                 {
                     Texture2D texture = new Texture2D(1, 1);
 
-                    string path = Path.Combine(Path.GetDirectoryName(pathToOBJ), Path.GetFileName(line));
-                    if(!File.Exists(path))
+                    string path = "";
+                    string[] chunks = null;
+                    chunks = line.Split(' ');
+
+                    if (chunks[chunks.Length - 1].Contains("/") || chunks[chunks.Length - 1].Contains("\\"))
                     {
-                        Debug.LogError("Incorrect path to texture");
+                        path = chunks[chunks.Length - 1];
+                    }
+                    else
+                    {
+                        path = Path.Combine(Path.GetDirectoryName(pathToOBJ), chunks[chunks.Length - 1]);
+                    }
+
+                    if (!File.Exists(path))
+                    {
+                        Debug.LogError("Incorrect path to texture:" + path);
                         break;
                     }
                     var extension = Path.GetExtension(path);

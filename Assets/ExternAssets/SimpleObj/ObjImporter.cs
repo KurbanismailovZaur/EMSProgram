@@ -714,8 +714,7 @@ public class ObjImporter
 
                     if (meshTrianglesForSubMesh.Count > 0)
                     {
-                        Material mat = new Material(Shader.Find("Standard"));
-                        //Material mat = MaterialManager.Instance.DefaultMaterialForModel;
+                        Material mat = new Material(MaterialManager.Instance.DefaultMaterialForModel);
                         mat.SetColor("_Color", Color.white);
                         mat.name = (string)subMeshData["name"];
                         if (mat.name.Length <= 0) mat.name = "mat" + meshMaterials.Count;
