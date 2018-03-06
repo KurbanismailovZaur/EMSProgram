@@ -56,7 +56,9 @@ namespace EMSP
             DestroyModel();
 
             Model.Factory modelFactory = new Model.Factory();
-            _model = modelFactory.MakeFactory(_importer.Import(pathToOBJ));
+
+            Material[] materials;
+            _model = modelFactory.MakeFactory(_importer.Import(pathToOBJ, out materials));
 
             _model.transform.position = Vector3.zero;
             _model.transform.SetParent(transform);
