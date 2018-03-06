@@ -68,7 +68,7 @@ namespace EMSP.Data.XLS
                     }
 
                     Segment segment = ReadSegment(row);
-                    wire.Segments.Add(segment);
+                    wire.Add(segment);
                 }
 
                 wires.Add(wire);

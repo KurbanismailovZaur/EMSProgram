@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace EMSP.Communication
 {
-	public class Wire 
+	public class Wire : IEnumerable<Segment>
 	{
         #region Entities
         #region Enums
@@ -24,6 +26,7 @@ namespace EMSP.Communication
         #endregion
 
         #region Fields
+        private List<Segment> _segments = new List<Segment>();
         #endregion
 
         #region Events
@@ -31,7 +34,7 @@ namespace EMSP.Communication
 
         #region Behaviour
         #region Properties
-        public List<Segment> Segments { get; set; }
+        public ReadOnlyCollection<Segment> Segments { get { return _segments.AsReadOnly(); } }
         #endregion
 
         #region Constructors
@@ -39,11 +42,31 @@ namespace EMSP.Communication
 
         public Wire(IEnumerable<Segment> segments)
         {
-            Segments = new List<Segment>(segments);
+            _segments.AddRange(segments);
         }
         #endregion
 
         #region Methods
+        public IEnumerator<Segment> GetEnumerator()
+        {
+            return _segments.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _segments.GetEnumerator();
+        }
+
+        public void Add(Segment segment)
+        {
+            _segments.Add(segment);
+        }
+
+        public void Add(Vector3 pointA, Vector3 pointB)
+        {
+            Add(new Segment(pointA, pointB));
+        }
+
         public List<Vector3> GetSequentialPoints()
         {
             List<Vector3> points = new List<Vector3>();
