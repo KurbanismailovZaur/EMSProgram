@@ -69,7 +69,7 @@ namespace EMSP.Data.OBJ
                 if (line.StartsWith(mtlLibKeyword))
                 {
                     mtlPath = line.Substring(mtlLibKeyword.Length + 1);
-                    if (!mtlPath.Contains("/") && !mtlPath.Contains("\\"))
+                    if (!Path.IsPathRooted(mtlPath))
                     {
                         mtlPath = Path.Combine(Path.GetDirectoryName(pathToOBJ), mtlPath);
                         if (!File.Exists(mtlPath))
@@ -100,7 +100,7 @@ namespace EMSP.Data.OBJ
                     string[] chunks = null;
                     chunks = line.Split(' ');
 
-                    if (chunks[chunks.Length - 1].Contains("/") || chunks[chunks.Length - 1].Contains("\\"))
+                    if (Path.IsPathRooted(chunks[chunks.Length - 1]))
                     {
                         path = chunks[chunks.Length - 1];
                     }
