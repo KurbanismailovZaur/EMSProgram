@@ -2,6 +2,7 @@
 using Numba;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace EMSP.Communication
@@ -30,6 +31,8 @@ namespace EMSP.Communication
 
         [SerializeField]
         private Material _lineMaterial;
+
+        private List<Wire> _wires = new List<Wire>();
         #endregion
 
         #region Events
@@ -37,6 +40,7 @@ namespace EMSP.Communication
 
         #region Behaviour
         #region Properties
+        public ReadOnlyCollection<Wire> Wires { get { return _wires.AsReadOnly(); } }
         #endregion
 
         #region Constructors
@@ -47,9 +51,9 @@ namespace EMSP.Communication
         {
             DestroyWiring();
 
-            List<Wire> wires = _wiringDataReader.ReadWiringFromFile(pathToXLS);
+            _wires = _wiringDataReader.ReadWiringFromFile(pathToXLS);
 
-            foreach (Wire wire in wires)
+            foreach (Wire wire in _wires)
             {
                 LineRenderer lineRenderer = new GameObject("Wire").AddComponent<LineRenderer>();
                 lineRenderer.widthMultiplier = 0.2f;
