@@ -216,8 +216,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: ea549677bffafd345a42b463126f99d3, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -264,7 +264,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -379,8 +379,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: dce7eb4c3c4f9b842860d1c8e6058ce1, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -427,7 +427,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -806,8 +806,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 966e11aa3e57c0b42813eefcdbd7b65b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -854,7 +854,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -964,8 +964,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: abd3764fd025d8a4a8b092f9e45fb1b9, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1012,7 +1012,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1151,8 +1151,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 325edea7c35d93e479b7ec1abdd923dd, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1199,7 +1199,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1369,7 +1369,7 @@ Prefab:
     - target: {fileID: 224146460354540700, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224146460354540700, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1394,7 +1394,7 @@ Prefab:
     - target: {fileID: 224698736122094466, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224698736122094466, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1439,7 +1439,7 @@ Prefab:
     - target: {fileID: 224853500625672254, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224853500625672254, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1484,7 +1484,7 @@ Prefab:
     - target: {fileID: 224826656818504966, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224826656818504966, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1529,7 +1529,7 @@ Prefab:
     - target: {fileID: 224557683830153876, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224557683830153876, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1614,7 +1614,7 @@ Prefab:
     - target: {fileID: 224470241469907130, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224470241469907130, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1659,7 +1659,7 @@ Prefab:
     - target: {fileID: 224960133540778382, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224960133540778382, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1714,7 +1714,7 @@ Prefab:
     - target: {fileID: 224389102303654212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224389102303654212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1739,7 +1739,7 @@ Prefab:
     - target: {fileID: 224231710007936880, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224231710007936880, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1764,7 +1764,7 @@ Prefab:
     - target: {fileID: 224813420329686960, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224813420329686960, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1819,7 +1819,7 @@ Prefab:
     - target: {fileID: 224507230563517116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224507230563517116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1839,7 +1839,7 @@ Prefab:
     - target: {fileID: 224882096448263616, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -40
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224882096448263616, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1859,7 +1859,7 @@ Prefab:
     - target: {fileID: 224355144634427212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -60
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224355144634427212, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1879,7 +1879,7 @@ Prefab:
     - target: {fileID: 224793672282183838, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -80
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224793672282183838, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1919,7 +1919,7 @@ Prefab:
     - target: {fileID: 224422403366770996, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224422403366770996, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -1944,7 +1944,7 @@ Prefab:
     - target: {fileID: 224213624510909906, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224213624510909906, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2019,7 +2019,7 @@ Prefab:
     - target: {fileID: 224855869430252314, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224855869430252314, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2044,7 +2044,7 @@ Prefab:
     - target: {fileID: 224072763840711682, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224072763840711682, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2059,7 +2059,7 @@ Prefab:
     - target: {fileID: 224492696368533116, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224510147581313466, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2069,7 +2069,7 @@ Prefab:
     - target: {fileID: 224510147581313466, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 40
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224627571812575056, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2079,7 +2079,7 @@ Prefab:
     - target: {fileID: 224627571812575056, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114783120712748144, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
         type: 2}
@@ -2760,8 +2760,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 76f2ebb5e40ed994784140d1f8d154ad, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2808,7 +2808,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1343357312}
-          m_MethodName: Deselect
+          m_MethodName: OnPointerUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

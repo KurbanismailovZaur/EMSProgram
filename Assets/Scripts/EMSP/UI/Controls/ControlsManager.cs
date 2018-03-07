@@ -59,37 +59,44 @@ namespace EMSP.UI.Controls
 
         public void OnUpClick()
         {
+            _rotator.SetBlockByUi(true);
             _y += 0.01f * _moveSensivity;
         }
 
         public void OnDownClick()
         {
+            _rotator.SetBlockByUi(true);
             _y -= 0.01f * _moveSensivity;
         }
 
         public void OnRightClick()
         {
+            _rotator.SetBlockByUi(true);
             _x += 0.01f * _moveSensivity;
         }
 
         public void OnLeftClick()
         {
+            _rotator.SetBlockByUi(true);
             _x -= 0.01f * _moveSensivity;
         }
 
         public void OnZoomInClick()
         {
+            _rotator.SetBlockByUi(true);
             _z += 0.01f * _zoomSensivity;
         }
 
         public void OnZoomOutClick()
         {
+            _rotator.SetBlockByUi(true);
             _z -= 0.01f * _zoomSensivity;
         }
 
-        public void Deselect()
+        public void OnPointerUp()
         {
             EventSystem.current.SetSelectedGameObject(_emtyGO);
+            _rotator.SetBlockByUi(false);
         }
 
         private void Update()

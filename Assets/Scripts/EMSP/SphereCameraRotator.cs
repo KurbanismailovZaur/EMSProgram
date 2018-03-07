@@ -28,7 +28,6 @@ namespace EMSP.Control
         [SerializeField]
         [Range(0.1f, 24f)]
         private float _interpolation = 12f;
-        private Transform _transform;
 
         public bool InputEnabled = true;
         public float Distance = 5.0f;
@@ -43,6 +42,8 @@ namespace EMSP.Control
         public float DistanceMin = .5f;
         public float DistanceMax = 100f;
 
+        private Transform _transform;
+        private bool _blockedByUI = false;
         private float _x = 0.0f;
         private float _y = 0.0f;
         private float _z = 0.0f;
@@ -77,10 +78,8 @@ namespace EMSP.Control
 
         void Update()
         {
-            if (!Input.GetMouseButton(0) && Input.GetAxis("Mouse ScrollWheel") == 0f)
-            {
+            if ((!Input.GetMouseButton(0) && Input.GetAxis("Mouse ScrollWheel") == 0f) || _blockedByUI)
                 return;
-            }
 
             MoveCamera(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse ScrollWheel"));
         }
@@ -101,6 +100,11 @@ namespace EMSP.Control
             _z = deltaZ;
 
             CalculateTransform();
+        }
+
+        public void SetBlockByUi(bool value)
+        {
+            _blockedByUI = value;
         }
 
         private void CalculateTransform()
