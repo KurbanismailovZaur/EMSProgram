@@ -4,6 +4,7 @@ using UnityEngine;
 using Numba.UI.Menu;
 using SFB;
 using EMSP.Communication;
+using EMSP.App;
 
 namespace EMSP.UI.Menu
 {
@@ -30,9 +31,7 @@ namespace EMSP.UI.Menu
         #region Fields
         private Context _context;
 
-        private ExtensionFilter[] _modelExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("3D Model", "obj") };
-
-        private ExtensionFilter[] _wiringExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("Excel Worksheets 2003", "xls") };
+        private Panel _panel;
         #endregion
 
         #region Events
@@ -49,11 +48,15 @@ namespace EMSP.UI.Menu
         private void Awake()
         {
             _context = GetComponent<Context>();
+
+            _panel = ((Group)_context.ContextContainer).Panel;
         }
 
         public void NewProject()
         {
-            print("new Project");
+            ProjectManager.Instance.CreateNewProject();
+
+            _panel.HideActiveContextAndStopAutoShow();
         }
 
         public void OpenProject()
@@ -66,9 +69,16 @@ namespace EMSP.UI.Menu
             print("Save Project");
         }
 
+        public void CloseProject()
+        {
+            ProjectManager.Instance.CloseProject();
+
+            _panel.HideActiveContextAndStopAutoShow();
+        }
+
         public void ImportModel()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Model", string.Empty, _modelExtensionFilter, false);
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Model", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, false);
 
             if (results.Length == 0)
             {
@@ -76,12 +86,12 @@ namespace EMSP.UI.Menu
             }
 
             ModelManager.Instance.CreateNewModel(results[0]);
-            ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
+            _panel.HideActiveContextAndStopAutoShow();
         }
 
         public void ImportWiring()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Wiring", string.Empty, _wiringExtensionFilter, false);
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Wiring", Application.dataPath, GameSettings.Instance.WiringExtensionFilter, false);
 
             if (results.Length == 0)
             {
@@ -89,7 +99,7 @@ namespace EMSP.UI.Menu
             }
 
             WiringManager.Instance.CreateNewWiring(results[0]);
-            ((Group)_context.ContextContainer).Panel.HideActiveContextAndStopAutoShow();
+            _panel.HideActiveContextAndStopAutoShow();
         }
 
         public void Exit()

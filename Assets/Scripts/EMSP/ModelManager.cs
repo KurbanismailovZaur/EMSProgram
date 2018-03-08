@@ -23,10 +23,10 @@ namespace EMSP
 
         #region Classes
         [Serializable]
-        public class ModelCreated : UnityEvent<Model> { }
+        public class ModelCreatedEvent : UnityEvent<Model> { }
 
         [Serializable]
-        public class ModelDestroyed : UnityEvent<Model> { }
+        public class ModelDestroyedEvent : UnityEvent<Model> { }
         #endregion
 
         #region Interfaces
@@ -40,6 +40,9 @@ namespace EMSP
         #endregion
 
         #region Events
+        public ModelCreatedEvent ModelCreated = new ModelCreatedEvent();
+
+        public ModelDestroyedEvent ModelDestroyed = new ModelDestroyedEvent();
         #endregion
 
         #region Behaviour
@@ -62,6 +65,8 @@ namespace EMSP
 
             _model.transform.position = Vector3.zero;
             _model.transform.SetParent(transform);
+
+            ModelCreated.Invoke(_model);
         }
 
         public void DestroyModel()
@@ -72,6 +77,8 @@ namespace EMSP
             }
 
             Destroy(_model.gameObject);
+
+            ModelDestroyed.Invoke(_model);
         }
         #endregion
 

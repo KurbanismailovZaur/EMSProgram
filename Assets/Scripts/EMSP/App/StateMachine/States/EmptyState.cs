@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.App.States
+namespace EMSP.App.StateMachine.States
 {
 	public class EmptyState : GameState 
 	{
@@ -26,11 +26,18 @@ namespace EMSP.App.States
         #endregion
 
         #region Fields
-        [SerializeField]
-        private Button _newProjectButton;
-
+        [Header("Menus")]
         [SerializeField]
         private Button _saveProjectButton;
+
+        [SerializeField]
+        private Button _closeProjectButton;
+
+        [SerializeField]
+        private Button _importModelButton;
+
+        [SerializeField]
+        private Button _importWiringButton;
         #endregion
 
         #region Events
@@ -46,8 +53,19 @@ namespace EMSP.App.States
         #region Methods
         public override void OnEnter()
         {
-            _newProjectButton.interactable = false;
             _saveProjectButton.interactable = false;
+            _closeProjectButton.interactable = false;
+            _importModelButton.interactable = false;
+            _importWiringButton.interactable = false;
+
+            GameFacade.Instance.DeactivateProjectEnvironment();
+
+            ProjectManager.Instance.ProjectCreated.AddListener(ProjectManager_ProjectCreated);
+        }
+
+        private void MoveToDefaultState()
+        {
+            _game.MoveToDefaultState();
         }
         #endregion
 
@@ -55,6 +73,12 @@ namespace EMSP.App.States
         #endregion
 
         #region Events handlers
+        private void ProjectManager_ProjectCreated(Project project)
+        {
+            ProjectManager.Instance.ProjectCreated.RemoveListener(ProjectManager_ProjectCreated);
+
+            MoveToDefaultState();
+        }
         #endregion
         #endregion
     }

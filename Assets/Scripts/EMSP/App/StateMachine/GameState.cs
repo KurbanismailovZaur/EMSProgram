@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.App
+namespace EMSP.App.StateMachine
 {
     public abstract class GameState : MonoBehaviour
     {

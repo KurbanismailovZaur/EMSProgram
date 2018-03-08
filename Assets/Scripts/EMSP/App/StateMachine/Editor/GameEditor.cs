@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using ScriptEditor = UnityEditor.Editor;
 
-namespace EMSP.App.Editor
+namespace EMSP.App.StateMachine.Editor
 {
     [CustomEditor(typeof(Game))]
     public class GameEditor : ScriptEditor

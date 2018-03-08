@@ -1,11 +1,11 @@
-﻿using EMSP.App.States;
+﻿using Numba;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.App
+namespace EMSP.Environment
 {
-    public class StatesPool : MonoBehaviour
+    public class Grid : MonoSingleton<Grid>
     {
         #region Entities
         #region Enums
@@ -25,8 +25,10 @@ namespace EMSP.App
         #endregion
 
         #region Fields
+        private bool _visibility = true;
+
         [SerializeField]
-        private EmptyState _emptyState;
+        private Renderer _gridRenderer;
         #endregion
 
         #region Events
@@ -34,13 +36,27 @@ namespace EMSP.App
 
         #region Behaviour
         #region Properties
-        public EmptyState EmptyState { get { return _emptyState; } }
+        public bool Visibility
+        {
+            get { return _visibility; }
+            set
+            {
+                _visibility = value;
+                _gridRenderer.enabled = _visibility;
+            }
+        }
+        #endregion
+
+        #region Constructors
         #endregion
 
         #region Methods
         #endregion
 
-        #region Event Handlers
+        #region Indexers
+        #endregion
+
+        #region Events handlers
         #endregion
         #endregion
     }

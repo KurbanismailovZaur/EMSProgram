@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.App
+namespace EMSP.App.StateMachine
 {
     public class Game : MonoBehaviour
     {
@@ -58,6 +58,11 @@ namespace EMSP.App
         public void MoveToEmptyState()
         {
             MoveToState(_statesPool.EmptyState);
+        }
+
+        public void MoveToDefaultState()
+        {
+            MoveToState(_statesPool.DefaultState);
         }
         #endregion
         #endregion
