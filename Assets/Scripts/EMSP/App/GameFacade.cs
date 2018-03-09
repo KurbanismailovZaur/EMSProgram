@@ -1,5 +1,7 @@
 ﻿using EMSP.Communication;
+using EMSP.Control;
 using EMSP.UI;
+using EMSP.UI.Dialogs.SaveProject;
 using EMSP.UI.Menu;
 using Numba;
 using SFB;
@@ -31,6 +33,9 @@ namespace EMSP.App
         #region Fields
         [SerializeField]
         private ViewBlocker _viewBlocker;
+
+        [SerializeField]
+        private SaveProjectDialog _saveProjectDialog;
         #endregion
 
         #region Events
@@ -44,15 +49,28 @@ namespace EMSP.App
         #endregion
 
         #region Methods
-        private void CreateNewProject()
+        #region File context methods
+        private void CreateNewProjectWithCheckToSave()
         {
-            if (ProjectManager.Instance.Project != null && ProjectManager.Instance.Project.IsChanged)
+            if (ProjectManager.Instance.Project != null && !ProjectManager.Instance.Project.IsChanged)
             {
-
+                BlockCamera();
+                _saveProjectDialog.Chosen.AddListener(SaveProjectDialog_Chosen);
+                _saveProjectDialog.ShowModal();
                 return;
             }
 
-            ProjectManager.Instance.CreateNewProject();
+            CreateNewProject();
+        }
+
+        private void OpenProject()
+        {
+            print("Open Project");
+        }
+
+        private void SaveProject()
+        {
+            print("Save Project");
         }
 
         private void CloseProject()
@@ -92,18 +110,38 @@ namespace EMSP.App
                     UnityEngine.Application.Quit();
 #endif
         }
+        #endregion
 
-        public void ActivateProjectEnvironment()
+        private void CreateNewProject()
+        {
+            ProjectManager.Instance.CreateNewProject();
+        }
+
+        private void InitializeCamera()
         {
             Camera.main.transform.position = GameSettings.Instance.CameraDefaultPosition;
             Camera.main.transform.rotation = GameSettings.Instance.CameraDefaultRotation;
+        }
 
+        public void ActivateProjectEnvironment()
+        {
+            InitializeCamera();
             _viewBlocker.UnblockView();
         }
 
         public void DeactivateProjectEnvironment()
         {
             _viewBlocker.BlockView();
+        }
+
+        private void BlockCamera()
+        {
+            print("Block Camera");
+        }
+
+        private void UnblockCamera()
+        {
+            print("Unblock Camera");
         }
         #endregion
 
@@ -116,7 +154,7 @@ namespace EMSP.App
             switch (actionType)
             {
                 case FileContextMethods.ActionType.NewProject:
-                    CreateNewProject();
+                    CreateNewProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.OpenProject:
                     print("Open Project");
@@ -139,6 +177,24 @@ namespace EMSP.App
             }
 
             fileContextMethods.Panel.HideActiveContextAndStopAutoShow();
+        }
+
+        private void SaveProjectDialog_Chosen(SaveProjectDialog saveProjectDialog, SaveProjectDialog.Action action)
+        {
+            UnblockCamera();
+            _saveProjectDialog.Chosen.RemoveListener(SaveProjectDialog_Chosen);
+
+            switch (action)
+            {
+                case SaveProjectDialog.Action.Save:
+                    SaveProject();
+                    break;
+                case SaveProjectDialog.Action.DontSave:
+                    CreateNewProject();
+                    break;
+                case SaveProjectDialog.Action.Cancel:
+                    break;
+            }
         }
         #endregion
         #endregion

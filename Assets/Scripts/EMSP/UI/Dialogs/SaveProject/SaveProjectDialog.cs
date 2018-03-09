@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace MyNamespace
+namespace EMSP.UI.Dialogs.SaveProject
 {
     [RequireComponent(typeof(CanvasGroup))]
 	public class SaveProjectDialog : MonoBehaviour 
