@@ -24,6 +24,8 @@ namespace EMSP.App
         #endregion
 
         #region Fields
+        private bool _isChanged;
+
         private string _path;
         #endregion
 
@@ -32,6 +34,8 @@ namespace EMSP.App
 
         #region Behaviour
         #region Properties
+        public bool IsChanged { get { return _isChanged; } }
+
         public string Path { get { return _path; } }
         #endregion
 

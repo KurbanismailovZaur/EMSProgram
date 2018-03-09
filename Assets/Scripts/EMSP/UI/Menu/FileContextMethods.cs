@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Numba.UI.Menu;
+using System;
 using UnityEngine;
-using Numba.UI.Menu;
-using SFB;
-using EMSP.Communication;
-using EMSP.App;
+using UnityEngine.Events;
 
 namespace EMSP.UI.Menu
 {
@@ -13,6 +10,16 @@ namespace EMSP.UI.Menu
     {
         #region Entities
         #region Enums
+        public enum ActionType
+        {
+            NewProject,
+            OpenProject,
+            SaveProject,
+            CloseProject,
+            ImportModel,
+            ImportWiring,
+            Exit
+        }
         #endregion
 
         #region Delegates
@@ -22,6 +29,8 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Classes
+        [Serializable]
+        public class SelectedEvent : UnityEvent<FileContextMethods, ActionType> { }
         #endregion
 
         #region Interfaces
@@ -35,10 +44,12 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Events
+        public SelectedEvent Selected = new SelectedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
+        public Panel Panel { get { return _panel; } }
         #endregion
 
         #region Constructors
@@ -54,61 +65,37 @@ namespace EMSP.UI.Menu
 
         public void NewProject()
         {
-            ProjectManager.Instance.CreateNewProject();
-
-            _panel.HideActiveContextAndStopAutoShow();
+            Selected.Invoke(this, ActionType.NewProject);
         }
 
         public void OpenProject()
         {
-            print("Open Project");
+            Selected.Invoke(this, ActionType.OpenProject);
         }
 
         public void SaveProject()
         {
-            print("Save Project");
+            Selected.Invoke(this, ActionType.SaveProject);
         }
 
         public void CloseProject()
         {
-            ProjectManager.Instance.CloseProject();
-
-            _panel.HideActiveContextAndStopAutoShow();
+            Selected.Invoke(this, ActionType.CloseProject);
         }
 
         public void ImportModel()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Model", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, false);
-
-            if (results.Length == 0)
-            {
-                return;
-            }
-
-            ModelManager.Instance.CreateNewModel(results[0]);
-            _panel.HideActiveContextAndStopAutoShow();
+            Selected.Invoke(this, ActionType.ImportModel);
         }
 
         public void ImportWiring()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Wiring", Application.dataPath, GameSettings.Instance.WiringExtensionFilter, false);
-
-            if (results.Length == 0)
-            {
-                return;
-            }
-
-            WiringManager.Instance.CreateNewWiring(results[0]);
-            _panel.HideActiveContextAndStopAutoShow();
+            Selected.Invoke(this, ActionType.ImportWiring);
         }
 
         public void Exit()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#elif UNITY_STANDALONE
-            UnityEngine.Application.Quit();
-#endif
+            Selected.Invoke(this, ActionType.Exit);
         }
         #endregion
 
