@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.App.StateMachine.States
+namespace EMSP.App.StateMachineBehaviour.States
 {
-	public class EmptyState : GameState 
+	public class EmptyState : State 
 	{
         #region Entities
         #region Enums
@@ -65,7 +65,7 @@ namespace EMSP.App.StateMachine.States
 
         private void MoveToDefaultState()
         {
-            _game.MoveToDefaultState();
+            _parentStateMachine.MoveToState("Default");
         }
         #endregion
 

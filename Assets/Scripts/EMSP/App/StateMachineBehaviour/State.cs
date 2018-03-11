@@ -1,11 +1,10 @@
-﻿using EMSP.App.StateMachine.States;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.App.StateMachine
+namespace EMSP.App.StateMachineBehaviour
 {
-    public class StatesPool : MonoBehaviour
+    public abstract class State : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -25,11 +24,9 @@ namespace EMSP.App.StateMachine
         #endregion
 
         #region Fields
-        [SerializeField]
-        private EmptyState _emptyState;
+        protected StateMachine _parentStateMachine;
 
-        [SerializeField]
-        private DefaultState _defaultState;
+        private bool _isSubStateMachine;
         #endregion
 
         #region Events
@@ -37,12 +34,19 @@ namespace EMSP.App.StateMachine
 
         #region Behaviour
         #region Properties
-        public EmptyState EmptyState { get { return _emptyState; } }
-
-        public DefaultState DefaultState { get { return _defaultState; } }
+        public bool IsSubStateMachine { get { return _isSubStateMachine; } }
         #endregion
 
         #region Methods
+        protected virtual void Awake()
+        {
+            _parentStateMachine = GetComponentInParent<StateMachine>();
+            _isSubStateMachine = _parentStateMachine.gameObject == gameObject;
+        }
+
+        public virtual void OnEnter() { }
+
+        public virtual void OnExit() { }
         #endregion
 
         #region Event Handlers

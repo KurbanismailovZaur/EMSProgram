@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Numba;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.App.StateMachine
+namespace EMSP.App.StateMachineBehaviour
 {
-    public abstract class GameState : MonoBehaviour
-    {
+	public class StateMachineManager : MonoSingleton<StateMachineManager>
+	{
         #region Entities
         #region Enums
         #endregion
@@ -24,7 +25,8 @@ namespace EMSP.App.StateMachine
         #endregion
 
         #region Fields
-        protected Game _game;
+        [SerializeField]
+        private StateMachine _rootStateMachine;
         #endregion
 
         #region Events
@@ -32,20 +34,19 @@ namespace EMSP.App.StateMachine
 
         #region Behaviour
         #region Properties
+        public StateMachine RootStateMachine { get { return _rootStateMachine; } }
+        #endregion
+
+        #region Constructors
         #endregion
 
         #region Methods
-        protected virtual void Awake()
-        {
-            _game = GetComponentInParent<Game>();
-        }
-
-        public virtual void OnEnter() { }
-
-        public virtual void OnExit() { }
         #endregion
 
-        #region Event Handlers
+        #region Indexers
+        #endregion
+
+        #region Events handlers
         #endregion
         #endregion
     }

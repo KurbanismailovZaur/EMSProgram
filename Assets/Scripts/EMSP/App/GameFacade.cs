@@ -36,6 +36,9 @@ namespace EMSP.App
 
         [SerializeField]
         private SaveProjectDialog _saveProjectDialog;
+
+        [SerializeField]
+        private OrbitController _orbitController;
         #endregion
 
         #region Events
@@ -114,18 +117,20 @@ namespace EMSP.App
 
         private void CreateNewProject()
         {
+            ProjectManager.Instance.CloseProject();
             ProjectManager.Instance.CreateNewProject();
         }
 
-        private void InitializeCamera()
+        private void ResetOrbitController()
         {
-            Camera.main.transform.position = GameSettings.Instance.CameraDefaultPosition;
-            Camera.main.transform.rotation = GameSettings.Instance.CameraDefaultRotation;
+            _orbitController.TargetVector = GameSettings.Instance.OrbitControllerDefaultTargetVector;
+            _orbitController.TargetUpVector = GameSettings.Instance.OrbitControllerDefaultTargetUpVector;
+            _orbitController.Distance = GameSettings.Instance.OrbitControllerDefaultDistance;
         }
 
         public void ActivateProjectEnvironment()
         {
-            InitializeCamera();
+            ResetOrbitController();
             _viewBlocker.UnblockView();
         }
 
@@ -188,6 +193,7 @@ namespace EMSP.App
             {
                 case SaveProjectDialog.Action.Save:
                     SaveProject();
+                    CreateNewProject();
                     break;
                 case SaveProjectDialog.Action.DontSave:
                     CreateNewProject();

@@ -83,6 +83,32 @@ namespace EMSP
             set { _origin = value; }
         }
 
+        public Vector3 TargetVector
+        {
+            get { return _targetVector; }
+            set
+            {
+                value.Normalize();
+                Quaternion fromToRotation = Quaternion.FromToRotation(_targetVector, value);
+
+                _targetVector = value;
+                _targetUpVector = fromToRotation * _targetUpVector;
+            }
+        }
+
+        public Vector3 TargetUpVector
+        {
+            get { return _targetUpVector; }
+            set
+            {
+                value.Normalize();
+                Quaternion fromToRotation = Quaternion.FromToRotation(_targetUpVector, value);
+
+                _targetUpVector = value;
+                _targetVector = fromToRotation * _targetVector;
+            }
+        }
+
         public float Distance
         {
             get { return _distance; }

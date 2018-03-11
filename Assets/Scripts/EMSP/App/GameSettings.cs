@@ -32,9 +32,11 @@ namespace EMSP.App
 
         private string _projectDefaultName = "Untitled";
 
-        private Vector3 _cameraDefaultPosition = new Vector3(0f, 8f, 0f);
+        private Vector3 _orbitControllerDefaultTargetVector = Vector3.up;
 
-        private Quaternion _cameraDefaultRotation = Quaternion.Euler(90f, 0f, 0f);
+        private Vector3 _orbitControllerDefaultTargetUpVector = Vector3.forward;
+
+        private float _orbitCOntrollerDefaultDistance = 8f;
         #endregion
 
         #region Events
@@ -48,9 +50,11 @@ namespace EMSP.App
 
         public string ProjectDefaultName { get { return _projectDefaultName; } }
 
-        public Vector3 CameraDefaultPosition { get { return _cameraDefaultPosition; } }
+        public Vector3 OrbitControllerDefaultTargetVector { get { return _orbitControllerDefaultTargetVector; } }
 
-        public Quaternion CameraDefaultRotation { get { return _cameraDefaultRotation; } }
+        public Vector3 OrbitControllerDefaultTargetUpVector { get { return _orbitControllerDefaultTargetUpVector; } }
+
+        public float OrbitControllerDefaultDistance { get { return _orbitCOntrollerDefaultDistance; } }
         #endregion
 
         #region Constructors
