@@ -61,7 +61,7 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             ProjectManager.Instance.ProjectDestroyed.AddListener(ProjectManager_ProjectDestroyed);
 
-            _parentStateMachine.MoveToState("EmptyProject");
+            _stateMachine.MoveToState("EmptyProject");
         }
         #endregion
 
@@ -73,7 +73,8 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             ProjectManager.Instance.ProjectDestroyed.RemoveListener(ProjectManager_ProjectDestroyed);
 
-            _parentStateMachine.MoveToState("OnlyMenu");
+            _stateMachine.ExitFromCurrentState();
+            _stateMachine.ParentStateMachine.MoveToState("OnlyMenu");
         }
         #endregion
         #endregion

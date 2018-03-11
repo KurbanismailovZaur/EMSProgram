@@ -54,6 +54,12 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
             ModelManager.Instance.ModelDestroyed.AddListener(ModelManager_ModelDestroyed);
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
         }
+
+        public override void OnExit()
+        {
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelDestroyed);
+            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
+        }
         #endregion
 
         #region Indexers
@@ -62,18 +68,12 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         #region Events handlers
         private void ModelManager_ModelDestroyed(Model model)
         {
-            ModelManager.Instance.ModelDestroyed.RemoveListener(ModelManager_ModelDestroyed);
-            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
-
-            _parentStateMachine.MoveToState("EmptyProject");
+            _stateMachine.MoveToState("EmptyProject");
         }
 
         private void WiringManager_WiringCreated(List<Wire> arg0)
         {
-            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
-            ModelManager.Instance.ModelDestroyed.RemoveListener(ModelManager_ModelDestroyed);
-
-            _parentStateMachine.MoveToState("WithModelAndWiring");
+            _stateMachine.MoveToState("WithModelAndWiring");
         }
         #endregion
         #endregion

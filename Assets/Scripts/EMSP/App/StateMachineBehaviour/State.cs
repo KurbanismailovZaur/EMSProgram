@@ -24,7 +24,7 @@ namespace EMSP.App.StateMachineBehaviour
         #endregion
 
         #region Fields
-        protected StateMachine _parentStateMachine;
+        protected StateMachine _stateMachine;
 
         private bool _isSubStateMachine;
         #endregion
@@ -40,8 +40,8 @@ namespace EMSP.App.StateMachineBehaviour
         #region Methods
         protected virtual void Awake()
         {
-            _parentStateMachine = GetComponentInParent<StateMachine>();
-            _isSubStateMachine = _parentStateMachine.gameObject == gameObject;
+            _stateMachine = GetComponentInParent<StateMachine>();
+            _isSubStateMachine = _stateMachine.gameObject == gameObject;
         }
 
         public virtual void OnEnter() { }

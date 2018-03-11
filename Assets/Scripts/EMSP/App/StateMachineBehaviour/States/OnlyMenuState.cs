@@ -80,7 +80,7 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             ProjectManager.Instance.ProjectCreated.RemoveListener(ProjectManager_ProjectCreated);
 
-            _parentStateMachine.MoveToState("InProject");
+            _stateMachine.MoveToState("InProject");
         }
         #endregion
         #endregion

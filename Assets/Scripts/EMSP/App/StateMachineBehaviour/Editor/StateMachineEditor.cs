@@ -185,14 +185,26 @@ namespace EMSP.App.StateMachineBehaviour.Editor
             EditorGUILayout.EndVertical();
             #endregion
 
+            StateMachine stateMachine = (StateMachine)serializedObject.targetObject;
+
+            #region Parent state-machine
+            FieldInfo parentStateMachineFieldInfo = typeof(StateMachine).GetField("_parentStateMachine", BindingFlags.NonPublic | BindingFlags.Instance);
+            StateMachine parentStateMachine = (StateMachine)parentStateMachineFieldInfo.GetValue(stateMachine);
+
+            GUI.enabled = false;
+            GUI.color = Color.blue;
+            EditorGUILayout.ObjectField("Parent State Machine", parentStateMachine, typeof(StateMachine), true);
+            GUI.color = oldColor;
+            GUI.enabled = true;
+            #endregion
+
             #region Current state
-            StateMachine game = (StateMachine)serializedObject.targetObject;
-            FieldInfo gameStateFieldInfo = typeof(StateMachine).GetField("_currentState", BindingFlags.NonPublic | BindingFlags.Instance);
-            State gameState = (State)gameStateFieldInfo.GetValue(game);
+            FieldInfo currentStateFieldInfo = typeof(StateMachine).GetField("_currentState", BindingFlags.NonPublic | BindingFlags.Instance);
+            State currentState = (State)currentStateFieldInfo.GetValue(stateMachine);
 
             GUI.enabled = false;
             GUI.color = Color.green;
-            EditorGUILayout.ObjectField("Current State", gameState, typeof(State), true);
+            EditorGUILayout.ObjectField("Current State", currentState, typeof(State), true);
             GUI.color = oldColor;
             GUI.enabled = true;
             #endregion

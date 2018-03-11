@@ -43,21 +43,16 @@ namespace EMSP.App.StateMachineBehaviour.Editor
         #region Methods
         public override void OnInspectorGUI()
         {
-            //SerializedProperty scriptProperty = serializedObject.FindProperty("m_Script");
-
-            //GUI.enabled = false;
-            //EditorGUILayout.PropertyField(scriptProperty);
-            //GUI.enabled = true;
             base.OnInspectorGUI();
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Debug Info", EditorStyles.boldLabel);
 
             State state = (State)serializedObject.targetObject;
-            FieldInfo stateMachineFieldInfo = typeof(State).GetField("_parentStateMachine", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo stateMachineFieldInfo = typeof(State).GetField("_stateMachine", BindingFlags.NonPublic | BindingFlags.Instance);
             StateMachine stateMachine = (StateMachine)stateMachineFieldInfo.GetValue(state);
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Parent State Machine", stateMachine, typeof(StateMachine), true);
+            EditorGUILayout.ObjectField("State Machine", stateMachine, typeof(StateMachine), true);
             GUI.enabled = true;
 
             FieldInfo isSubStateMachineFieldInfo = typeof(State).GetField("_isSubStateMachine", BindingFlags.NonPublic | BindingFlags.Instance);

@@ -38,6 +38,8 @@ namespace EMSP.App.StateMachineBehaviour
         #endregion
 
         #region Fields
+        private StateMachine _parentStateMachine;
+
         [SerializeField]
         private List<string> _statesNames = new List<string>();
 
@@ -55,10 +57,22 @@ namespace EMSP.App.StateMachineBehaviour
 
         #region Behaviour
         #region Properties
+        public StateMachine ParentStateMachine { get { return _parentStateMachine; } }
+
         public State State { get { return _currentState; } }
         #endregion
 
         #region Methods
+        private void Awake()
+        {
+            StateMachine[] stateMachines = GetComponentsInParent<StateMachine>();
+
+            if (stateMachines.Length > 1)
+            {
+                _parentStateMachine = stateMachines[1];
+            }
+        }
+
         private void Start()
         {
             if (_onStartSettings.EnterToStateOnStart)
@@ -88,6 +102,15 @@ namespace EMSP.App.StateMachineBehaviour
 
             _currentState = state;
             _currentState.OnEnter();
+        }
+
+        public void ExitFromCurrentState()
+        {
+            if (_currentState)
+            {
+                _currentState.OnExit();
+                _currentState = null;
+            }
         }
         #endregion
 
