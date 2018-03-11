@@ -103,18 +103,14 @@ namespace EMSP.Mathematic
             return ppInductionDirection;
         }
 
-        public Vector3 Calculate(Segment segment, Vector3 point, float amperage)
+        public Vector3 Calculate(Wire wire, Vector3 targetPoint, float amperage)
         {
-            return Calculate(segment.pointA, segment.pointB, point, amperage);
-        }
+            ReadOnlyCollection<Vector3> points = wire.Points;
 
-        public Vector3 Calculate(Wire wire, Vector3 point, float amperage)
-        {
             Vector3 result = new Vector3();
-
-            foreach (Segment segment in wire.Segments)
+            for (int i = 0; i < points.Count - 1; i++)
             {
-                result += Calculate(segment, point, amperage);
+                result += Calculate(points[i], points[i + 1], targetPoint, amperage);
             }
 
             return result;

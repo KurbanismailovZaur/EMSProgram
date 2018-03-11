@@ -1,14 +1,22 @@
-﻿using Numba;
+﻿using Numba.UI.Menu;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace EMSP
+namespace EMSP.UI.Menu.Contexts
 {
-	public class MaterialManager : MonoSingleton<MaterialManager> 
+    [RequireComponent(typeof(Context))]
+    public class EditContextMethods : ContextMethodsBase 
 	{
         #region Entities
         #region Enums
+        public enum ActionType
+        {
+            RemoveModel,
+            RemoveWiring
+        }
         #endregion
 
         #region Delegates
@@ -18,6 +26,8 @@ namespace EMSP
         #endregion
 
         #region Classes
+        [Serializable]
+        public class SelectedEvent : UnityEvent<EditContextMethods, ActionType> { }
         #endregion
 
         #region Interfaces
@@ -25,25 +35,29 @@ namespace EMSP
         #endregion
 
         #region Fields
-        [SerializeField]
-        private Material _modelDefault;
-
-        [SerializeField]
-        private Material _modelTransparent;
         #endregion
 
         #region Events
+        public SelectedEvent Selected = new SelectedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public Material DefaultMaterialForModel { get { return _modelDefault; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
+        public void RemoveModel()
+        {
+            Selected.Invoke(this, ActionType.RemoveModel);
+        }
+
+        public void RemoveWiring()
+        {
+            Selected.Invoke(this, ActionType.RemoveWiring);
+        }
         #endregion
 
         #region Indexers

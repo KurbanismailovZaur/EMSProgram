@@ -1,9 +1,11 @@
 ﻿using EMSP.Data.XLS;
 using Numba;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Communication
 {
@@ -20,6 +22,11 @@ namespace EMSP.Communication
         #endregion
 
         #region Classes
+        [Serializable]
+        public class WiringCreatedEvent : UnityEvent<List<Wire>> { }
+
+        [Serializable]
+        public class WiringDestroyedEvent : UnityEvent<List<Wire>> { }
         #endregion
 
         #region Interfaces
@@ -36,6 +43,9 @@ namespace EMSP.Communication
         #endregion
 
         #region Events
+        public WiringCreatedEvent WiringCreated = new WiringCreatedEvent();
+
+        public WiringDestroyedEvent WiringDestroyed = new WiringDestroyedEvent();
         #endregion
 
         #region Behaviour
@@ -55,34 +65,23 @@ namespace EMSP.Communication
 
             foreach (Wire wire in _wires)
             {
-                LineRenderer lineRenderer = new GameObject("Wire").AddComponent<LineRenderer>();
-                lineRenderer.widthMultiplier = 0.2f;
-                lineRenderer.numCornerVertices = 4;
-                lineRenderer.numCapVertices = 4;
-
-                Vector3[] points = wire.GetSequentialPoints().ToArray();
-                lineRenderer.positionCount = points.Length;
-                lineRenderer.SetPositions(points);
-
-                lineRenderer.sharedMaterial = _lineMaterial;
-
-                lineRenderer.transform.SetParent(transform, true);
+                wire.LineMaterial = _lineMaterial;
+                wire.transform.SetParent(transform, true);
             }
+
+            WiringCreated.Invoke(_wires);
         }
 
         public void DestroyWiring()
         {
-            List<Transform> childs = new List<Transform>();
-
-            foreach (Transform child in transform)
+            foreach (Wire wire in _wires)
             {
-                childs.Add(child);
+                Destroy(wire.gameObject);
             }
 
-            foreach (Transform child in childs)
-            {
-                Destroy(child.gameObject);
-            }
+            _wires.Clear();
+
+            WiringDestroyed.Invoke(_wires);
         }
 		#endregion
 		

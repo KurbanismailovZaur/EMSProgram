@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using EMSP.Communication;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace EMSP.App.StateMachineBehaviour.States.InProject
 {
-	public class EmptyProject : State 
+	public class EmptyProjectState : State 
 	{
         #region Entities
         #region Enums
@@ -25,6 +27,7 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         #endregion
 
         #region Fields
+        [Header("Menus")]
         [SerializeField]
         private Button _removeModelButton;
 
@@ -47,13 +50,32 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         {
             _removeModelButton.interactable = false;
             _removeWiringButton.interactable = false;
+
+            ModelManager.Instance.ModelCreated.AddListener(ModelManager_ModelCreated);
+            WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
         }
+
         #endregion
 
         #region Indexers
         #endregion
 
         #region Events handlers
+        private void ModelManager_ModelCreated(Model model)
+        {
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelCreated);
+            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
+
+            _parentStateMachine.MoveToState("WithModel");
+        }
+
+        private void WiringManager_WiringCreated(List<Wire> wires)
+        {
+            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelCreated);
+
+            _parentStateMachine.MoveToState("WithWiring");
+        }
         #endregion
         #endregion
     }

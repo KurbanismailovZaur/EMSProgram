@@ -1,11 +1,11 @@
-﻿using Numba;
+﻿using Numba.UI.Menu;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP
+namespace EMSP.UI.Menu.Contexts
 {
-	public class MaterialManager : MonoSingleton<MaterialManager> 
+	public abstract class ContextMethodsBase : MonoBehaviour 
 	{
         #region Entities
         #region Enums
@@ -25,11 +25,9 @@ namespace EMSP
         #endregion
 
         #region Fields
-        [SerializeField]
-        private Material _modelDefault;
+        protected Context _context;
 
-        [SerializeField]
-        private Material _modelTransparent;
+        protected Panel _panel;
         #endregion
 
         #region Events
@@ -37,13 +35,19 @@ namespace EMSP
 
         #region Behaviour
         #region Properties
-        public Material DefaultMaterialForModel { get { return _modelDefault; } }
+        public Panel Panel { get { return _panel; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
+        protected virtual void Awake()
+        {
+            _context = GetComponent<Context>();
+
+            _panel = ((Group)_context.ContextContainer).Panel;
+        }
         #endregion
 
         #region Indexers

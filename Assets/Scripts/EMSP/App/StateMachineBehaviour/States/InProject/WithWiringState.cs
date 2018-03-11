@@ -1,12 +1,13 @@
-﻿using EMSP.App;
+﻿using EMSP.Communication;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.App.StateMachineBehaviour.States
+namespace EMSP.App.StateMachineBehaviour.States.InProject
 {
-	public class OnlyMenuState : State 
+	public class WithWiringState : State
 	{
         #region Entities
         #region Enums
@@ -28,18 +29,6 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Fields
         [Header("Menus")]
         [SerializeField]
-        private Button _saveProjectButton;
-
-        [SerializeField]
-        private Button _closeProjectButton;
-
-        [SerializeField]
-        private Button _importModelButton;
-
-        [SerializeField]
-        private Button _importWiringButton;
-
-        [SerializeField]
         private Button _removeModelButton;
 
         [SerializeField]
@@ -59,16 +48,11 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
-            _saveProjectButton.interactable = false;
-            _closeProjectButton.interactable = false;
-            _importModelButton.interactable = false;
-            _importWiringButton.interactable = false;
             _removeModelButton.interactable = false;
-            _removeWiringButton.interactable = false;
+            _removeWiringButton.interactable = true;
 
-            GameFacade.Instance.DeactivateProjectEnvironment();
-
-            ProjectManager.Instance.ProjectCreated.AddListener(ProjectManager_ProjectCreated);
+            WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
+            ModelManager.Instance.ModelCreated.AddListener(ModelManager_ModelCreated);
         }
         #endregion
 
@@ -76,11 +60,20 @@ namespace EMSP.App.StateMachineBehaviour.States
         #endregion
 
         #region Events handlers
-        private void ProjectManager_ProjectCreated(Project project)
+        private void WiringManager_WiringDestroyed(List<Wire> wires)
         {
-            ProjectManager.Instance.ProjectCreated.RemoveListener(ProjectManager_ProjectCreated);
+            WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelCreated);
 
-            _parentStateMachine.MoveToState("InProject");
+            _parentStateMachine.MoveToState("EmptyProject");
+        }
+
+        private void ModelManager_ModelCreated(Model model)
+        {
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelCreated);
+            WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
+
+            _parentStateMachine.MoveToState("WithModelAndWiring");
         }
         #endregion
         #endregion

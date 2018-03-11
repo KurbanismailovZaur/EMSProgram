@@ -51,5 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0060ed0cf3f4b58419ecc57c74c09c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultMaterialForModel: {fileID: 2100000, guid: 92e234767a8fefc4cb89224d5af71e31,
-    type: 2}
+  _modelDefault: {fileID: 2100000, guid: 92e234767a8fefc4cb89224d5af71e31, type: 2}
+  _modelTransparent: {fileID: 2100000, guid: 6416d4954aa706241a2434c92c1c3618, type: 2}

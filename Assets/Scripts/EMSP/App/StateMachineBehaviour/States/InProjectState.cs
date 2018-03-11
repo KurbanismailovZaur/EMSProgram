@@ -63,11 +63,6 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             _parentStateMachine.MoveToState("EmptyProject");
         }
-
-        private void MoveToOnlyMenuState()
-        {
-            _parentStateMachine.MoveToState("OnlyMenu");
-        }
         #endregion
 
         #region Indexers
@@ -78,7 +73,7 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             ProjectManager.Instance.ProjectDestroyed.RemoveListener(ProjectManager_ProjectDestroyed);
 
-            MoveToOnlyMenuState();
+            _parentStateMachine.MoveToState("OnlyMenu");
         }
         #endregion
         #endregion

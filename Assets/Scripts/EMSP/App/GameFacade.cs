@@ -2,7 +2,7 @@
 using EMSP.Control;
 using EMSP.UI;
 using EMSP.UI.Dialogs.SaveProject;
-using EMSP.UI.Menu;
+using EMSP.UI.Menu.Contexts;
 using Numba;
 using SFB;
 using System.Collections;
@@ -57,7 +57,6 @@ namespace EMSP.App
         {
             if (ProjectManager.Instance.Project != null && !ProjectManager.Instance.Project.IsChanged)
             {
-                BlockCamera();
                 _saveProjectDialog.Chosen.AddListener(SaveProjectDialog_Chosen);
                 _saveProjectDialog.ShowModal();
                 return;
@@ -115,6 +114,18 @@ namespace EMSP.App
         }
         #endregion
 
+        #region Edit context methods
+        private void RemoveModel()
+        {
+            ModelManager.Instance.DestroyModel();
+        }
+
+        private void RemoveWiring()
+        {
+            WiringManager.Instance.DestroyWiring();
+        }
+        #endregion
+
         private void CreateNewProject()
         {
             ProjectManager.Instance.CloseProject();
@@ -138,16 +149,6 @@ namespace EMSP.App
         {
             _viewBlocker.BlockView();
         }
-
-        private void BlockCamera()
-        {
-            print("Block Camera");
-        }
-
-        private void UnblockCamera()
-        {
-            print("Unblock Camera");
-        }
         #endregion
 
         #region Indexers
@@ -162,10 +163,10 @@ namespace EMSP.App
                     CreateNewProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.OpenProject:
-                    print("Open Project");
+                    OpenProject();
                     break;
                 case FileContextMethods.ActionType.SaveProject:
-                    print("Save Project");
+                    SaveProject();
                     break;
                 case FileContextMethods.ActionType.CloseProject:
                     CloseProject();
@@ -184,9 +185,23 @@ namespace EMSP.App
             fileContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
+        public void EditContextMethods_Selected(EditContextMethods editContextMethods, EditContextMethods.ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case EditContextMethods.ActionType.RemoveModel:
+                    RemoveModel();
+                    break;
+                case EditContextMethods.ActionType.RemoveWiring:
+                    RemoveWiring();
+                    break;
+            }
+
+            editContextMethods.Panel.HideActiveContextAndStopAutoShow();
+        }
+
         private void SaveProjectDialog_Chosen(SaveProjectDialog saveProjectDialog, SaveProjectDialog.Action action)
         {
-            UnblockCamera();
             _saveProjectDialog.Chosen.RemoveListener(SaveProjectDialog_Chosen);
 
             switch (action)

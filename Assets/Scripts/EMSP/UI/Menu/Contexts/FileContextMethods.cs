@@ -3,10 +3,10 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace EMSP.UI.Menu
+namespace EMSP.UI.Menu.Contexts
 {
     [RequireComponent(typeof(Context))]
-    public class FileContextMethods : MonoBehaviour
+    public class FileContextMethods : ContextMethodsBase
     {
         #region Entities
         #region Enums
@@ -38,9 +38,6 @@ namespace EMSP.UI.Menu
         #endregion
 
         #region Fields
-        private Context _context;
-
-        private Panel _panel;
         #endregion
 
         #region Events
@@ -49,20 +46,12 @@ namespace EMSP.UI.Menu
 
         #region Behaviour
         #region Properties
-        public Panel Panel { get { return _panel; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            _context = GetComponent<Context>();
-
-            _panel = ((Group)_context.ContextContainer).Panel;
-        }
-
         public void NewProject()
         {
             Selected.Invoke(this, ActionType.NewProject);

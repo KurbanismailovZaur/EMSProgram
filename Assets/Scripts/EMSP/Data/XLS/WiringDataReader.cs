@@ -50,14 +50,16 @@ namespace EMSP.Data.XLS
                 MyBook = new HSSFWorkbook(stream);
             }
 
+            Wire.Factory wireFactory = new Wire.Factory();
             List<Wire> wires = new List<Wire>();
 
             for (int i = 0; i < MyBook.NumberOfSheets; i++)
             {
                 ISheet sheet = MyBook.GetSheetAt(i);
 
-                Wire wire = new Wire();
+                Wire wire = wireFactory.Create();
 
+                List<Segment> segments = new List<Segment>();
                 for (int j = 5; j <= sheet.LastRowNum; j++)
                 {
                     IRow row = sheet.GetRow(j);
@@ -68,8 +70,15 @@ namespace EMSP.Data.XLS
                     }
 
                     Segment segment = ReadSegment(row);
-                    wire.Add(segment);
+                    segments.Add(segment);
                 }
+
+                for (int j = 0; j < segments.Count; j++)
+                {
+                    wire.Add(segments[j].pointA);
+                }
+
+                wire.Add(segments[segments.Count - 1].pointB);
 
                 wires.Add(wire);
             }

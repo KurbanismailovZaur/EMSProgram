@@ -6,8 +6,9 @@ using UnityEngine;
 
 namespace EMSP.Communication
 {
-	public class Wire : IEnumerable<Segment>
-	{
+    [RequireComponent(typeof(LineRenderer))]
+    public class Wire : MonoBehaviour, IEnumerable<Vector3>
+    {
         #region Entities
         #region Enums
         #endregion
@@ -19,6 +20,20 @@ namespace EMSP.Communication
         #endregion
 
         #region Classes
+        public class Factory
+        {
+            public Wire Create()
+            {
+                Wire wire = new GameObject("Wire").AddComponent<Wire>();
+
+                wire._lineRenderer = wire.GetComponent<LineRenderer>();
+                wire._lineRenderer.widthMultiplier = 0.02f;
+                wire._lineRenderer.numCornerVertices = 4;
+                wire._lineRenderer.numCapVertices = 4;
+
+                return wire;
+            }
+        }
         #endregion
 
         #region Interfaces
@@ -26,7 +41,9 @@ namespace EMSP.Communication
         #endregion
 
         #region Fields
-        private List<Segment> _segments = new List<Segment>();
+        private LineRenderer _lineRenderer;
+
+        List<Vector3> _points = new List<Vector3>();
         #endregion
 
         #region Events
@@ -34,54 +51,51 @@ namespace EMSP.Communication
 
         #region Behaviour
         #region Properties
-        public ReadOnlyCollection<Segment> Segments { get { return _segments.AsReadOnly(); } }
-        #endregion
+        public ReadOnlyCollection<Vector3> Points { get { return _points.AsReadOnly(); } }
 
-        #region Constructors
-        public Wire() : this(new Segment[0]) { }
-
-        public Wire(IEnumerable<Segment> segments)
+        public Material LineMaterial
         {
-            _segments.AddRange(segments);
+            get { return _lineRenderer.sharedMaterial; }
+            set { _lineRenderer.sharedMaterial = value; }
         }
         #endregion
 
+        #region Constructors
+        private Wire() { }
+        #endregion
+
         #region Methods
-        public IEnumerator<Segment> GetEnumerator()
+        public IEnumerator<Vector3> GetEnumerator()
         {
-            return _segments.GetEnumerator();
+            return _points.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _segments.GetEnumerator();
+            return _points.GetEnumerator();
         }
 
-        public void Add(Segment segment)
+        public void Add(Vector3 point)
         {
-            _segments.Add(segment);
+            _points.Add(point);
+            UpdateLineRendererPoints();
         }
 
-        public void Add(Vector3 pointA, Vector3 pointB)
+        public void AddRange(IEnumerable<Vector3> points)
         {
-            Add(new Segment(pointA, pointB));
+            _points.AddRange(points);
+            UpdateLineRendererPoints();
         }
 
-        public List<Vector3> GetSequentialPoints()
+        public void Add(float x, float y, float z)
         {
-            List<Vector3> points = new List<Vector3>();
+            Add(new Vector3(x, y, z));
+        }
 
-            foreach (Segment segment in Segments)
-            {
-                points.Add(segment.pointA);
-            }
-
-            if (Segments.Count != 0)
-            {
-                points.Add(Segments[Segments.Count - 1].pointB);
-            }
-
-            return points;
+        private void UpdateLineRendererPoints()
+        {
+            _lineRenderer.positionCount = _points.Count;
+            _lineRenderer.SetPositions(_points.ToArray());
         }
         #endregion
 
