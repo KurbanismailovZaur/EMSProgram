@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace EMSP.App.StateMachineBehaviour.States
 {
-	public class EmptyState : State 
+	public class OnlyMenuState : State 
 	{
         #region Entities
         #region Enums
@@ -38,6 +38,12 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         [SerializeField]
         private Button _importWiringButton;
+
+        [SerializeField]
+        private Button _removeModelButton;
+
+        [SerializeField]
+        private Button _removeWiringButton;
         #endregion
 
         #region Events
@@ -57,15 +63,17 @@ namespace EMSP.App.StateMachineBehaviour.States
             _closeProjectButton.interactable = false;
             _importModelButton.interactable = false;
             _importWiringButton.interactable = false;
+            _removeModelButton.interactable = false;
+            _removeWiringButton.interactable = false;
 
             GameFacade.Instance.DeactivateProjectEnvironment();
 
             ProjectManager.Instance.ProjectCreated.AddListener(ProjectManager_ProjectCreated);
         }
 
-        private void MoveToDefaultState()
+        private void MoveToInProjectState()
         {
-            _parentStateMachine.MoveToState("Default");
+            _parentStateMachine.MoveToState("InProject");
         }
         #endregion
 
@@ -77,7 +85,7 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             ProjectManager.Instance.ProjectCreated.RemoveListener(ProjectManager_ProjectCreated);
 
-            MoveToDefaultState();
+            MoveToInProjectState();
         }
         #endregion
         #endregion

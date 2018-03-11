@@ -39,10 +39,10 @@ namespace EMSP.App.StateMachineBehaviour
 
         #region Fields
         [SerializeField]
-        private List<string> _statesNames;
+        private List<string> _statesNames = new List<string>();
 
         [SerializeField]
-        private List<State> _states;
+        private List<State> _states = new List<State>();
 
         [SerializeField]
         private OnStartSettings _onStartSettings;
@@ -69,7 +69,14 @@ namespace EMSP.App.StateMachineBehaviour
 
         public void MoveToState(string stateName)
         {
-            MoveToState(_states[_statesNames.IndexOf(stateName)]);
+            int index = _statesNames.IndexOf(stateName);
+
+            if (index == -1)
+            {
+                throw new ArgumentException(string.Format("State with name \"{0}\" not exist.", stateName));
+            }
+
+            MoveToState(_states[index]);
         }
 
         private void MoveToState(State state)

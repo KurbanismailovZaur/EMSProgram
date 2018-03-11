@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace EMSP.App.StateMachineBehaviour.States
 {
-    public class DefaultState : State
+    public class InProjectState : State
     {
         #region Entities
         #region Enums
@@ -60,11 +60,13 @@ namespace EMSP.App.StateMachineBehaviour.States
             GameFacade.Instance.ActivateProjectEnvironment();
 
             ProjectManager.Instance.ProjectDestroyed.AddListener(ProjectManager_ProjectDestroyed);
+
+            _parentStateMachine.MoveToState("EmptyProject");
         }
 
-        private void MoveToEmptyState()
+        private void MoveToOnlyMenuState()
         {
-            _parentStateMachine.MoveToState("Empty");
+            _parentStateMachine.MoveToState("OnlyMenu");
         }
         #endregion
 
@@ -76,7 +78,7 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             ProjectManager.Instance.ProjectDestroyed.RemoveListener(ProjectManager_ProjectDestroyed);
 
-            MoveToEmptyState();
+            MoveToOnlyMenuState();
         }
         #endregion
         #endregion

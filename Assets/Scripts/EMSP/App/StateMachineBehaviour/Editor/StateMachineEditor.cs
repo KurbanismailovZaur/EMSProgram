@@ -29,6 +29,8 @@ namespace EMSP.App.StateMachineBehaviour.Editor
 
         #region Fields
         private bool _foldoutFlag = true;
+
+        private int _popupIndex = 0;
         #endregion
 
         #region Events
@@ -58,16 +60,16 @@ namespace EMSP.App.StateMachineBehaviour.Editor
             EditorGUI.indentLevel = 1;
             _foldoutFlag = EditorGUILayout.Foldout(_foldoutFlag, "States", true);
 
+            #region Get states names and objects
+            FieldInfo statesNamesFieldInfo = typeof(StateMachine).GetField("_statesNames", BindingFlags.Instance | BindingFlags.NonPublic);
+            List<string> statesNames = (List<string>)statesNamesFieldInfo.GetValue(serializedObject.targetObject);
+
+            FieldInfo statesFieldInfo = typeof(StateMachine).GetField("_states", BindingFlags.Instance | BindingFlags.NonPublic);
+            List<State> states = (List<State>)statesFieldInfo.GetValue(serializedObject.targetObject);
+            #endregion
+
             if (_foldoutFlag)
             {
-                #region Get states names and objects
-                FieldInfo statesNamesFieldInfo = typeof(StateMachine).GetField("_statesNames", BindingFlags.Instance | BindingFlags.NonPublic);
-                List<string> statesNames = (List<string>)statesNamesFieldInfo.GetValue(serializedObject.targetObject);
-
-                FieldInfo statesFieldInfo = typeof(StateMachine).GetField("_states", BindingFlags.Instance | BindingFlags.NonPublic);
-                List<State> states = (List<State>)statesFieldInfo.GetValue(serializedObject.targetObject);
-                #endregion
-
                 if (statesNames.Count == 0)
                 {
                     EditorGUILayout.LabelField("No one states was created.");
@@ -194,6 +196,8 @@ namespace EMSP.App.StateMachineBehaviour.Editor
             GUI.color = oldColor;
             GUI.enabled = true;
             #endregion
+
+            EditorUtility.SetDirty(target);
 
             serializedObject.ApplyModifiedProperties();
         }
