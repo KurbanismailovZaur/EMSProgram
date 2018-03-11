@@ -49,22 +49,22 @@ namespace EMSP.UI.Control
 		#region Methods
         private void MoveLeft()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(-_deltaValue, 0f));
+            _orbitController.ApplyDeltasToTransform(new Vector2(_deltaValue, 0f));
         }
 
         private void MoveRight()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(_deltaValue, 0f));
+            _orbitController.ApplyDeltasToTransform(new Vector2(-_deltaValue, 0f));
         }
 
         private void MoveUp()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(0f, _deltaValue));
+            _orbitController.ApplyDeltasToTransform(new Vector2(0f, -_deltaValue));
         }
 
         private void MoveDown()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(0f, -_deltaValue));
+            _orbitController.ApplyDeltasToTransform(new Vector2(0f, _deltaValue));
         }
 
         private void ZoomIn()
