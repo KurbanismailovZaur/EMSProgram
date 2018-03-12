@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace EMSP.Communication
 {
-	public class WiringManager : MonoSingleton<WiringManager>
+    public class WiringManager : MonoSingleton<WiringManager>
     {
         #region Entities
         #region Enums
@@ -46,11 +46,32 @@ namespace EMSP.Communication
         public WiringCreatedEvent WiringCreated = new WiringCreatedEvent();
 
         public WiringDestroyedEvent WiringDestroyed = new WiringDestroyedEvent();
+
+        public UnityEvent WiringVisibilityChanged = new UnityEvent();
         #endregion
 
         #region Behaviour
         #region Properties
         public ReadOnlyCollection<Wire> Wires { get { return _wires.AsReadOnly(); } }
+
+        public bool IsWiringVisible
+        {
+            get { return _wires[0].gameObject.activeSelf; }
+            set
+            {
+                if (_wires[0].gameObject.activeSelf == value)
+                {
+                    return;
+                }
+
+                foreach (Wire wire in _wires)
+                {
+                    wire.gameObject.SetActive(value);
+                }
+
+                WiringVisibilityChanged.Invoke();
+            }
+        }
         #endregion
 
         #region Constructors
@@ -83,13 +104,13 @@ namespace EMSP.Communication
 
             WiringDestroyed.Invoke(_wires);
         }
-		#endregion
-		
-		#region Indexers
-		#endregion
-		
-		#region Events handlers
-		#endregion
-		#endregion
-	}
+        #endregion
+
+        #region Indexers
+        #endregion
+
+        #region Events handlers
+        #endregion
+        #endregion
+    }
 }

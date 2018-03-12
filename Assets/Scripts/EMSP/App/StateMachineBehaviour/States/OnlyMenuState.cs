@@ -46,7 +46,13 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _editRemoveWiringButton;
 
         [SerializeField]
+        private Button _viewModelIsVisibilityButton;
+
+        [SerializeField]
         private Button _viewModelIsTransparentButton;
+
+        [SerializeField]
+        private Button _viewWiringIsVisibilityButton;
 
         [SerializeField]
         private Button _viewGridVisibilityButton;
@@ -71,8 +77,10 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileImportWiringButton.interactable = false;
             _editRemoveModelButton.interactable = false;
             _editRemoveWiringButton.interactable = false;
-            _viewGridVisibilityButton.interactable = false;
+            _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
+            _viewWiringIsVisibilityButton.interactable = false;
+            _viewGridVisibilityButton.interactable = false;
 
             GameFacade.Instance.DeactivateProjectEnvironment();
 

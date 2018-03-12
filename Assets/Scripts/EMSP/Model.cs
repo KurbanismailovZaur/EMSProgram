@@ -51,6 +51,9 @@ namespace EMSP
 
         [Serializable]
         public class TransparentStateChangedEvent : UnityEvent<Model, bool> { }
+
+        [Serializable]
+        public class VisibilityStateChangedEvent : UnityEvent<Model, bool> { }
         #endregion
 
         #region Interfaces
@@ -60,11 +63,15 @@ namespace EMSP
         #region Fields
         private bool _isTransparent;
 
+        private bool _isVisible = true;
+
         private Material[] _sharedMaterials;
         #endregion
 
         #region Events
         public TransparentStateChangedEvent TransparentStateChanged = new TransparentStateChangedEvent();
+
+        public VisibilityStateChangedEvent VisibilityStateChanged = new VisibilityStateChangedEvent();
         #endregion
 
         #region Behaviour
@@ -84,6 +91,24 @@ namespace EMSP
                 _isTransparent = value;
 
                 TransparentStateChanged.Invoke(this, _isTransparent);
+            }
+        }
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set
+            {
+                if (_isVisible == value)
+                {
+                    return;
+                }
+
+                gameObject.SetActive(value);
+
+                _isVisible = value;
+
+                VisibilityStateChanged.Invoke(this, _isVisible);
             }
         }
         #endregion

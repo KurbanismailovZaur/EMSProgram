@@ -35,7 +35,13 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         private Button _removeWiringButton;
 
         [SerializeField]
+        private Button _viewModelIsVisibilityButton;
+
+        [SerializeField]
         private Button _viewModelIsTransparentButton;
+
+        [SerializeField]
+        private Button _viewWiringIsVisibilityButton;
         #endregion
 
         #region Events
@@ -53,7 +59,9 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         {
             _removeModelButton.interactable = false;
             _removeWiringButton.interactable = false;
+            _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
+            _viewWiringIsVisibilityButton.interactable = false;
 
             ModelManager.Instance.ModelCreated.AddListener(ModelManager_ModelCreated);
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
