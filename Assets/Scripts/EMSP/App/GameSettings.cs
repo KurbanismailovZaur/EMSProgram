@@ -34,7 +34,7 @@ namespace EMSP.App
 
         private Vector3 _orbitControllerDefaultTargetVector = Vector3.up;
 
-        private Vector3 _orbitControllerDefaultTargetUpVector = Vector3.forward;
+        private float _orbitControllerDefaultTargetUpAngle = 0f;
 
         private float _orbitCOntrollerDefaultDistance = 8f;
         #endregion
@@ -52,7 +52,7 @@ namespace EMSP.App
 
         public Vector3 OrbitControllerDefaultTargetVector { get { return _orbitControllerDefaultTargetVector; } }
 
-        public Vector3 OrbitControllerDefaultTargetUpVector { get { return _orbitControllerDefaultTargetUpVector; } }
+        public float OrbitControllerDefaultTargetUpAngle { get { return _orbitControllerDefaultTargetUpAngle; } }
 
         public float OrbitControllerDefaultDistance { get { return _orbitCOntrollerDefaultDistance; } }
         #endregion

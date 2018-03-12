@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace EMSP.Environment
+namespace EMSP.Environment.Metrics
 {
     public class Grid : MonoSingleton<Grid>
     {

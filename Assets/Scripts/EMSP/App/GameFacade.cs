@@ -1,5 +1,6 @@
 ﻿using EMSP.Communication;
 using EMSP.Control;
+using EMSP.Environment.View;
 using EMSP.UI;
 using EMSP.UI.Dialogs.SaveProject;
 using EMSP.UI.Menu.Contexts;
@@ -8,7 +9,7 @@ using SFB;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Grid = EMSP.Environment.Grid;
+using Grid = EMSP.Environment.Metrics.Grid;
 
 namespace EMSP.App
 {
@@ -139,8 +140,7 @@ namespace EMSP.App
 
         private void ResetOrbitController()
         {
-            _orbitController.TargetVector = GameSettings.Instance.OrbitControllerDefaultTargetVector;
-            _orbitController.TargetUpVector = GameSettings.Instance.OrbitControllerDefaultTargetUpVector;
+            _orbitController.SetTargetVectorAndZAngle(GameSettings.Instance.OrbitControllerDefaultTargetVector, GameSettings.Instance.OrbitControllerDefaultTargetUpAngle);
             _orbitController.Distance = GameSettings.Instance.OrbitControllerDefaultDistance;
         }
 
@@ -231,6 +231,31 @@ namespace EMSP.App
                     CreateNewProject();
                     break;
                 case SaveProjectDialog.Action.Cancel:
+                    break;
+            }
+        }
+
+        public void ViewCube_AxisSelected(ViewCube viewCube, AxisDirection axisDirection)
+        {
+            switch (axisDirection)
+            {
+                case AxisDirection.Right:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.right, 0f);
+                    break;
+                case AxisDirection.Up:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.up, 0f);
+                    break;
+                case AxisDirection.Forward:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.forward, 0f);
+                    break;
+                case AxisDirection.Left:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.left, 0f);
+                    break;
+                case AxisDirection.Down:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.down, 0f);
+                    break;
+                case AxisDirection.Back:
+                    _orbitController.SetTargetVectorAndZAngle(Vector3.back, 0f);
                     break;
             }
         }

@@ -218,6 +218,31 @@ namespace EMSP
             //transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f);
         }
 
+        public void SetTargetVectorAndZAngle(Vector3 vector, float angle)
+        {
+            _targetVector = vector.normalized;
+
+            if (_targetVector == Vector3.up)
+            {
+                _targetUpVector = Quaternion.AngleAxis(angle, Vector3.down) * Vector3.forward;
+                return;
+            }
+
+            if (_targetVector == Vector3.down)
+            {
+                _targetUpVector = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.back;
+                return;
+            }
+
+            Vector3 relativeXAxis = Vector3.Cross(_targetVector, Vector3.up).normalized;
+            Vector3 relativeYAxis = Vector3.Cross(relativeXAxis, _targetVector).normalized;
+
+            Quaternion axisRotation = Quaternion.AngleAxis(angle, _targetVector);
+
+            _targetUpVector = axisRotation * relativeYAxis;
+        }
+
+#if UNITY_EDITOR
         private void DrawDebugLines()
         {
             Debug.DrawLine(_origin, _origin + _targetVector, Color.red);
@@ -225,13 +250,14 @@ namespace EMSP
             Debug.DrawLine(_origin, _origin + _currentVector, Color.yellow);
             Debug.DrawLine(_origin, _origin + _currentUpVector, Color.white);
         }
-        #endregion
+#endif
+#endregion
 
         #region Indexers
         #endregion
 
         #region Events handlers
         #endregion
-        #endregion
+#endregion
     }
 }

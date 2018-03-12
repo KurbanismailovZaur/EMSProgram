@@ -1,13 +1,13 @@
-﻿using EMSP.App;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Grid = EMSP.Environment.Metrics.Grid;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-namespace EMSP.UI.Menu.Contexts.View
+namespace EMSP.Environment.View
 {
-	public class GridVisibilitySwitcher : MonoBehaviour 
+	public class Axis : MonoBehaviour 
 	{
         #region Entities
         #region Enums
@@ -20,6 +20,8 @@ namespace EMSP.UI.Menu.Contexts.View
         #endregion
 
         #region Classes
+        [Serializable]
+        public class SelectedEvent : UnityEvent<Axis, AxisDirection> { }
         #endregion
 
         #region Interfaces
@@ -28,10 +30,11 @@ namespace EMSP.UI.Menu.Contexts.View
 
         #region Fields
         [SerializeField]
-        private Image _stateImage;
+        private AxisDirection _direction;
         #endregion
 
         #region Events
+        public SelectedEvent Selected = new SelectedEvent();
         #endregion
 
         #region Behaviour
@@ -42,26 +45,17 @@ namespace EMSP.UI.Menu.Contexts.View
         #endregion
 
         #region Methods
-        private void TrySwitchVisibility()
-        {
-            Grid.Instance.Visibility = !Grid.Instance.Visibility;
-        }
-		#endregion
-		
-		#region Indexers
-		#endregion
-			
-		#region Events handlers
-        public void Button_OnClick()
-        {
-            TrySwitchVisibility();
-        }
+        #endregion
 
-        public void Grid_VisibilityChanged(Grid grid, bool state)
+        #region Indexers
+        #endregion
+
+        #region Events handlers
+        public void EventTrigger_PointerClick(BaseEventData eventData)
         {
-            _stateImage.enabled = state;
+            Selected.Invoke(this, _direction);
         }
-        #endregion
-        #endregion
-    }
+		#endregion
+		#endregion
+	}
 }
