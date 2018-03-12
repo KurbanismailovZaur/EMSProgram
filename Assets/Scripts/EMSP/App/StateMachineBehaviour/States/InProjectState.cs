@@ -27,16 +27,19 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Fields
         [Header("Menus")]
         [SerializeField]
-        private Button _saveProjectButton;
+        private Button _fileSaveProjectButton;
 
         [SerializeField]
-        private Button _closeProjectButton;
+        private Button _fileCloseProjectButton;
 
         [SerializeField]
-        private Button _importModelButton;
+        private Button _fileImportModelButton;
 
         [SerializeField]
-        private Button _importWiringButton;
+        private Button _fileImportWiringButton;
+
+        [SerializeField]
+        private Button _viewGridVisibilityButton;
         #endregion
 
         #region Events
@@ -52,12 +55,13 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
-            _saveProjectButton.interactable = true;
-            _closeProjectButton.interactable = true;
-            _importModelButton.interactable = true;
-            _importWiringButton.interactable = true;
+            _fileSaveProjectButton.interactable = true;
+            _fileCloseProjectButton.interactable = true;
+            _fileImportModelButton.interactable = true;
+            _fileImportWiringButton.interactable = true;
+            _viewGridVisibilityButton.interactable = true;
 
-            GameFacade.Instance.ActivateProjectEnvironment();
+            GameFacade.Instance.InitializeActivateProjectEnvironment();
 
             ProjectManager.Instance.ProjectDestroyed.AddListener(ProjectManager_ProjectDestroyed);
 

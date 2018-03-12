@@ -28,22 +28,28 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Fields
         [Header("Menus")]
         [SerializeField]
-        private Button _saveProjectButton;
+        private Button _fileSaveProjectButton;
 
         [SerializeField]
-        private Button _closeProjectButton;
+        private Button _fileCloseProjectButton;
 
         [SerializeField]
-        private Button _importModelButton;
+        private Button _fileImportModelButton;
 
         [SerializeField]
-        private Button _importWiringButton;
+        private Button _fileImportWiringButton;
 
         [SerializeField]
-        private Button _removeModelButton;
+        private Button _editRemoveModelButton;
 
         [SerializeField]
-        private Button _removeWiringButton;
+        private Button _editRemoveWiringButton;
+
+        [SerializeField]
+        private Button _viewModelIsTransparentButton;
+
+        [SerializeField]
+        private Button _viewGridVisibilityButton;
         #endregion
 
         #region Events
@@ -59,12 +65,14 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
-            _saveProjectButton.interactable = false;
-            _closeProjectButton.interactable = false;
-            _importModelButton.interactable = false;
-            _importWiringButton.interactable = false;
-            _removeModelButton.interactable = false;
-            _removeWiringButton.interactable = false;
+            _fileSaveProjectButton.interactable = false;
+            _fileCloseProjectButton.interactable = false;
+            _fileImportModelButton.interactable = false;
+            _fileImportWiringButton.interactable = false;
+            _editRemoveModelButton.interactable = false;
+            _editRemoveWiringButton.interactable = false;
+            _viewGridVisibilityButton.interactable = false;
+            _viewModelIsTransparentButton.interactable = false;
 
             GameFacade.Instance.DeactivateProjectEnvironment();
 

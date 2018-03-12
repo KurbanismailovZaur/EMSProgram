@@ -1,12 +1,14 @@
-﻿using System.Collections;
+﻿using EMSP.App;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Grid = EMSP.Environment.Grid;
 
 namespace EMSP.UI.Menu.Contexts.View
 {
-    public class ModelMaterialSwitcher : MonoBehaviour
-    {
+	public class GridVisibilitySwitcher : MonoBehaviour 
+	{
         #region Entities
         #region Enums
         #endregion
@@ -40,32 +42,22 @@ namespace EMSP.UI.Menu.Contexts.View
         #endregion
 
         #region Methods
-        private void TryToSwitchModelMaterial()
+        private void TrySwitchVisibility()
         {
-            ModelManager.Instance.Model.IsTransparent = !ModelManager.Instance.Model.IsTransparent;
+            Grid.Instance.Visibility = !Grid.Instance.Visibility;
         }
-        #endregion
-
-        #region Indexers
-        #endregion
-
-        #region Events handlers
+		#endregion
+		
+		#region Indexers
+		#endregion
+			
+		#region Events handlers
         public void Button_OnClick()
         {
-            TryToSwitchModelMaterial();
+            TrySwitchVisibility();
         }
 
-        public void ModelManager_ModelCreated(Model model)
-        {
-            model.TransparentStateChanged.AddListener(Model_TransparentStateChanged);
-        }
-
-        public void ModelManager_ModelDestroyed(Model model)
-        {
-            _stateImage.enabled = false;
-        }
-
-        private void Model_TransparentStateChanged(Model model, bool state)
+        public void Grid_VisibilityChanged(Grid grid, bool state)
         {
             _stateImage.enabled = state;
         }

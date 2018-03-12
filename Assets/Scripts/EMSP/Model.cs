@@ -43,7 +43,7 @@ namespace EMSP
                     }
                 }
 
-                model._materials = uniqueMaterials.ToArray();
+                model._sharedMaterials = uniqueMaterials.ToArray();
 
                 return model;
             }
@@ -60,7 +60,7 @@ namespace EMSP
         #region Fields
         private bool _isTransparent;
 
-        private Material[] _materials;
+        private Material[] _sharedMaterials;
         #endregion
 
         #region Events
@@ -79,14 +79,7 @@ namespace EMSP
                     return;
                 }
 
-                if (value)
-                {
-                    SwitchMaterialsRenderModeTo(RenderMode.Fade);
-                }
-                else
-                {
-                    SwitchMaterialsRenderModeTo(RenderMode.Opaque);
-                }
+                SwitchMaterialsRenderModeTo(value ? RenderMode.Fade : RenderMode.Opaque);
 
                 _isTransparent = value;
 
@@ -133,17 +126,61 @@ namespace EMSP
         {
             if (renderMode == RenderMode.Opaque)
             {
-                foreach (Material material in _materials)
+                foreach (Material material in _sharedMaterials)
                 {
                     MakeMaterialOpaque(material);
                 }
             }
             else
             {
-                foreach (Material material in _materials)
+                foreach (Material material in _sharedMaterials)
                 {
                     MakeMaterialTransparent(material);
                 }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            List<Texture> textures = new List<Texture>();
+
+            foreach (Material material in _sharedMaterials)
+            {
+                if (material.mainTexture)
+                {
+                    textures.Add(material.mainTexture);
+                }
+
+                Texture normalMap = material.GetTexture("_BumpMap");
+                if (normalMap)
+                {
+                    textures.Add(normalMap);
+                }
+            }
+
+            foreach (Texture texture in textures)
+            {
+                Destroy(texture);
+            }
+
+            foreach (Material material in _sharedMaterials)
+            {
+                Destroy(material);
+            }
+
+            MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
+            List<Mesh> sharedMeshes = new List<Mesh>();
+            foreach (MeshFilter meshFilter in meshFilters)
+            {
+                if (!sharedMeshes.Contains(meshFilter.sharedMesh))
+                {
+                    sharedMeshes.Add(meshFilter.sharedMesh);
+                }
+            }
+
+            foreach (Mesh mesh in sharedMeshes)
+            {
+                Destroy(mesh);
             }
         }
         #endregion

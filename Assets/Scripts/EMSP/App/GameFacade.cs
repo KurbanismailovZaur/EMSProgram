@@ -8,6 +8,7 @@ using SFB;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Grid = EMSP.Environment.Grid;
 
 namespace EMSP.App
 {
@@ -77,7 +78,11 @@ namespace EMSP.App
 
         private void CloseProject()
         {
+            ModelManager.Instance.DestroyModel();
+            WiringManager.Instance.DestroyWiring();
             ProjectManager.Instance.CloseProject();
+
+            Resources.UnloadUnusedAssets();
         }
 
         private void ImportModel()
@@ -139,14 +144,16 @@ namespace EMSP.App
             _orbitController.Distance = GameSettings.Instance.OrbitControllerDefaultDistance;
         }
 
-        public void ActivateProjectEnvironment()
+        public void InitializeActivateProjectEnvironment()
         {
+            Grid.Instance.Visibility = true;
             ResetOrbitController();
             _viewBlocker.UnblockView();
         }
 
         public void DeactivateProjectEnvironment()
         {
+            Grid.Instance.Visibility = false;
             _viewBlocker.BlockView();
         }
         #endregion

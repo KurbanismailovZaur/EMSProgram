@@ -1,7 +1,9 @@
 ﻿using Numba;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Environment
 {
@@ -18,6 +20,8 @@ namespace EMSP.Environment
         #endregion
 
         #region Classes
+        [Serializable]
+        public class VisibilityChangedEvent : UnityEvent<Grid, bool> { }
         #endregion
 
         #region Interfaces
@@ -32,6 +36,7 @@ namespace EMSP.Environment
         #endregion
 
         #region Events
+        public VisibilityChangedEvent VisibilityChanged = new VisibilityChangedEvent();
         #endregion
 
         #region Behaviour
@@ -41,8 +46,15 @@ namespace EMSP.Environment
             get { return _visibility; }
             set
             {
+                if (_visibility == value)
+                {
+                    return;
+                }
+
+                _gridRenderer.enabled = value;
                 _visibility = value;
-                _gridRenderer.enabled = _visibility;
+
+                VisibilityChanged.Invoke(this, _visibility);
             }
         }
         #endregion
