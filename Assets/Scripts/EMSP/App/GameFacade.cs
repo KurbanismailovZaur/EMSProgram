@@ -200,6 +200,16 @@ namespace EMSP.App
             editContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
+        public void ViewContextMethods_Selected(ViewContextMethods viewContextMethods, ViewContextMethods.ActionType actionType)
+        {
+            switch (actionType)
+            {
+                
+            }
+
+            viewContextMethods.Panel.HideActiveContextAndStopAutoShow();
+        }
+
         private void SaveProjectDialog_Chosen(SaveProjectDialog saveProjectDialog, SaveProjectDialog.Action action)
         {
             _saveProjectDialog.Chosen.RemoveListener(SaveProjectDialog_Chosen);
