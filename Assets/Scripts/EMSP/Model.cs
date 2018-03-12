@@ -129,7 +129,7 @@ namespace EMSP
             material.renderQueue = 3000;
 
             Color color = material.color;
-            color.a = 0.125f;
+            color.a = 0.2f;
             material.color = color;
         }
 
