@@ -23,10 +23,10 @@ namespace EMSP.Communication
 
         #region Classes
         [Serializable]
-        public class WiringCreatedEvent : UnityEvent<List<Wire>> { }
+        public class WiringCreatedEvent : UnityEvent<Wiring> { }
 
         [Serializable]
-        public class WiringDestroyedEvent : UnityEvent<List<Wire>> { }
+        public class WiringDestroyedEvent : UnityEvent<Wiring> { }
         #endregion
 
         #region Interfaces
@@ -39,39 +39,37 @@ namespace EMSP.Communication
         [SerializeField]
         private Material _lineMaterial;
 
-        private List<Wire> _wires = new List<Wire>();
+        private Wiring _wiring;
         #endregion
 
         #region Events
         public WiringCreatedEvent WiringCreated = new WiringCreatedEvent();
 
         public WiringDestroyedEvent WiringDestroyed = new WiringDestroyedEvent();
-
-        public UnityEvent WiringVisibilityChanged = new UnityEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public ReadOnlyCollection<Wire> Wires { get { return _wires.AsReadOnly(); } }
+        public Wiring Wiring { get { return _wiring; } }
 
-        public bool IsWiringVisible
-        {
-            get { return _wires[0].gameObject.activeSelf; }
-            set
-            {
-                if (_wires[0].gameObject.activeSelf == value)
-                {
-                    return;
-                }
+        //public bool IsWiringVisible
+        //{
+        //    get { return _wires[0].gameObject.activeSelf; }
+        //    set
+        //    {
+        //        if (_wires[0].gameObject.activeSelf == value)
+        //        {
+        //            return;
+        //        }
 
-                foreach (Wire wire in _wires)
-                {
-                    wire.gameObject.SetActive(value);
-                }
+        //        foreach (Wire wire in _wires)
+        //        {
+        //            wire.gameObject.SetActive(value);
+        //        }
 
-                WiringVisibilityChanged.Invoke();
-            }
-        }
+        //        WiringVisibilityChanged.Invoke();
+        //    }
+        //}
         #endregion
 
         #region Constructors
@@ -82,27 +80,24 @@ namespace EMSP.Communication
         {
             DestroyWiring();
 
-            _wires = _wiringDataReader.ReadWiringFromFile(pathToXLS);
+            _wiring = _wiringDataReader.ReadWiringFromFile(pathToXLS);
+            _wiring.SetWiringMaterial(_lineMaterial);
+            _wiring.transform.SetParent(transform, true);
 
-            foreach (Wire wire in _wires)
-            {
-                wire.LineMaterial = _lineMaterial;
-                wire.transform.SetParent(transform, true);
-            }
-
-            WiringCreated.Invoke(_wires);
+            WiringCreated.Invoke(_wiring);
         }
 
         public void DestroyWiring()
         {
-            foreach (Wire wire in _wires)
+            if (!_wiring)
             {
-                Destroy(wire.gameObject);
+                return;
             }
 
-            _wires.Clear();
+            Destroy(_wiring.gameObject);
+            _wiring = null;
 
-            WiringDestroyed.Invoke(_wires);
+            WiringDestroyed.Invoke(_wiring);
         }
         #endregion
 

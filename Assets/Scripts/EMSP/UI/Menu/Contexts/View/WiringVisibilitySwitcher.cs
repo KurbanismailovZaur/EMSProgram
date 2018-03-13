@@ -43,7 +43,7 @@ namespace EMSP.UI.Menu.Contexts.View
         #region Methods
         private void TrySwitchVisibility()
         {
-            WiringManager.Instance.IsWiringVisible = !WiringManager.Instance.IsWiringVisible;
+            WiringManager.Instance.Wiring.IsVisible = !WiringManager.Instance.Wiring.IsVisible;
         }
         #endregion
 
@@ -56,21 +56,21 @@ namespace EMSP.UI.Menu.Contexts.View
             TrySwitchVisibility();
         }
 
-        public void Wiringmanager_WiringCreated(List<Wire> wires)
+        public void Wiringmanager_WiringCreated(Wiring wiring)
         {
-            WiringManager.Instance.WiringVisibilityChanged.AddListener(WiringManager_WiringVisibilityChanged);
+            WiringManager.Instance.Wiring.VisibilityChanged.AddListener(WiringManager_WiringVisibilityChanged);
             _stateImage.enabled = true;
         }
 
-        public void Wiringmanager_WiringDestroyed(List<Wire> wires)
+        public void Wiringmanager_WiringDestroyed(Wiring wiring)
         {
-            WiringManager.Instance.WiringVisibilityChanged.RemoveListener(WiringManager_WiringVisibilityChanged);
+            WiringManager.Instance.Wiring.VisibilityChanged.RemoveListener(WiringManager_WiringVisibilityChanged);
             _stateImage.enabled = false;
         }
 
-        private void WiringManager_WiringVisibilityChanged()
+        private void WiringManager_WiringVisibilityChanged(Wiring wiring, bool state)
         {
-            _stateImage.enabled = WiringManager.Instance.IsWiringVisible;
+            _stateImage.enabled = WiringManager.Instance.Wiring.IsVisible;
         }
         #endregion
         #endregion

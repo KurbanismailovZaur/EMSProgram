@@ -41,8 +41,11 @@ namespace EMSP.Data.XLS
 		#endregion
 		
 		#region Methods
-        public List<Wire> ReadWiringFromFile(string pathToXLS)
+        public Wiring ReadWiringFromFile(string pathToXLS)
         {
+            Wiring.Factory wiringFactory = new Wiring.Factory();
+            Wiring wiring = wiringFactory.Create();
+
             HSSFWorkbook MyBook;
 
             using (FileStream stream = new FileStream(pathToXLS, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -51,13 +54,12 @@ namespace EMSP.Data.XLS
             }
 
             Wire.Factory wireFactory = new Wire.Factory();
-            List<Wire> wires = new List<Wire>();
 
             for (int i = 0; i < MyBook.NumberOfSheets; i++)
             {
                 ISheet sheet = MyBook.GetSheetAt(i);
 
-                Wire wire = wireFactory.Create();
+                Wire wire = wiring.CreateWire();
 
                 List<Segment> segments = new List<Segment>();
                 for (int j = 5; j <= sheet.LastRowNum; j++)
@@ -79,11 +81,9 @@ namespace EMSP.Data.XLS
                 }
 
                 wire.Add(segments[segments.Count - 1].pointB);
-
-                wires.Add(wire);
             }
 
-            return wires;
+            return wiring;
         }
 
         private Segment ReadSegment(IRow row)

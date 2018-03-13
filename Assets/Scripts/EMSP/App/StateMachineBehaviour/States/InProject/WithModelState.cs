@@ -83,7 +83,7 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
             _stateMachine.MoveToState("EmptyProject");
         }
 
-        private void WiringManager_WiringCreated(List<Wire> arg0)
+        private void WiringManager_WiringCreated(Wiring wiring)
         {
             _stateMachine.MoveToState("WithModelAndWiring");
         }

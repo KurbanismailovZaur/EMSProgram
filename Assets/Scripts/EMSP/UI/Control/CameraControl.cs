@@ -28,11 +28,11 @@ namespace EMSP.UI.Control
         private OrbitController _orbitController;
 
         [SerializeField]
-        [Range(0f, 8f)]
+        [Range(0f, 64f)]
         private float _deltaValue = 1f;
 
         [SerializeField]
-        [Range(0f, 8f)]
+        [Range(0f, 32f)]
         private float _distanceDelta = 1f;
 		#endregion
 		
@@ -49,32 +49,32 @@ namespace EMSP.UI.Control
 		#region Methods
         private void MoveLeft()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(_deltaValue, 0f));
+            _orbitController.ApplyDeltasToTransform(new Vector2(_deltaValue, 0f) * Time.deltaTime);
         }
 
         private void MoveRight()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(-_deltaValue, 0f));
+            _orbitController.ApplyDeltasToTransform(new Vector2(-_deltaValue, 0f) * Time.deltaTime);
         }
 
         private void MoveUp()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(0f, -_deltaValue));
+            _orbitController.ApplyDeltasToTransform(new Vector2(0f, -_deltaValue) * Time.deltaTime);
         }
 
         private void MoveDown()
         {
-            _orbitController.ApplyDeltasToTransform(new Vector2(0f, _deltaValue));
+            _orbitController.ApplyDeltasToTransform(new Vector2(0f, _deltaValue) * Time.deltaTime);
         }
 
         private void ZoomIn()
         {
-            _orbitController.Distance -= _distanceDelta;
+            _orbitController.Distance -= _distanceDelta * Time.deltaTime;
         }
 
         private void ZoomOut()
         {
-            _orbitController.Distance += _distanceDelta;
+            _orbitController.Distance += _distanceDelta * Time.deltaTime;
         }
         #endregion
 

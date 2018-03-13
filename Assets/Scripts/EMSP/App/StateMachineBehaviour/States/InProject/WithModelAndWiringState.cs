@@ -78,7 +78,7 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
         #endregion
 
         #region Events handlers
-        private void WiringManager_WiringDestroyed(List<Wire> wiring)
+        private void WiringManager_WiringDestroyed(Wiring wiring)
         {
             _stateMachine.MoveToState("WithModel");
         }

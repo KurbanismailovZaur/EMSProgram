@@ -30,6 +30,7 @@ namespace EMSP.Communication
                 wire._lineRenderer.widthMultiplier = 0.02f;
                 wire._lineRenderer.numCornerVertices = 4;
                 wire._lineRenderer.numCapVertices = 4;
+                wire._lineRenderer.useWorldSpace = false;
 
                 return wire;
             }
@@ -81,15 +82,52 @@ namespace EMSP.Communication
             UpdateLineRendererPoints();
         }
 
+        public void Add(float x, float y, float z)
+        {
+            Add(new Vector3(x, y, z));
+        }
+
         public void AddRange(IEnumerable<Vector3> points)
         {
             _points.AddRange(points);
             UpdateLineRendererPoints();
         }
 
-        public void Add(float x, float y, float z)
+        public bool Remove(Vector3 point)
         {
-            Add(new Vector3(x, y, z));
+            bool result = _points.Remove(point);
+            UpdateLineRendererPoints();
+
+            return result;
+        }
+
+        public bool Remove(float x, float y, float z)
+        {
+            return Remove(new Vector3(x, y, z));
+        }
+
+        public void RemoveAt(int index)
+        {
+            _points.RemoveAt(index);
+            UpdateLineRendererPoints();
+        }
+
+        public void Insert(int index, Vector3 point)
+        {
+            _points.Insert(index, point);
+            UpdateLineRendererPoints();
+        }
+
+        public void Insert(int index, float x, float y, float z)
+        {
+            _points.Insert(index, new Vector3(x, y, z));
+            UpdateLineRendererPoints();
+        }
+
+        public void InsertRange(int index, IEnumerable<Vector3> points)
+        {
+            _points.InsertRange(index, points);
+            UpdateLineRendererPoints();
         }
 
         private void UpdateLineRendererPoints()
