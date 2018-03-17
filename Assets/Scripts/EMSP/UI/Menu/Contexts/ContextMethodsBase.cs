@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace EMSP.UI.Menu.Contexts
 {
-	public abstract class ContextMethodsBase : MonoBehaviour 
+    [RequireComponent(typeof(Context))]
+    public abstract class ContextMethodsBase : MonoBehaviour 
 	{
         #region Entities
         #region Enums

@@ -56,6 +56,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         [SerializeField]
         private Button _viewGridVisibilityButton;
+
+        [SerializeField]
+        private Button _calculationsComputationMagneticTensionInSpaceButton;
         #endregion
 
         #region Events
@@ -81,6 +84,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _viewModelIsTransparentButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = false;
             _viewGridVisibilityButton.interactable = false;
+            _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
 
             GameFacade.Instance.DeactivateProjectEnvironment();
 

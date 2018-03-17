@@ -1,8 +1,10 @@
-﻿using System;
+﻿using EMSP.Utility;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Communication
 {
@@ -35,6 +37,9 @@ namespace EMSP.Communication
                 return wire;
             }
         }
+
+        [Serializable]
+        public class GeometryChangedEvent : UnityEvent<Wire, ReadOnlyCollection<Vector3>> { }
         #endregion
 
         #region Interfaces
@@ -44,15 +49,31 @@ namespace EMSP.Communication
         #region Fields
         private LineRenderer _lineRenderer;
 
-        List<Vector3> _points = new List<Vector3>();
+        List<Vector3> _localPoints = new List<Vector3>();
         #endregion
 
         #region Events
+        public GeometryChangedEvent GeometryChanged = new GeometryChangedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public ReadOnlyCollection<Vector3> Points { get { return _points.AsReadOnly(); } }
+        public ReadOnlyCollection<Vector3> LocalPoints { get { return _localPoints.AsReadOnly(); } }
+
+        public ReadOnlyCollection<Vector3> WorldPoints
+        {
+            get
+            {
+                List<Vector3> worldPoints = Lists.RepeatedDefault<Vector3>(_localPoints.Count);
+
+                for (int i = 0; i < _localPoints.Count; i++)
+                {
+                    worldPoints[i] = transform.TransformPoint(_localPoints[i]);
+                }
+
+                return worldPoints.AsReadOnly();
+            }
+        }
 
         public Material LineMaterial
         {
@@ -68,18 +89,18 @@ namespace EMSP.Communication
         #region Methods
         public IEnumerator<Vector3> GetEnumerator()
         {
-            return _points.GetEnumerator();
+            return _localPoints.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _points.GetEnumerator();
+            return _localPoints.GetEnumerator();
         }
 
         public void Add(Vector3 point)
         {
-            _points.Add(point);
-            UpdateLineRendererPoints();
+            _localPoints.Add(point);
+            OnGeometryChanged();
         }
 
         public void Add(float x, float y, float z)
@@ -89,14 +110,14 @@ namespace EMSP.Communication
 
         public void AddRange(IEnumerable<Vector3> points)
         {
-            _points.AddRange(points);
-            UpdateLineRendererPoints();
+            _localPoints.AddRange(points);
+            OnGeometryChanged();
         }
 
         public bool Remove(Vector3 point)
         {
-            bool result = _points.Remove(point);
-            UpdateLineRendererPoints();
+            bool result = _localPoints.Remove(point);
+            OnGeometryChanged();
 
             return result;
         }
@@ -108,32 +129,55 @@ namespace EMSP.Communication
 
         public void RemoveAt(int index)
         {
-            _points.RemoveAt(index);
-            UpdateLineRendererPoints();
+            _localPoints.RemoveAt(index);
+            OnGeometryChanged();
         }
 
         public void Insert(int index, Vector3 point)
         {
-            _points.Insert(index, point);
-            UpdateLineRendererPoints();
+            _localPoints.Insert(index, point);
+            OnGeometryChanged();
         }
 
         public void Insert(int index, float x, float y, float z)
         {
-            _points.Insert(index, new Vector3(x, y, z));
-            UpdateLineRendererPoints();
+            _localPoints.Insert(index, new Vector3(x, y, z));
+            OnGeometryChanged();
         }
 
         public void InsertRange(int index, IEnumerable<Vector3> points)
         {
-            _points.InsertRange(index, points);
-            UpdateLineRendererPoints();
+            _localPoints.InsertRange(index, points);
+            OnGeometryChanged();
         }
 
-        private void UpdateLineRendererPoints()
+        private void OnGeometryChanged()
         {
-            _lineRenderer.positionCount = _points.Count;
-            _lineRenderer.SetPositions(_points.ToArray());
+            GeometryChanged.Invoke(this, LocalPoints);
+            UpdateLineRenderer();
+        }
+
+        private void UpdateLineRenderer()
+        {
+            _lineRenderer.positionCount = _localPoints.Count;
+            _lineRenderer.SetPositions(_localPoints.ToArray());
+        }
+
+        public Bounds GetBounds()
+        {
+            if (_localPoints.Count == 0)
+            {
+                return new Bounds(transform.position, Vector3.zero);
+            }
+
+            Bounds bounds = new Bounds(transform.TransformPoint(_localPoints[0]), Vector3.zero);
+
+            for (int i = 1; i < _localPoints.Count; i++)
+            {
+                bounds.Encapsulate(transform.TransformPoint(_localPoints[i]));
+            }
+
+            return bounds;
         }
         #endregion
 

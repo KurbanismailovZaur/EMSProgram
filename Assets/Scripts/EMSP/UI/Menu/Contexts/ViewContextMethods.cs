@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 namespace EMSP.UI.Menu.Contexts
 {
-    [RequireComponent(typeof(Context))]
     public class ViewContextMethods : ContextMethodsBase 
 	{
         #region Entities

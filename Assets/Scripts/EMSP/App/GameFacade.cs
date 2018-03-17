@@ -1,6 +1,7 @@
 ﻿using EMSP.Communication;
 using EMSP.Control;
 using EMSP.Environment.View;
+using EMSP.Mathematic;
 using EMSP.UI;
 using EMSP.UI.Dialogs.SaveProject;
 using EMSP.UI.Menu.Contexts;
@@ -132,6 +133,14 @@ namespace EMSP.App
         }
         #endregion
 
+        #region Calculations context methods
+        private void CalculateMagneticTensionsInSpace()
+        {
+            MathematicManager.Instance.Calculate(CalculationType.MagneticTensionInSpace);
+            MathematicManager.Instance.ShowCalculatedResult(CalculationType.MagneticTensionInSpace);
+        }
+        #endregion
+
         private void CreateNewProject()
         {
             ProjectManager.Instance.CloseProject();
@@ -209,12 +218,21 @@ namespace EMSP.App
 
         public void ViewContextMethods_Selected(ViewContextMethods viewContextMethods, ViewContextMethods.ActionType actionType)
         {
-            switch (actionType)
-            {
-                
-            }
+            switch (actionType) { }
 
             viewContextMethods.Panel.HideActiveContextAndStopAutoShow();
+        }
+
+        public void CalculationsContextMethods_Selected(CalculationsContextMethods calculationsContextMethods, CalculationsContextMethods.ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
+                    CalculateMagneticTensionsInSpace();
+                    break;
+            }
+
+            calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
         private void SaveProjectDialog_Chosen(SaveProjectDialog saveProjectDialog, SaveProjectDialog.Action action)

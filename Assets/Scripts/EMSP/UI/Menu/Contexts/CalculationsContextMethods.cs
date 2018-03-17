@@ -1,5 +1,4 @@
-﻿using Numba.UI.Menu;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,14 +6,13 @@ using UnityEngine.Events;
 
 namespace EMSP.UI.Menu.Contexts
 {
-    public class EditContextMethods : ContextMethodsBase 
+    public class CalculationsContextMethods : ContextMethodsBase 
 	{
         #region Entities
         #region Enums
         public enum ActionType
         {
-            RemoveModel,
-            RemoveWiring
+            MagneticTensionInSpace
         }
         #endregion
 
@@ -26,7 +24,7 @@ namespace EMSP.UI.Menu.Contexts
 
         #region Classes
         [Serializable]
-        public class SelectedEvent : UnityEvent<EditContextMethods, ActionType> { }
+        public class SelectedEvent : UnityEvent<CalculationsContextMethods, ActionType> { }
         #endregion
 
         #region Interfaces
@@ -48,14 +46,9 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Methods
-        public void RemoveModel()
+        public void CalculateMagneticTensionInSpace()
         {
-            Selected.Invoke(this, ActionType.RemoveModel);
-        }
-
-        public void RemoveWiring()
-        {
-            Selected.Invoke(this, ActionType.RemoveWiring);
+            Selected.Invoke(this, ActionType.MagneticTensionInSpace);
         }
         #endregion
 

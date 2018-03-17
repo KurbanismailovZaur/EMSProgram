@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -100,9 +101,30 @@ namespace EMSP.Communication
         {
             return _wires.GetEnumerator();
         }
+
+        public Bounds GetBounds()
+        {
+            if (_wires.Count == 0)
+            {
+                return new Bounds(transform.position, Vector3.zero);
+            }
+
+            Bounds bounds = _wires[0].GetBounds();
+
+            for (int i = 1; i < _wires.Count; i++)
+            {
+                bounds.Encapsulate(_wires[i].GetBounds());
+            }
+
+            return bounds;
+        }
         #endregion
 
         #region Indexers
+        public Wire this[int index]
+        {
+            get { return _wires[index]; }
+        }
         #endregion
 
         #region Events handlers

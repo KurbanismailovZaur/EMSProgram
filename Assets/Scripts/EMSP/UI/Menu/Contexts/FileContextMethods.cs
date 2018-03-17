@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 namespace EMSP.UI.Menu.Contexts
 {
-    [RequireComponent(typeof(Context))]
     public class FileContextMethods : ContextMethodsBase
     {
         #region Entities

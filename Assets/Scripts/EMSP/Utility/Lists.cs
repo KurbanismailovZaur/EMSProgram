@@ -1,21 +1,14 @@
-﻿using Numba.UI.Menu;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace EMSP.UI.Menu.Contexts
+namespace EMSP.Utility
 {
-    public class EditContextMethods : ContextMethodsBase 
+	public static class Lists 
 	{
         #region Entities
         #region Enums
-        public enum ActionType
-        {
-            RemoveModel,
-            RemoveWiring
-        }
         #endregion
 
         #region Delegates
@@ -25,8 +18,6 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Classes
-        [Serializable]
-        public class SelectedEvent : UnityEvent<EditContextMethods, ActionType> { }
         #endregion
 
         #region Interfaces
@@ -37,7 +28,6 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Events
-        public SelectedEvent Selected = new SelectedEvent();
         #endregion
 
         #region Behaviour
@@ -48,14 +38,16 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Methods
-        public void RemoveModel()
+        public static List<T> RepeatedDefault<T>(int count)
         {
-            Selected.Invoke(this, ActionType.RemoveModel);
+            return Repeated(default(T), count);
         }
 
-        public void RemoveWiring()
+        public static List<T> Repeated<T>(T value, int count)
         {
-            Selected.Invoke(this, ActionType.RemoveWiring);
+            List<T> ret = new List<T>(count);
+            ret.AddRange(Enumerable.Repeat(value, count));
+            return ret;
         }
         #endregion
 

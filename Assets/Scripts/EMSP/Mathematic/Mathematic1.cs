@@ -105,7 +105,7 @@ namespace EMSP.Mathematic
 
         public Vector3 Calculate(Wire wire, Vector3 targetPoint, float amperage)
         {
-            ReadOnlyCollection<Vector3> points = wire.Points;
+            ReadOnlyCollection<Vector3> points = wire.WorldPoints;
 
             Vector3 result = new Vector3();
             for (int i = 0; i < points.Count - 1; i++)
@@ -116,7 +116,7 @@ namespace EMSP.Mathematic
             return result;
         }
 
-        public float Calculate(List<Wire> wires, Vector3 point, float amperage)
+        public float Calculate(Wiring wires, Vector3 point, float amperage)
         {
             Vector3 result = new Vector3();
 

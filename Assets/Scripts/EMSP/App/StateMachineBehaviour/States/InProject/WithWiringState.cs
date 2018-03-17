@@ -42,6 +42,9 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
 
         [SerializeField]
         private Button _viewWiringIsVisibilityButton;
+
+        [SerializeField]
+        private Button _calculationsComputationMagneticTensionInSpaceButton;
         #endregion
 
         #region Events
@@ -62,6 +65,7 @@ namespace EMSP.App.StateMachineBehaviour.States.InProject
             _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = true;
+            _calculationsComputationMagneticTensionInSpaceButton.interactable = true;
 
             WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
             ModelManager.Instance.ModelCreated.AddListener(ModelManager_ModelCreated);
