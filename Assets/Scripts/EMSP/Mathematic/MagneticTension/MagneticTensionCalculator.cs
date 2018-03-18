@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace EMSP.Mathematic
+namespace EMSP.Mathematic.MagneticTension
 {
-	public class Mathematic1 : MathematicBase
+	public class MagneticTensionCalculator : MathematicBase
 	{
         #region Entities
         #region Enums

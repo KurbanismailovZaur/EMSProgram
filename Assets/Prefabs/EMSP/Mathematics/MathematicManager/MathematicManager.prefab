@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4858883599598586}
+  - component: {fileID: 114591187936990582}
   m_Layer: 0
   m_Name: MagneticTensionInSpace
   m_TagString: Untagged
@@ -69,6 +70,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114591187936990582
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1523018046373444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a63e211688899948846003d106607e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _magneticTensionPointMaterial: {fileID: 2100000, guid: 066bcd2e3f2ea304ea67e155ba11db02,
+    type: 2}
+  _stretchPercent: 1
+  _pointSizeStretchPercent: 0.2
 --- !u!114 &114674595718332276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -82,9 +98,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rangeLength: 22
   _amperage: 2
-  _magneticTensionMaterial: {fileID: 2100000, guid: 066bcd2e3f2ea304ea67e155ba11db02,
-    type: 2}
-  _magneticTensionsInSpace: {fileID: 4858883599598586}
-  _stretchPercent: 1
-  _pointSizeStretchPercent: 0.2
-  _ignoreMagneticTensionWithAlphaLess: 0.01
+  _magneticTensionInSpace: {fileID: 114591187936990582}

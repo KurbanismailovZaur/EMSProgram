@@ -56,15 +56,14 @@ namespace EMSP.UI.Menu.Contexts.View
             TrySwitchVisibility();
         }
 
-        public void Wiringmanager_WiringCreated(Wiring wiring)
+        public void WiringManager_WiringCreated(Wiring wiring)
         {
             WiringManager.Instance.Wiring.VisibilityChanged.AddListener(WiringManager_WiringVisibilityChanged);
             _stateImage.enabled = true;
         }
 
-        public void Wiringmanager_WiringDestroyed(Wiring wiring)
+        public void WiringManager_WiringDestroyed(Wiring wiring)
         {
-            WiringManager.Instance.Wiring.VisibilityChanged.RemoveListener(WiringManager_WiringVisibilityChanged);
             _stateImage.enabled = false;
         }
 

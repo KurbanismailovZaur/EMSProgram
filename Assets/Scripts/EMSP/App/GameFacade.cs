@@ -82,6 +82,7 @@ namespace EMSP.App
         {
             ModelManager.Instance.DestroyModel();
             WiringManager.Instance.DestroyWiring();
+            MathematicManager.Instance.DestroyCalculations();
             ProjectManager.Instance.CloseProject();
 
             Resources.UnloadUnusedAssets();
@@ -137,7 +138,7 @@ namespace EMSP.App
         private void CalculateMagneticTensionsInSpace()
         {
             MathematicManager.Instance.Calculate(CalculationType.MagneticTensionInSpace);
-            MathematicManager.Instance.ShowCalculatedResult(CalculationType.MagneticTensionInSpace);
+            MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
         }
         #endregion
 
