@@ -23,6 +23,7 @@ namespace EMSP.Mathematic.MagneticTension
             public MagneticTensionPoint Create(PrimitiveType primitiveType, Transform parent, Material material, float size, float alpha, MagneticTensionInSpace.MagneticTensionsInfo mtInfo)
             {
                 MagneticTensionPoint magneticTensionPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere).AddComponent<MagneticTensionPoint>();
+                magneticTensionPoint.name = "Point";
                 magneticTensionPoint.transform.position = mtInfo.Point;
                 magneticTensionPoint.transform.localScale = new Vector3(size, size, size);
                 magneticTensionPoint.transform.SetParent(parent, true);

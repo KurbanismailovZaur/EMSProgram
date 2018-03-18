@@ -61,7 +61,6 @@ namespace EMSP.Data.XLS
 
                 Wire wire = wiring.CreateWire();
 
-                List<Segment> segments = new List<Segment>();
                 for (int j = 5; j <= sheet.LastRowNum; j++)
                 {
                     IRow row = sheet.GetRow(j);
@@ -71,43 +70,31 @@ namespace EMSP.Data.XLS
                         break;
                     }
 
-                    Segment segment = ReadSegment(row);
-                    segments.Add(segment);
+                    wire.Add(ReadNode(row));
                 }
-
-                for (int j = 0; j < segments.Count; j++)
-                {
-                    wire.Add(segments[j].pointA);
-                }
-
-                wire.Add(segments[segments.Count - 1].pointB);
             }
 
             return wiring;
         }
 
-        private Segment ReadSegment(IRow row)
+        private Vector3 ReadNode(IRow row)
         {
-            Segment segment = new Segment();
+            Vector3 node;
 
-            segment.pointA.x = (float)row.GetCell(0).NumericCellValue;
-            segment.pointA.y = (float)row.GetCell(1).NumericCellValue;
-            segment.pointA.z = (float)row.GetCell(2).NumericCellValue;
+            node.x = (float)row.GetCell(0).NumericCellValue;
+            node.y = (float)row.GetCell(1).NumericCellValue;
+            node.z = (float)row.GetCell(2).NumericCellValue;
 
-            segment.pointB.x = (float)row.GetCell(3).NumericCellValue;
-            segment.pointB.y = (float)row.GetCell(4).NumericCellValue;
-            segment.pointB.z = (float)row.GetCell(5).NumericCellValue;
-
-            return segment;
+            return node;
         }
 
         private bool IsCorrectRow(IRow row)
         {
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 ICell cell = row.GetCell(i);
 
-                if (cell.CellType != CellType.Numeric && cell.CellType != CellType.Formula)
+                if (cell.CellType != CellType.Numeric)
                 {
                     return false;
                 }
