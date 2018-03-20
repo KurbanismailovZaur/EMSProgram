@@ -91,8 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2922d16d79c940e4c8dd0ee75392c052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedColor: {r: 0.16911763, g: 0.16165656, b: 0.16165656, a: 0}
-  NormalColor: {r: 0.45588237, g: 0.42906576, b: 0.42906576, a: 0}
+  SelectedButtonColor: {r: 0.25, g: 0.23529412, b: 0.23529412, a: 1}
+  SelectedTextColor: {r: 1, g: 1, b: 1, a: 1}
+  NormalButtonColor: {r: 1, g: 1, b: 1, a: 1}
+  NormalTextColor: {r: 0.07352942, g: 0.061634958, b: 0.061634958, a: 1}
 --- !u!114 &114146492063702808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -105,14 +107,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.45490196, g: 0.42745098, b: 0.42745098, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: f7befdb76903eed489c6bc88ebd1d498, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -139,9 +141,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 0
   m_Colors:
-    m_NormalColor: {r: 0.45490196, g: 0.42745098, b: 0.42745098, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.27205884, g: 0.2580558, b: 0.2580558, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1

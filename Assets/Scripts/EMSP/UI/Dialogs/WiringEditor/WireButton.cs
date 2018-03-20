@@ -28,21 +28,16 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         static WireButton _currentActiveButton = null;
         
-        public Color SelectedColor;
-        public Color NormalColor;
+        public Color SelectedButtonColor;
+        public Color SelectedTextColor;
+
+        public Color NormalButtonColor;
+        public Color NormalTextColor;
+
 
         private Image _image = null;
-        private Image image
-        {
-            get
-            {
-                if(_image == null)
-                    _image = GetComponent<Image>();
-                return _image;
-            }
+        private Text _textComponent = null;
 
-            set { _image = value; }
-        }
         #endregion
 
         #region Events
@@ -51,6 +46,30 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Behaviour
         #region Properties
         public int WireNumber { get; set; }
+
+        private Image ImageComponent
+        {
+            get
+            {
+                if (_image == null)
+                    _image = GetComponent<Image>();
+                return _image;
+            }
+
+            set { _image = value; }
+        }
+
+        private Text TextComponent
+        {
+            get
+            {
+                if (_textComponent == null)
+                    _textComponent = GetComponentInChildren<Text>();
+                return _textComponent;
+            }
+
+            set { _textComponent = value; }
+        }
         #endregion
 
         #region Constructors
@@ -58,6 +77,13 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Methods
 
+
+        #endregion
+
+        #region Indexers
+        #endregion
+
+        #region Events handlers
         public static void OnEditorClosing()
         {
             _currentActiveButton = null;
@@ -65,7 +91,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         public void OnClick()
         {
-            image.color = SelectedColor;
+            ImageComponent.color = SelectedButtonColor;
+            TextComponent.color = SelectedTextColor;
+
             if (_currentActiveButton != null)
                 _currentActiveButton.OnDifferentWireButtonClick();
 
@@ -74,14 +102,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         public void OnDifferentWireButtonClick()
         {
-            image.color = NormalColor;
+            ImageComponent.color = NormalButtonColor;
+            TextComponent.color = NormalTextColor;
         }
-        #endregion
-
-        #region Indexers
-        #endregion
-
-        #region Events handlers
         #endregion
         #endregion
     }

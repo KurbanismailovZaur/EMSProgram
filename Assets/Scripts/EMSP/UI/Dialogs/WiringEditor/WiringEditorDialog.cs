@@ -53,6 +53,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #endregion
 
         #region Events
+
+        public event Action OnDialogActivated = () => { };
+        public event Action OnDialogDeactivated = () => { };
+
         #endregion
 
         #region Behaviour
@@ -140,7 +144,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 Close();
             });
 
-            if(_wireButtonContainer.childCount > 0)
+            if (_wireButtonContainer.childCount > 0)
                 _wireButtonContainer.GetChild(0).GetComponent<Button>().onClick.Invoke();
         }
 
@@ -149,6 +153,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
             _canvasGroup.alpha = 1f;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
+
+            OnDialogActivated();
         }
 
         private void Hide()
@@ -170,10 +176,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 Destroy(_wireButtonContainer.GetChild(i).gameObject);
             }
 
+            OnDialogDeactivated();
+
             if (needClearChangedWiring)
                 Wiring.Clear();
 
             WireButton.OnEditorClosing();
+            OnDialogActivated = () => { };
+            OnDialogDeactivated = () => { };
 
             Hide();
         }
@@ -196,6 +206,5 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Events handlers
         #endregion
         #endregion
-
     }
 }

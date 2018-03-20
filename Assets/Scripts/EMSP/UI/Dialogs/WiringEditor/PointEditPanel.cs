@@ -50,6 +50,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         public void Initialize(int wireNumber, int pointNumber)
         {
+            X.contentType = InputField.ContentType.DecimalNumber;
+            Y.contentType = InputField.ContentType.DecimalNumber;
+            Z.contentType = InputField.ContentType.DecimalNumber;
+
             Vector3 point = WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber];
             _currentValue = point;
             PointNumberField.text = pointNumber.ToString();
@@ -57,22 +61,34 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Y.text = point.y.ToString();
             Z.text = point.z.ToString();
 
-            X.onValueChanged.AddListener((c) =>
+            X.onValueChanged.AddListener((str) =>
             {
-                _currentValue.x = float.Parse(c);
-                WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                float newX;
+                if (float.TryParse(str, out newX))
+                {
+                    _currentValue.x = newX;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                }
             });
 
-            Y.onValueChanged.AddListener((c) =>
+            Y.onValueChanged.AddListener((str) =>
             {
-                _currentValue.y = float.Parse(c);
-                WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                float newY;
+                if (float.TryParse(str, out newY))
+                {
+                    _currentValue.y = newY;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                }
             });
 
-            Z.onValueChanged.AddListener((c) =>
+            Z.onValueChanged.AddListener((str) =>
             {
-                _currentValue.z = float.Parse(c);
-                WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                float newZ;
+                if (float.TryParse(str, out newZ))
+                {
+                    _currentValue.z = newZ;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                }
             });
 
         }
