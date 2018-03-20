@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.WiringEditor
 {
-    public class WiringEditorDialog : MonoSingleton<WiringEditorDialog>
+    public class WiringEditorDialog : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -28,6 +28,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #endregion
 
         #region Fields
+        public static WiringEditorDialog Instance;
 
         [SerializeField]
         private Button _wireButtonPrefab;
@@ -46,7 +47,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         [SerializeField]
         private RectTransform _pointsContainer;
 
-        protected Dictionary<int, List<Vector3>> _wiring = new Dictionary<int, List<Vector3>>();
+        public Dictionary<int, List<Vector3>> Wiring = new Dictionary<int, List<Vector3>>();
         private CanvasGroup _canvasGroup;
 
         #endregion
@@ -63,6 +64,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Methods
 
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+            else
+                DestroyImmediate(this);
+        }
+
         private void Start()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
@@ -78,15 +87,21 @@ namespace EMSP.UI.Dialogs.WiringEditor
             int wireCount = 0;
             foreach(Wire wire in wiring)
             {
-                _wiring.Add(wireCount, new List<Vector3>());
+                Wiring.Add(wireCount, new List<Vector3>());
                 foreach (Vector3 point in wire)
                 {
-                    _wiring[wireCount].Add(point);
+                    Wiring[wireCount].Add(point);
                 }
 
                 Button wireButton = Instantiate(_wireButtonPrefab);
-                wireButton.transform.parent = _wireButtonContainer;
+                wireButton.transform.SetParent(_wireButtonContainer, false);
                 wireButton.GetComponentInChildren<Text>().text = string.Format("Wire_{0}", wireCount);
+                wireButton.GetComponent<WireButton>().WireNumber = wireCount;
+
+                wireButton.onClick.AddListener(() =>
+                {
+                    wireButton.GetComponent<WireButton>().OnClick();
+                });
 
                 wireButton.onClick.AddListener(() =>
                 {
@@ -95,13 +110,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         Destroy(_pointsContainer.GetChild(i).gameObject);
                     }
 
+                    int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
                     int pointCount = 0;
-                    foreach (var point in wire)
+                    foreach (var point in Wiring[wireNumber])
                     {
                         PointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
-                        editPanel.transform.parent = _pointsContainer;
+                        editPanel.transform.SetParent(_pointsContainer, false);
 
-                        editPanel.Initialize(wireCount, pointCount);
+                        editPanel.Initialize(wireNumber, pointCount);
                         ++pointCount;
                     }
                 });
@@ -123,6 +139,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
             {
                 Close();
             });
+
+            if(_wireButtonContainer.childCount > 0)
+                _wireButtonContainer.GetChild(0).GetComponent<Button>().onClick.Invoke();
         }
 
         private void Show()
@@ -152,7 +171,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
             }
 
             if (needClearChangedWiring)
-                _wiring.Clear();
+                Wiring.Clear();
+
+            WireButton.OnEditorClosing();
 
             Hide();
         }
@@ -162,9 +183,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Close(false);
 
             if (onWiringEdited != null)
-                onWiringEdited(_wiring);
+                onWiringEdited(Wiring);
 
-            _wiring.Clear();
+            Wiring.Clear();
         }
 
         #endregion
