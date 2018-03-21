@@ -79,9 +79,23 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private void Start()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
+
+            Wiring w = new Communication.Wiring.Factory().Create();
+
+            for (int i = 0; i < 8; i++)
+            {
+                Wire wire = w.CreateWire();
+
+                for (int j = 0; j < UnityEngine.Random.Range(1, 128); j++)
+                {
+                    wire.Add(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                }
+            }
+
+            StartWiringEditing(w, null);
         }
 
-        public void StartWiringEditing(Wiring wiring, Action<Dictionary<int, List<Vector3>>> onWiringEdited) 
+        public void StartWiringEditing(Wiring wiring, Action<Dictionary<int, List<Vector3>>> onWiringEdited)
         {
             _saveButton.onClick.RemoveAllListeners();
             _cancelButton.onClick.RemoveAllListeners();
@@ -89,7 +103,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Show();
 
             int wireCount = 0;
-            foreach(Wire wire in wiring)
+            foreach (Wire wire in wiring)
             {
                 Wiring.Add(wireCount, new List<Vector3>());
                 foreach (Vector3 point in wire)
@@ -109,7 +123,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 wireButton.onClick.AddListener(() =>
                 {
-                    for(int i = 0; i < _pointsContainer.childCount; ++i)
+                    for (int i = 0; i < _pointsContainer.childCount; ++i)
                     {
                         Destroy(_pointsContainer.GetChild(i).gameObject);
                     }
