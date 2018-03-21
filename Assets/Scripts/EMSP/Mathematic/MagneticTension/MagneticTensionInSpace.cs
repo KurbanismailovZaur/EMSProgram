@@ -11,6 +11,11 @@ namespace EMSP.Mathematic.MagneticTension
     {
         #region Entities
         #region Enums
+        public enum MeshType
+        {
+            Sphere = 0,
+            Cube = 3
+        }
         #endregion
 
         #region Delegates
@@ -61,6 +66,9 @@ namespace EMSP.Mathematic.MagneticTension
         [SerializeField]
         [Range(0f, 1f)]
         private float _pointSizeStretchPercent = 0f;
+
+        [SerializeField]
+        private MeshType _meshType;
         #endregion
 
         #region Events
@@ -113,7 +121,7 @@ namespace EMSP.Mathematic.MagneticTension
             {
                 float alpha = Remap(mtInfo.MagneticTension, 0f, maxMagneticTension, 0f, 1f);
 
-                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create(PrimitiveType.Sphere, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
+                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create((PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
                 _points.Add(magneticTensionPoint);
             }
 

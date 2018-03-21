@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using EMSP.Communication;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +42,24 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         [SerializeField]
         private Button _viewGridVisibilityButton;
+
+        [SerializeField]
+        private Button _removeModelButton;
+
+        [SerializeField]
+        private Button _removeWiringButton;
+
+        [SerializeField]
+        private Button _viewModelIsVisibilityButton;
+
+        [SerializeField]
+        private Button _viewModelIsTransparentButton;
+
+        [SerializeField]
+        private Button _viewWiringIsVisibilityButton;
+
+        [SerializeField]
+        private Button _calculationsComputationMagneticTensionInSpaceButton;
         #endregion
 
         #region Events
@@ -65,14 +85,22 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             ProjectManager.Instance.ProjectDestroyed.AddListener(ProjectManager_ProjectDestroyed);
 
-            _stateMachine.MoveToState("EmptyProject");
+            ModelManager.Instance.ModelCreated.AddListener(ModelManager_ModelCreated);
+            ModelManager.Instance.ModelDestroyed.AddListener(ModelManager_ModelDestroyed);
+
+            WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
+            WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
         }
 
         public override void OnExit()
         {
             ProjectManager.Instance.ProjectDestroyed.RemoveListener(ProjectManager_ProjectDestroyed);
 
-            _stateMachine.ExitFromCurrentState();
+            ModelManager.Instance.ModelCreated.RemoveListener(ModelManager_ModelCreated);
+            ModelManager.Instance.ModelDestroyed.RemoveListener(ModelManager_ModelDestroyed);
+
+            WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
+            WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
         }
         #endregion
 
@@ -82,7 +110,35 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Events handlers
         public void ProjectManager_ProjectDestroyed(Project project)
         {
-            _stateMachine.ParentStateMachine.MoveToState("OnlyMenu");
+            _stateMachine.MoveToState("OnlyMenu");
+        }
+
+        private void ModelManager_ModelCreated(Model model)
+        {
+            _removeModelButton.interactable = true;
+            _viewModelIsVisibilityButton.interactable = true;
+            _viewModelIsTransparentButton.interactable = true;
+        }
+
+        private void ModelManager_ModelDestroyed(Model model)
+        {
+            _removeModelButton.interactable = false;
+            _viewModelIsVisibilityButton.interactable = false;
+            _viewModelIsTransparentButton.interactable = false;
+        }
+
+        private void WiringManager_WiringCreated(Wiring arg0)
+        {
+            _removeWiringButton.interactable = true;
+            _viewWiringIsVisibilityButton.interactable = true;
+            _calculationsComputationMagneticTensionInSpaceButton.interactable = true;
+        }
+
+        private void WiringManager_WiringDestroyed(Wiring arg0)
+        {
+            _removeWiringButton.interactable = false;
+            _viewWiringIsVisibilityButton.interactable = false;
+            _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
         }
         #endregion
         #endregion

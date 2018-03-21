@@ -495,98 +495,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &339366471
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 339366472}
-  - component: {fileID: 339366473}
-  m_Layer: 0
-  m_Name: WithModelState
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &339366472
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 339366471}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 555747661}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &339366473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 339366471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ac656402171a146a813b2a2c99a88f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _removeModelButton: {fileID: 705033157}
-  _removeWiringButton: {fileID: 1649299365}
-  _viewModelIsVisibilityButton: {fileID: 882655834}
-  _viewModelIsTransparentButton: {fileID: 866672053}
-  _viewWiringIsVisibilityButton: {fileID: 149479126}
-  _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
---- !u!1 &373089128
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 373089129}
-  - component: {fileID: 373089130}
-  m_Layer: 0
-  m_Name: EmptyProjectState
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &373089129
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 373089128}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 555747661}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &373089130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 373089128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb5c1188e9497f841b75fc6e1f5f5901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _removeModelButton: {fileID: 705033157}
-  _removeWiringButton: {fileID: 1649299365}
-  _viewModelIsVisibilityButton: {fileID: 882655834}
-  _viewModelIsTransparentButton: {fileID: 866672053}
-  _viewWiringIsVisibilityButton: {fileID: 149479126}
-  _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
 --- !u!1 &419435138
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +613,6 @@ GameObject:
   m_Component:
   - component: {fileID: 555747661}
   - component: {fileID: 555747662}
-  - component: {fileID: 555747663}
   m_Layer: 0
   m_Name: InProjectState
   m_TagString: Untagged
@@ -722,11 +629,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 373089129}
-  - {fileID: 339366472}
-  - {fileID: 861488632}
-  - {fileID: 1561522328}
+  m_Children: []
   m_Father: {fileID: 1120933207}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -746,30 +649,12 @@ MonoBehaviour:
   _fileImportModelButton: {fileID: 1563042885}
   _fileImportWiringButton: {fileID: 310812116}
   _viewGridVisibilityButton: {fileID: 1878075472}
---- !u!114 &555747663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 555747660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b4316da12ddb104ea40a1aec01886df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _statesNames:
-  - EmptyProject
-  - WithModel
-  - WithWiring
-  - WithModelAndWiring
-  _states:
-  - {fileID: 373089130}
-  - {fileID: 339366473}
-  - {fileID: 861488633}
-  - {fileID: 1561522329}
-  _onStartSettings:
-    _enterToStateOnStart: 0
-    _startStateName: 
+  _removeModelButton: {fileID: 705033157}
+  _removeWiringButton: {fileID: 1649299365}
+  _viewModelIsVisibilityButton: {fileID: 882655834}
+  _viewModelIsTransparentButton: {fileID: 866672053}
+  _viewWiringIsVisibilityButton: {fileID: 149479126}
+  _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
 --- !u!4 &701492524 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4496346690442660, guid: d02c961d1ee960d48858e0dc4d04cc5f,
@@ -861,52 +746,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rootStateMachine: {fileID: 1120933208}
---- !u!1 &861488631
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 861488632}
-  - component: {fileID: 861488633}
-  m_Layer: 0
-  m_Name: WithWiringState
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &861488632
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 861488631}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 555747661}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &861488633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 861488631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0718baab0a2811942adc89e922a9b295, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _removeModelButton: {fileID: 705033157}
-  _removeWiringButton: {fileID: 1649299365}
-  _viewModelIsVisibilityButton: {fileID: 882655834}
-  _viewModelIsTransparentButton: {fileID: 866672053}
-  _viewWiringIsVisibilityButton: {fileID: 149479126}
-  _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
 --- !u!114 &866672050 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114720202606152566, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,
@@ -1444,52 +1283,6 @@ MonoBehaviour:
   _viewBlocker: {fileID: 325874723}
   _saveProjectDialog: {fileID: 1669526739}
   _orbitController: {fileID: 2019584177}
---- !u!1 &1561522327
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1561522328}
-  - component: {fileID: 1561522329}
-  m_Layer: 0
-  m_Name: WithModelAndWiringState
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1561522328
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1561522327}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 555747661}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1561522329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1561522327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db91351b9796a9a4aa800bc4a1cab6d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _removeModelButton: {fileID: 705033157}
-  _removeWiringButton: {fileID: 1649299365}
-  _viewModelIsVisibilityButton: {fileID: 882655834}
-  _viewModelIsTransparentButton: {fileID: 866672053}
-  _viewWiringIsVisibilityButton: {fileID: 149479126}
-  _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
 --- !u!114 &1563042885 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114279198557326686, guid: 3e09890a0c3b5ff44a8b12f00d9d98df,

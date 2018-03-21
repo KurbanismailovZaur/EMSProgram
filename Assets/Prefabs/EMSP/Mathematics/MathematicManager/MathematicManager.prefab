@@ -84,7 +84,8 @@ MonoBehaviour:
   _magneticTensionPointMaterial: {fileID: 2100000, guid: 066bcd2e3f2ea304ea67e155ba11db02,
     type: 2}
   _stretchPercent: 1
-  _pointSizeStretchPercent: 0.2
+  _pointSizeStretchPercent: 0
+  _meshType: 3
 --- !u!114 &114674595718332276
 MonoBehaviour:
   m_ObjectHideFlags: 1
