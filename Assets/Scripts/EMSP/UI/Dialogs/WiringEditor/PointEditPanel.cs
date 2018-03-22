@@ -73,7 +73,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             X.onEndEdit.AddListener((str) =>
             {
-                if(string.IsNullOrEmpty(str))
+                if(string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.x = 0;
                     WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
@@ -93,7 +93,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Y.onEndEdit.AddListener((str) =>
             {
-                if (string.IsNullOrEmpty(str))
+                if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.y = 0;
                     WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
@@ -114,7 +114,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Z.onEndEdit.AddListener((str) =>
             {
-                if (string.IsNullOrEmpty(str))
+                if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.z = 0;
                     WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;

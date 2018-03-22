@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace EMSP.UI.Dialogs.WiringEditor
 {
@@ -27,6 +28,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Fields
 
         static WireButton _currentActiveButton = null;
+
+        public Button DeleteWireButton;
         
         public Color SelectedButtonColor;
         public Color SelectedTextColor;
@@ -45,6 +48,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Behaviour
         #region Properties
+        public static WireButton CurrentActiveWireButton { get { return _currentActiveButton; } }
         public int WireNumber { get; set; }
 
         private Image ImageComponent
@@ -83,6 +87,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             {
                 ImageComponent.color = NormalButtonColor;
                 TextComponent.color = NormalTextColor;
+                DeleteWireButton.gameObject.SetActive(false);
             }
         }
 
@@ -101,6 +106,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
         {
             ImageComponent.color = SelectedButtonColor;
             TextComponent.color = SelectedTextColor;
+            DeleteWireButton.gameObject.SetActive(true);
+
 
             if (_currentActiveButton != null)
                 _currentActiveButton.OnDifferentWireButtonClick();
@@ -112,7 +119,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
         {
             ImageComponent.color = NormalButtonColor;
             TextComponent.color = NormalTextColor;
+            DeleteWireButton.gameObject.SetActive(false);
         }
+
         #endregion
         #endregion
     }

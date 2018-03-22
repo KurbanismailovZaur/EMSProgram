@@ -855,6 +855,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wireButtonPrefab: {fileID: 114955383763175694, guid: 2db9a6275f4540f47b0505ff4589a358,
     type: 2}
+  _addWireButtonPrefab: {fileID: 114955383763175694, guid: fe89ea972f4e3d4479e9ec4285d4bd0b,
+    type: 2}
+  _addPointButtonPrefab: {fileID: 114584285139264754, guid: a0bfd63591448de499eeb9b66cf9d390,
+    type: 2}
   _pointEditPanelPrefab: {fileID: 114261419919551738, guid: 01b19fb1b8afc694aa9329121f7273e1,
     type: 2}
   _saveButton: {fileID: 114164327586986600}
@@ -1594,7 +1598,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.0000076293945}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224280247211536464
