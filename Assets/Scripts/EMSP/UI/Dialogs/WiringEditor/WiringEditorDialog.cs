@@ -270,15 +270,12 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     });
                 });
 
-
-                var wireNumbers = Wiring.Keys.ToList();
-                int numberOfNewWire = wireNumbers[wireNumbers.Count - 1] + 1;
+                int numberOfNewWire = Wiring.Keys.ToList().Max() + 1;
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
 
                 wireButton.GetComponent<WireButton>().WireNumber = numberOfNewWire;
                 wireButton.GetComponentInChildren<Text>().text = string.Format(" {0}", numberOfNewWire);
-
                 addWireButton.transform.SetAsLastSibling();
             });
 
