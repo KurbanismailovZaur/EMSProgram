@@ -39,7 +39,12 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private Button _addPointButtonPrefab;
         [SerializeField]
         private PointEditPanel _pointEditPanelPrefab;
-
+        [SerializeField]
+        private GameObject _deleteWireDialog;
+        [SerializeField]
+        private Button _deleteWireDialogYesButton;
+        [SerializeField]
+        private Button _deleteWireDialogNoButton;
 
         [SerializeField]
         private Button _saveButton;
@@ -88,26 +93,17 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Wiring w = new Communication.Wiring.Factory().Create();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Wire wire = w.CreateWire();
 
-                for (int j = 0; j < UnityEngine.Random.Range(1, 5); j++)
+                for (int j = 0; j < UnityEngine.Random.Range(1, 128); j++)
                 {
                     wire.Add(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
                 }
             }
 
-            StartWiringEditing(w, (we) =>
-            {
-                foreach (var wire1 in we.Values.ToList())
-                {
-                    foreach (var point in wire1)
-                    {
-                        Debug.Log(point);
-                    }
-                }
-            });
+            StartWiringEditing(w, null);
         }
     
 
@@ -174,14 +170,28 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 wireButton.GetComponent<WireButton>().DeleteWireButton.onClick.AddListener(() =>
                 {
                     int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
-                    Wiring.Remove(wireNumber);
 
-                    for (int i = 0; i < _pointsContainer.childCount; ++i)
+                    _deleteWireDialog.gameObject.SetActive(true);
+                    _deleteWireDialogYesButton.onClick.RemoveAllListeners();
+                    _deleteWireDialogNoButton.onClick.RemoveAllListeners();
+
+                    _deleteWireDialogYesButton.onClick.AddListener(() =>
                     {
-                        Destroy(_pointsContainer.GetChild(i).gameObject);
-                    }
+                        Wiring.Remove(wireNumber);
 
-                    Destroy(wireButton.gameObject);
+                        for (int i = 0; i < _pointsContainer.childCount; ++i)
+                        {
+                            Destroy(_pointsContainer.GetChild(i).gameObject);
+                        }
+
+                        Destroy(wireButton.gameObject);
+                        _deleteWireDialog.gameObject.SetActive(false);
+                    });
+
+                    _deleteWireDialogNoButton.onClick.AddListener(() =>
+                    {
+                        _deleteWireDialog.gameObject.SetActive(false);
+                    });
                 });
 
                 ++wireCount;
@@ -236,14 +246,28 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 wireButton.GetComponent<WireButton>().DeleteWireButton.onClick.AddListener(() =>
                 {
                     int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
-                    Wiring.Remove(wireNumber);
 
-                    for (int i = 0; i < _pointsContainer.childCount; ++i)
+                    _deleteWireDialog.gameObject.SetActive(true);
+                    _deleteWireDialogYesButton.onClick.RemoveAllListeners();
+                    _deleteWireDialogNoButton.onClick.RemoveAllListeners();
+
+                    _deleteWireDialogYesButton.onClick.AddListener(() =>
                     {
-                        Destroy(_pointsContainer.GetChild(i).gameObject);
-                    }
+                        Wiring.Remove(wireNumber);
 
-                    Destroy(wireButton.gameObject);
+                        for (int i = 0; i < _pointsContainer.childCount; ++i)
+                        {
+                            Destroy(_pointsContainer.GetChild(i).gameObject);
+                        }
+
+                        Destroy(wireButton.gameObject);
+                        _deleteWireDialog.gameObject.SetActive(false);
+                    });
+
+                    _deleteWireDialogNoButton.onClick.AddListener(() =>
+                    {
+                        _deleteWireDialog.gameObject.SetActive(false);
+                    });
                 });
 
 
