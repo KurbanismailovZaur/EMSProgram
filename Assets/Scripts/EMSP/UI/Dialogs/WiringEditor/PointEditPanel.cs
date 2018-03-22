@@ -71,6 +71,16 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 }
             });
 
+            X.onEndEdit.AddListener((str) =>
+            {
+                if(string.IsNullOrEmpty(str))
+                {
+                    _currentValue.x = 0;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                    X.text = 0.ToString();
+                }
+            });
+
             Y.onValueChanged.AddListener((str) =>
             {
                 float newY;
@@ -81,6 +91,16 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 }
             });
 
+            Y.onEndEdit.AddListener((str) =>
+            {
+                if (string.IsNullOrEmpty(str))
+                {
+                    _currentValue.y = 0;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                    Y.text = 0.ToString();
+                }
+            });
+
             Z.onValueChanged.AddListener((str) =>
             {
                 float newZ;
@@ -88,6 +108,17 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 {
                     _currentValue.z = newZ;
                     WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                }
+            });
+
+
+            Z.onEndEdit.AddListener((str) =>
+            {
+                if (string.IsNullOrEmpty(str))
+                {
+                    _currentValue.z = 0;
+                    WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
+                    Z.text = 0.ToString();
                 }
             });
 

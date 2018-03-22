@@ -77,6 +77,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Methods
 
+        private void Start()
+        {
+            if(_currentActiveButton != this)
+            {
+                ImageComponent.color = NormalButtonColor;
+                TextComponent.color = NormalTextColor;
+            }
+        }
 
         #endregion
 

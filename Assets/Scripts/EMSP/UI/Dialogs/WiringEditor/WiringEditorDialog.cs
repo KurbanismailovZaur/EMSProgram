@@ -3,6 +3,7 @@ using Numba;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -82,7 +83,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Wiring w = new Communication.Wiring.Factory().Create();
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Wire wire = w.CreateWire();
 
@@ -92,8 +93,18 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 }
             }
 
-            StartWiringEditing(w, null);
+            StartWiringEditing(w, (we) =>
+            {
+                foreach (var wire1 in we.Values.ToList())
+                {
+                    foreach (var point in wire1)
+                    {
+                        Debug.Log(point);
+                    }
+                }
+            });
         }
+    
 
         public void StartWiringEditing(Wiring wiring, Action<Dictionary<int, List<Vector3>>> onWiringEdited)
         {
@@ -113,7 +124,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 Button wireButton = Instantiate(_wireButtonPrefab);
                 wireButton.transform.SetParent(_wireButtonContainer, false);
-                wireButton.GetComponentInChildren<Text>().text = string.Format("Wire_{0}", wireCount);
+                wireButton.GetComponentInChildren<Text>().text = string.Format("{0}", wireCount);
                 wireButton.GetComponent<WireButton>().WireNumber = wireCount;
 
                 wireButton.onClick.AddListener(() =>
