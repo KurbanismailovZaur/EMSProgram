@@ -1,9 +1,11 @@
 ﻿using EMSP.Communication;
 using EMSP.Utility.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Mathematic.MagneticTension
 {
@@ -41,6 +43,14 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Classes
+        [Serializable]
+        public class CalculatedEvent : UnityEvent<MagneticTensionInSpace> { }
+
+        [Serializable]
+        public class DestroyedEvent : UnityEvent<MagneticTensionInSpace> { }
+
+        [Serializable]
+        public class VisibilityChangedEvent : UnityEvent<MagneticTensionInSpace, bool> { }
         #endregion
 
         #region Interfaces
@@ -72,10 +82,30 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Events
+        public CalculatedEvent Calculated = new CalculatedEvent();
+
+        public DestroyedEvent Destroyed = new DestroyedEvent();
+
+        public VisibilityChangedEvent VisibilityChanged = new VisibilityChangedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
+        public bool IsVisible
+        {
+            get { return _isCalculated && gameObject.activeSelf; }
+            set
+            {
+                if (gameObject.activeSelf == value || !_isCalculated)
+                {
+                    return;
+                }
+
+                gameObject.SetActive(value);
+
+                VisibilityChanged.Invoke(this, gameObject.activeSelf);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -86,8 +116,10 @@ namespace EMSP.Mathematic.MagneticTension
         {
             if (_isCalculated)
             {
-                DestroyPoints();
+                DestroyMagneticTensions();
             }
+
+            gameObject.SetActive(true);
 
             float rangeLength = MathematicManager.Instance.RangeLength;
             float amperage = MathematicManager.Instance.Amperage;
@@ -127,6 +159,8 @@ namespace EMSP.Mathematic.MagneticTension
 
             _isCalculated = true;
 
+            Calculated.Invoke(this);
+
             //FilterPointsByAlpha(0.01f);
         }
 
@@ -146,17 +180,7 @@ namespace EMSP.Mathematic.MagneticTension
             return oMin + (value - iMin) * (oMax - oMin) / (iMax - iMin);
         }
 
-        public void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void DestroyPoints()
+        public void DestroyMagneticTensions()
         {
             if (!_isCalculated)
             {
@@ -169,6 +193,10 @@ namespace EMSP.Mathematic.MagneticTension
             }
 
             _points.Clear();
+
+            _isCalculated = false;
+
+            Destroyed.Invoke(this);
         }
         #endregion
 

@@ -132,6 +132,11 @@ namespace EMSP.App
         {
             WiringManager.Instance.DestroyWiring();
         }
+
+        private void RemoveMagneticTensionInSpace()
+        {
+            MathematicManager.Instance.MagneticTensionInSpace.DestroyMagneticTensions();
+        }
         #endregion
 
         #region Calculations context methods
@@ -211,6 +216,9 @@ namespace EMSP.App
                     break;
                 case EditContextMethods.ActionType.RemoveWiring:
                     RemoveWiring();
+                    break;
+                case EditContextMethods.ActionType.RemoveMagneticTensionInSpace:
+                    RemoveMagneticTensionInSpace();
                     break;
             }
 

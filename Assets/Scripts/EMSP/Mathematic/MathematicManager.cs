@@ -76,14 +76,14 @@ namespace EMSP.Mathematic
             switch (calculationType)
             {
                 case CalculationType.MagneticTensionInSpace:
-                    _magneticTensionInSpace.Show();
+                    _magneticTensionInSpace.IsVisible = true;
                     break;
             }
         }
 
         public void DestroyCalculations()
         {
-            MagneticTensionInSpace.DestroyPoints();
+            MagneticTensionInSpace.DestroyMagneticTensions();
         }
         #endregion
 

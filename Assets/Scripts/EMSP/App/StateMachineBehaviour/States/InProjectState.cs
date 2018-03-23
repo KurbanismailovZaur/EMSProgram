@@ -1,4 +1,6 @@
 ﻿using EMSP.Communication;
+using EMSP.Mathematic;
+using EMSP.Mathematic.MagneticTension;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,13 +43,13 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _fileImportWiringButton;
 
         [SerializeField]
-        private Button _viewGridVisibilityButton;
+        private Button _editRemoveModelButton;
 
         [SerializeField]
-        private Button _removeModelButton;
+        private Button _editRemoveWiringButton;
 
         [SerializeField]
-        private Button _removeWiringButton;
+        private Button _editCalculationRemoveMagneticTensionInSpaceButton;
 
         [SerializeField]
         private Button _viewModelIsVisibilityButton;
@@ -57,6 +59,12 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         [SerializeField]
         private Button _viewWiringIsVisibilityButton;
+
+        [SerializeField]
+        private Button _viewComputationMagneticTensionInSpaceIsVisibleButton;
+
+        [SerializeField]
+        private Button _viewGridVisibilityButton;
 
         [SerializeField]
         private Button _calculationsComputationMagneticTensionInSpaceButton;
@@ -90,6 +98,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
+
+            MathematicManager.Instance.MagneticTensionInSpace.Calculated.AddListener(MagneticTensionInSpace_Calculated);
+            MathematicManager.Instance.MagneticTensionInSpace.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
         }
 
         public override void OnExit()
@@ -101,6 +112,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
+
+            MathematicManager.Instance.MagneticTensionInSpace.Calculated.RemoveListener(MagneticTensionInSpace_Calculated);
+            MathematicManager.Instance.MagneticTensionInSpace.Destroyed.RemoveListener(MagneticTensionInSpace_Destroyed);
         }
         #endregion
 
@@ -115,30 +129,42 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         private void ModelManager_ModelCreated(Model model)
         {
-            _removeModelButton.interactable = true;
+            _editRemoveModelButton.interactable = true;
             _viewModelIsVisibilityButton.interactable = true;
             _viewModelIsTransparentButton.interactable = true;
         }
 
         private void ModelManager_ModelDestroyed(Model model)
         {
-            _removeModelButton.interactable = false;
+            _editRemoveModelButton.interactable = false;
             _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
         }
 
-        private void WiringManager_WiringCreated(Wiring arg0)
+        private void WiringManager_WiringCreated(Wiring wiring)
         {
-            _removeWiringButton.interactable = true;
+            _editRemoveWiringButton.interactable = true;
             _viewWiringIsVisibilityButton.interactable = true;
             _calculationsComputationMagneticTensionInSpaceButton.interactable = true;
         }
 
-        private void WiringManager_WiringDestroyed(Wiring arg0)
+        private void WiringManager_WiringDestroyed(Wiring wiring)
         {
-            _removeWiringButton.interactable = false;
+            _editRemoveWiringButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = false;
             _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
+        }
+
+        private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
+        {
+            _editCalculationRemoveMagneticTensionInSpaceButton.interactable = true;
+            _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
+        }
+
+        private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
+        {
+            _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;
+            _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
         }
         #endregion
         #endregion
