@@ -93,11 +93,11 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Wiring w = new Communication.Wiring.Factory().Create();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Wire wire = w.CreateWire();
 
-                for (int j = 0; j < UnityEngine.Random.Range(1, 128); j++)
+                for (int j = 0; j < UnityEngine.Random.Range(20, 50); j++)
                 {
                     wire.Add(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
                 }
@@ -105,7 +105,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             StartWiringEditing(w, null);
         }
-    
+
 
         public void StartWiringEditing(Wiring wiring, Action<Dictionary<int, List<Vector3>>> onWiringEdited)
         {
@@ -164,6 +164,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                         editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
                         addPointButton.transform.SetAsLastSibling();
+
+                        StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
                     });
                 });
 
@@ -240,10 +242,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                         editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
                         addPointButton.transform.SetAsLastSibling();
+
+                        StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
                     });
                 });
 
-                wireButton.GetComponent<WireButton>().DeleteWireButton.onClick.AddListener(() =>
+                WireButton wireButtonComponent = wireButton.GetComponent<WireButton>();
+
+                wireButtonComponent.DeleteWireButton.onClick.AddListener(() =>
                 {
                     int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
 
@@ -274,9 +280,13 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
 
-                wireButton.GetComponent<WireButton>().WireNumber = numberOfNewWire;
+                wireButtonComponent.WireNumber = numberOfNewWire;
                 wireButton.GetComponentInChildren<Text>().text = string.Format(" {0}", numberOfNewWire);
+
                 addWireButton.transform.SetAsLastSibling();
+
+                wireButton.onClick.Invoke();
+                StartCoroutine(WaitAndMoveWireButtonsContainer(wireButton.GetComponent<RectTransform>().rect.width));
             });
 
 
@@ -297,6 +307,37 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             if (_wireButtonContainer.childCount > 0)
                 _wireButtonContainer.GetChild(0).GetComponent<Button>().onClick.Invoke();
+        }
+
+        IEnumerator WaitAndMoveWireButtonsContainer(float offset)
+        {
+            yield return null;
+
+            var wcParentWidth = _wireButtonContainer.parent.GetComponent<RectTransform>().rect.width;
+            var wcWidth = _wireButtonContainer.rect.width;
+
+            if (wcWidth > wcParentWidth)
+            {
+                _wireButtonContainer.anchoredPosition3D = new Vector3(
+                       _wireButtonContainer.anchoredPosition3D.x - offset - 5,
+                       0, 0);
+            }
+        }
+
+        IEnumerator WaitAndMovePointsContainer(float offset)
+        {
+            yield return null;
+
+            var pcParentHeight = _pointsContainer.parent.GetComponent<RectTransform>().rect.height;
+            var pcHeight = _pointsContainer.rect.height;
+
+            if (pcHeight > pcParentHeight)
+            {
+                _pointsContainer.anchoredPosition3D = new Vector3(
+                       0,
+                       _pointsContainer.anchoredPosition3D.y + offset + 5,
+                       0);
+            }
         }
 
         private void Show()
