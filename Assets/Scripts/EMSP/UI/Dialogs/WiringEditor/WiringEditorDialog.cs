@@ -183,9 +183,17 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         {
                             Wiring.Remove(wireNumber);
 
-                            for (int i = 0; i < _pointsContainer.childCount; ++i)
+                            int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
+                            if(!(wbNumber == 0))
                             {
-                                Destroy(_pointsContainer.GetChild(i).gameObject);
+                                _wireButtonContainer.GetChild(wbNumber - 1).GetComponent<Button>().onClick.Invoke();
+                            }
+                            else
+                            {
+                                for (int i = 0; i < _pointsContainer.childCount; ++i)
+                                {
+                                    Destroy(_pointsContainer.GetChild(i).gameObject);
+                                }
                             }
 
                             Destroy(wireButton.gameObject);
@@ -282,9 +290,17 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     {
                         Wiring.Remove(wireNumber);
 
-                        for (int i = 0; i < _pointsContainer.childCount; ++i)
+                        int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
+                        if (!(wbNumber == 0))
                         {
-                            Destroy(_pointsContainer.GetChild(i).gameObject);
+                            _wireButtonContainer.GetChild(wbNumber - 1).GetComponent<Button>().onClick.Invoke();
+                        }
+                        else
+                        {
+                            for (int i = 0; i < _pointsContainer.childCount; ++i)
+                            {
+                                Destroy(_pointsContainer.GetChild(i).gameObject);
+                            }
                         }
 
                         Destroy(wireButton.gameObject);
