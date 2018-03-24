@@ -385,7 +385,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             foreach (var editPointPanel in _pointsContainer.GetComponentsInChildren<PointEditPanel>())
             {
-                editPointPanel.UpdatePointNumberImmediate();
+                editPointPanel.UpdatePointNumberAndSelectableImmediate();
             }
         }
 
