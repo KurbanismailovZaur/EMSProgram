@@ -89,7 +89,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public void StartWiringEditing(Wiring wiring, Action<Dictionary<int, List<Vector3>>> onWiringEdited)
+        public void StartWiringEditing(Wiring wiring, Action<Wiring> onWiringEdited)
         {
             _saveButton.onClick.RemoveAllListeners();
             _cancelButton.onClick.RemoveAllListeners();
@@ -261,7 +261,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     });
                 });
 
-                int numberOfNewWire = Wiring.Keys.ToList().Max() + 1;
+                var wiresNumbers = Wiring.Keys.ToList();
+                int numberOfNewWire = (wiresNumbers.Count == 0)? 0: wiresNumbers.Max() + 1;
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
 
@@ -365,14 +366,27 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Hide();
         }
 
-        private void SaveAndClose(Action<Dictionary<int, List<Vector3>>> onWiringEdited)
+        private void SaveAndClose(Action<Wiring> onWiringEdited)
         {
             Close(false);
 
             if (onWiringEdited != null)
-                onWiringEdited(Wiring);
+                onWiringEdited(DictionaryToWiting(Wiring));
 
             Wiring.Clear();
+        }
+
+        private Wiring DictionaryToWiting(Dictionary<int, List<Vector3>> dict)
+        {
+            Wiring result = new Communication.Wiring.Factory().Create();
+
+            foreach(var pList in dict.Values.ToList())
+            {
+                Wire wire = result.CreateWire();
+                wire.AddRange(pList);
+            }
+
+            return result;
         }
 
         #endregion

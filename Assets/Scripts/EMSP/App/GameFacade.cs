@@ -299,7 +299,7 @@ namespace EMSP.App
             }
         }
 
-        private void WiringEditorDialog_OnWiringEdited(Dictionary<int, List<Vector3>> wiringData)
+        private void WiringEditorDialog_OnWiringEdited(Wiring wiringData)
         {
 
         }
