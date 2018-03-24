@@ -68,6 +68,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         public Dictionary<int, List<Vector3>> Wiring = new Dictionary<int, List<Vector3>>();
 
         private CanvasGroup _canvasGroup;
+        private GameObject _tabNavigationObject;
         #endregion
 
         #region Events
@@ -394,6 +395,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
 
+            ActivateTabNavigation();
+
             OnDialogActivated();
         }
 
@@ -402,6 +405,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
             _canvasGroup.alpha = 0f;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
+
+            DeactivateTabNavigation();
         }
 
         private void Close(bool needClearChangedWiring = true)
@@ -449,6 +454,17 @@ namespace EMSP.UI.Dialogs.WiringEditor
             }
 
             return result;
+        }
+
+        private void ActivateTabNavigation()
+        {
+            _tabNavigationObject = new GameObject("TabNavigation");
+            _tabNavigationObject.AddComponent<TabNavigation>();
+        }
+
+        private void DeactivateTabNavigation()
+        {
+            Destroy(_tabNavigationObject);
         }
 
         #endregion

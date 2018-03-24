@@ -44,6 +44,28 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Behaviour
 
         #region Properties
+
+        public Selectable UpSelectable
+        {
+            get { return X; }
+            set
+            {
+                var navigation = X.navigation;
+                navigation.selectOnUp = value;
+                X.navigation = navigation;
+            }
+        }
+
+        public Selectable DownSelectable
+        {
+            get { return Z; }
+            set
+            {
+                var navigation = Z.navigation;
+                navigation.selectOnDown = value;
+                Z.navigation = navigation;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -57,9 +79,12 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Y.contentType = InputField.ContentType.DecimalNumber;
             Z.contentType = InputField.ContentType.DecimalNumber;
 
+
             Vector3 point = WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber];
             _currentValue = point;
+
             StartCoroutine(UpdatePointNumber());
+
             X.text = point.x.ToString();
             Y.text = point.y.ToString();
             Z.text = point.z.ToString();
@@ -76,7 +101,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             X.onEndEdit.AddListener((str) =>
             {
-                if(string.IsNullOrEmpty(str) || str == "-")
+                if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.x = 0;
                     WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber] = _currentValue;
@@ -129,7 +154,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         public void UpdatePointNumberImmediate()
         {
-            PointNumberField.text = GetComponent<RectTransform>().GetSiblingIndex().ToString();
+            int sibIndex = GetComponent<RectTransform>().GetSiblingIndex();
+
+            PointNumberField.text = sibIndex.ToString();
+
+            if (sibIndex != 0)
+            {
+                transform.parent.GetChild(sibIndex - 1).GetComponent<PointEditPanel>().DownSelectable = UpSelectable;
+                UpSelectable = transform.parent.GetChild(sibIndex - 1).GetComponent<PointEditPanel>().DownSelectable;
+            }
         }
 
         public IEnumerator UpdatePointNumber()
