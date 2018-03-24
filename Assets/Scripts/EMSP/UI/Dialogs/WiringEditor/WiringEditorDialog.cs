@@ -133,6 +133,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             editPanel.transform.SetParent(_pointsContainer, false);
 
                             editPanel.Initialize(wireNumber, pointCount);
+                            editPanel.DeletePointButton.onClick.AddListener(() =>
+                            {
+                                int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
+                                Vector3 _point = editPanel.CurrentValue;
+
+                                Wiring[wireNum].RemoveAt(editPanel.GetComponent<RectTransform>().GetSiblingIndex());
+                                StartCoroutine(WaitAndUpdatePointsNumber());
+                                Destroy(editPanel.gameObject);
+                            });
                             ++pointCount;
                         }
 
@@ -147,6 +156,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             editPanel.transform.SetParent(_pointsContainer, false);
 
                             editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
+                            editPanel.DeletePointButton.onClick.AddListener(() =>
+                            {
+                                int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
+                                Vector3 _point = editPanel.CurrentValue;
+
+                                Wiring[wireNum].RemoveAt(editPanel.GetComponent<RectTransform>().GetSiblingIndex());
+                                StartCoroutine(WaitAndUpdatePointsNumber());
+                                Destroy(editPanel.gameObject);
+                            });
                             addPointButton.transform.SetAsLastSibling();
 
                             StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
@@ -212,6 +230,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         editPanel.transform.SetParent(_pointsContainer, false);
 
                         editPanel.Initialize(wireNumber, pointCount);
+                        editPanel.DeletePointButton.onClick.AddListener(() =>
+                        {
+                            int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
+                            Vector3 _point = editPanel.CurrentValue;
+
+                            Wiring[wireNum].RemoveAt(editPanel.GetComponent<RectTransform>().GetSiblingIndex());
+                            StartCoroutine(WaitAndUpdatePointsNumber());
+                            Destroy(editPanel.gameObject);
+                        });
                         ++pointCount;
                     }
 
@@ -226,6 +253,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         editPanel.transform.SetParent(_pointsContainer, false);
 
                         editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
+                        editPanel.DeletePointButton.onClick.AddListener(() =>
+                        {
+                            int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
+                            Vector3 _point = editPanel.CurrentValue;
+
+                            Wiring[wireNum].RemoveAt(editPanel.GetComponent<RectTransform>().GetSiblingIndex());
+                            StartCoroutine(WaitAndUpdatePointsNumber());
+                            Destroy(editPanel.gameObject);
+                        });
                         addPointButton.transform.SetAsLastSibling();
 
                         StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
@@ -323,6 +359,16 @@ namespace EMSP.UI.Dialogs.WiringEditor
                        0,
                        _pointsContainer.anchoredPosition3D.y + offset + 5,
                        0);
+            }
+        }
+
+        private IEnumerator WaitAndUpdatePointsNumber()
+        {
+            yield return null;
+
+            foreach (var editPointPanel in _pointsContainer.GetComponentsInChildren<PointEditPanel>())
+            {
+                editPointPanel.UpdatePointNumberImmediate();
             }
         }
 

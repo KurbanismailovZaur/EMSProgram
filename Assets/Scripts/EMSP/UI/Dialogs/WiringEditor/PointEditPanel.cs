@@ -27,11 +27,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Fields
 
         public Text PointNumberField;
+        public Button DeletePointButton;
         public InputField X;
         public InputField Y;
         public InputField Z;
 
         private Vector3 _currentValue;
+        public Vector3 CurrentValue { get { return _currentValue; } }
+
 
         #endregion
 
@@ -56,7 +59,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Vector3 point = WiringEditorDialog.Instance.Wiring[wireNumber][pointNumber];
             _currentValue = point;
-            PointNumberField.text = pointNumber.ToString();
+            StartCoroutine(UpdatePointNumber());
             X.text = point.x.ToString();
             Y.text = point.y.ToString();
             Z.text = point.z.ToString();
@@ -122,6 +125,18 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 }
             });
 
+        }
+
+        public void UpdatePointNumberImmediate()
+        {
+            PointNumberField.text = GetComponent<RectTransform>().GetSiblingIndex().ToString();
+        }
+
+        public IEnumerator UpdatePointNumber()
+        {
+            yield return null;
+
+            UpdatePointNumberImmediate();
         }
         #endregion
 
