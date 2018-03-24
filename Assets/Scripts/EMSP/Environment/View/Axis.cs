@@ -31,6 +31,13 @@ namespace EMSP.Environment.View
         #region Fields
         [SerializeField]
         private AxisDirection _direction;
+
+        private Renderer _renderer;
+
+        private Color _selfColor;
+
+        [SerializeField]
+        private Color _highlightColor = Color.yellow;
         #endregion
 
         #region Events
@@ -45,6 +52,11 @@ namespace EMSP.Environment.View
         #endregion
 
         #region Methods
+        private void Awake()
+        {
+            _renderer = GetComponent<Renderer>();
+            _selfColor = _renderer.material.color;
+        }
         #endregion
 
         #region Indexers
@@ -55,7 +67,17 @@ namespace EMSP.Environment.View
         {
             Selected.Invoke(this, _direction);
         }
-		#endregion
-		#endregion
-	}
+
+        public void EventTrigger_PointerEnter(BaseEventData eventData)
+        {
+            _renderer.sharedMaterial.color = _highlightColor;
+        }
+
+        public void EventTrigger_PointerExit(BaseEventData eventData)
+        {
+            _renderer.sharedMaterial.color = _selfColor;
+        }
+        #endregion
+        #endregion
+    }
 }
