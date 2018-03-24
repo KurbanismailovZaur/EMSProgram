@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Grid = EMSP.Environment.Metrics.Grid;
+using EMSP.UI.Dialogs.WiringEditor;
 
 namespace EMSP.App
 {
@@ -42,6 +43,9 @@ namespace EMSP.App
 
         [SerializeField]
         private OrbitController _orbitController;
+
+        [SerializeField]
+        private WiringEditorDialog _wiringEditorDialog;
         #endregion
 
         #region Events
@@ -137,6 +141,11 @@ namespace EMSP.App
         {
             MathematicManager.Instance.MagneticTensionInSpace.DestroyMagneticTensions();
         }
+
+        private void EditWiring()
+        {
+            _wiringEditorDialog.StartWiringEditing(WiringManager.Instance.Wiring, WiringEditorDialog_OnWiringEdited);
+        }
         #endregion
 
         #region Calculations context methods
@@ -220,6 +229,9 @@ namespace EMSP.App
                 case EditContextMethods.ActionType.RemoveMagneticTensionInSpace:
                     RemoveMagneticTensionInSpace();
                     break;
+                case EditContextMethods.ActionType.EditWiring:
+                    EditWiring();
+                    break;
             }
 
             editContextMethods.Panel.HideActiveContextAndStopAutoShow();
@@ -285,6 +297,11 @@ namespace EMSP.App
                     _orbitController.SetTargetVectorAndZAngle(Vector3.back, 0f);
                     break;
             }
+        }
+
+        private void WiringEditorDialog_OnWiringEdited(Dictionary<int, List<Vector3>> wiringData)
+        {
+
         }
         #endregion
         #endregion

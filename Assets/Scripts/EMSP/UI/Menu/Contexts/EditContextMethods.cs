@@ -15,7 +15,8 @@ namespace EMSP.UI.Menu.Contexts
         {
             RemoveModel,
             RemoveWiring,
-            RemoveMagneticTensionInSpace
+            RemoveMagneticTensionInSpace,
+            EditWiring
         }
         #endregion
 
@@ -62,6 +63,11 @@ namespace EMSP.UI.Menu.Contexts
         public void RemoveMagneticTensionInSpace()
         {
             Selected.Invoke(this, ActionType.RemoveMagneticTensionInSpace);
+        }
+
+        public void EditWiring()
+        {
+            Selected.Invoke(this, ActionType.EditWiring);
         }
         #endregion
 
