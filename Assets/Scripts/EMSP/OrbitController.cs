@@ -166,7 +166,24 @@ namespace EMSP
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    _isStartInViewport = false;
+                    PointerEventData pointerData = new PointerEventData(EventSystem.current)
+                    {
+                        pointerId = -1,
+                    };
+
+                    pointerData.position = Input.mousePosition;
+
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(pointerData, results);
+
+                    if (results.TrueForAll(x => x.gameObject.layer == LayerMask.NameToLayer("Gizmos")))
+                    {
+                        _isStartInViewport = true;
+                    }
+                    else
+                    {
+                        _isStartInViewport = false;
+                    }
                 }
                 else
                 {
@@ -251,13 +268,13 @@ namespace EMSP
             Debug.DrawLine(_origin, _origin + _currentUpVector, Color.white);
         }
 #endif
-#endregion
+        #endregion
 
         #region Indexers
         #endregion
 
         #region Events handlers
         #endregion
-#endregion
+        #endregion
     }
 }
