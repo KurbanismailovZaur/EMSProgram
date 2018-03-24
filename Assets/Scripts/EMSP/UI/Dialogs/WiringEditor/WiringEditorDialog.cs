@@ -378,7 +378,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         private Wiring DictionaryToWiring(Dictionary<int, List<Vector3>> dict)
         {
-            Wiring result = new Communication.Wiring.Factory().Create();
+            Wiring result = new Wiring.Factory().Create();
 
             foreach(var pList in dict.Values.ToList())
             {
