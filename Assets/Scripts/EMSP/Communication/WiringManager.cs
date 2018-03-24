@@ -78,9 +78,20 @@ namespace EMSP.Communication
         #region Methods
         public void CreateNewWiring(string pathToXLS)
         {
+            Wiring wiring = _wiringDataReader.ReadWiringFromFile(pathToXLS);
+            CreateNewWiring(wiring);
+        }
+
+        public void CreateNewWiring(Wiring wiring)
+        {
             DestroyWiring();
 
-            _wiring = _wiringDataReader.ReadWiringFromFile(pathToXLS);
+            if (!wiring.CheckPointsExist())
+            {
+                return;
+            }
+
+            _wiring = wiring;
             _wiring.SetWiringMaterial(_lineMaterial);
             _wiring.transform.SetParent(transform, true);
 

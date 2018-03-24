@@ -75,6 +75,8 @@ namespace EMSP.Communication
             }
         }
 
+        public int Count { get { return _localPoints.Count; } }
+
         public Material LineMaterial
         {
             get { return _lineRenderer.sharedMaterial; }
@@ -97,18 +99,26 @@ namespace EMSP.Communication
             return _localPoints.GetEnumerator();
         }
 
-        public void Add(Vector3 point)
+        public void Add(Vector3 point, Space relativeTo = Space.World)
         {
-            _localPoints.Add(point);
+            if (relativeTo == Space.World)
+            {
+                _localPoints.Add(transform.InverseTransformPoint(point));
+            }
+            else
+            {
+                _localPoints.Add(point);
+            }
+
             OnGeometryChanged();
         }
 
-        public void Add(float x, float y, float z)
+        public void Add(float x, float y, float z, Space relativeTo = Space.World)
         {
-            Add(new Vector3(x, y, z));
+            Add(new Vector3(x, y, z), relativeTo);
         }
 
-        public void AddRange(IEnumerable<Vector3> points)
+        public void AddRange(IEnumerable<Vector3> points, Space relativeTo = Space.World)
         {
             _localPoints.AddRange(points);
             OnGeometryChanged();

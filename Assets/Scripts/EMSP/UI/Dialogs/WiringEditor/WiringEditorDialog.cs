@@ -371,12 +371,12 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Close(false);
 
             if (onWiringEdited != null)
-                onWiringEdited(DictionaryToWiting(Wiring));
+                onWiringEdited(DictionaryToWiring(Wiring));
 
             Wiring.Clear();
         }
 
-        private Wiring DictionaryToWiting(Dictionary<int, List<Vector3>> dict)
+        private Wiring DictionaryToWiring(Dictionary<int, List<Vector3>> dict)
         {
             Wiring result = new Communication.Wiring.Factory().Create();
 

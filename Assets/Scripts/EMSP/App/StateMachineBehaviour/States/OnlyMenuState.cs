@@ -49,6 +49,9 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _editCalculationRemoveMagneticTensionInSpaceButton;
 
         [SerializeField]
+        private Button _editWiringButton;
+
+        [SerializeField]
         private Button _viewModelIsVisibilityButton;
 
         [SerializeField]
@@ -87,6 +90,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _editRemoveModelButton.interactable = false;
             _editRemoveWiringButton.interactable = false;
             _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;
+            _editWiringButton.interactable = false;
             _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = false;

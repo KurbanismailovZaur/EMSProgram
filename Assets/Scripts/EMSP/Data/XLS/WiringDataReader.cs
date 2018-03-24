@@ -70,7 +70,7 @@ namespace EMSP.Data.XLS
                         break;
                     }
 
-                    wire.Add(ReadNode(row));
+                    wire.Add(ReadNode(row), Space.Self);
                 }
             }
 

@@ -299,9 +299,9 @@ namespace EMSP.App
             }
         }
 
-        private void WiringEditorDialog_OnWiringEdited(Wiring wiringData)
+        private void WiringEditorDialog_OnWiringEdited(Wiring wiring)
         {
-
+            WiringManager.Instance.CreateNewWiring(wiring);
         }
         #endregion
         #endregion

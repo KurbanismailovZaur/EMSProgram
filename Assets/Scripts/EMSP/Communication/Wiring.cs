@@ -67,6 +67,10 @@ namespace EMSP.Communication
                 VisibilityChanged.Invoke(this, _isVisible);
             }
         }
+
+        public ReadOnlyCollection<Wire> Wires { get { return _wires.AsReadOnly(); } }
+
+        public int Count { get { return _wires.Count; } }
         #endregion
 
         #region Constructors
@@ -117,6 +121,24 @@ namespace EMSP.Communication
             }
 
             return bounds;
+        }
+
+        public bool CheckPointsExist()
+        {
+            if (_wires.Count == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < _wires.Count; i++)
+            {
+                if (_wires[i].Count != 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         #endregion
 

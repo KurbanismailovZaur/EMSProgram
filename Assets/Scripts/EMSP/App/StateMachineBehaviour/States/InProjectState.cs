@@ -52,6 +52,9 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _editCalculationRemoveMagneticTensionInSpaceButton;
 
         [SerializeField]
+        private Button _editWiringButton;
+
+        [SerializeField]
         private Button _viewModelIsVisibilityButton;
 
         [SerializeField]
@@ -87,6 +90,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileCloseProjectButton.interactable = true;
             _fileImportModelButton.interactable = true;
             _fileImportWiringButton.interactable = true;
+            _editWiringButton.interactable = true;
             _viewGridVisibilityButton.interactable = true;
 
             GameFacade.Instance.InitializeActivateProjectEnvironment();
