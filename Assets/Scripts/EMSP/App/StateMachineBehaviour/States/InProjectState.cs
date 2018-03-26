@@ -43,6 +43,9 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _fileImportWiringButton;
 
         [SerializeField]
+        private Button _fileExportMagneticTensionInSpace;
+
+        [SerializeField]
         private Button _editRemoveModelButton;
 
         [SerializeField]
@@ -161,12 +164,14 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
         {
+            _fileExportMagneticTensionInSpace.interactable = true;
             _editCalculationRemoveMagneticTensionInSpaceButton.interactable = true;
             _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
         }
 
         private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
         {
+            _fileExportMagneticTensionInSpace.interactable = false;
             _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;
             _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
         }

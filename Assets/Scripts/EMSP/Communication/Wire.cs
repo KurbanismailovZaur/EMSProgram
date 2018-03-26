@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,6 +28,7 @@ namespace EMSP.Communication
             public Wire Create()
             {
                 Wire wire = new GameObject("Wire").AddComponent<Wire>();
+                wire._name = "Sheet1";
 
                 wire._lineRenderer = wire.GetComponent<LineRenderer>();
                 wire._lineRenderer.widthMultiplier = 0.02f;
@@ -47,6 +49,8 @@ namespace EMSP.Communication
         #endregion
 
         #region Fields
+        private string _name;
+
         private LineRenderer _lineRenderer;
 
         List<Vector3> _localPoints = new List<Vector3>();
@@ -89,6 +93,28 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
+        public string GetName()
+        {
+            return _name;
+        }
+
+        public bool SetName(string name)
+        {
+            if (!IsCorrectName(name))
+            {
+                return false;
+            }
+
+            _name = name;
+
+            return true;
+        }
+
+        private static bool IsCorrectName(string name)
+        {
+            return name.All(char.IsLetterOrDigit);
+        }
+
         public IEnumerator<Vector3> GetEnumerator()
         {
             return _localPoints.GetEnumerator();

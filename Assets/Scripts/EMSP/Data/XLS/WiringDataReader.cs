@@ -46,20 +46,20 @@ namespace EMSP.Data.XLS
             Wiring.Factory wiringFactory = new Wiring.Factory();
             Wiring wiring = wiringFactory.Create();
 
-            HSSFWorkbook MyBook;
+            HSSFWorkbook workbook;
 
             using (FileStream stream = new FileStream(pathToXLS, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                MyBook = new HSSFWorkbook(stream);
+                workbook = new HSSFWorkbook(stream);
             }
 
             Wire.Factory wireFactory = new Wire.Factory();
 
-            for (int i = 0; i < MyBook.NumberOfSheets; i++)
+            for (int i = 0; i < workbook.NumberOfSheets; i++)
             {
-                ISheet sheet = MyBook.GetSheetAt(i);
+                ISheet sheet = workbook.GetSheetAt(i);
 
-                Wire wire = wiring.CreateWire();
+                Wire wire = wiring.CreateWire(sheet.SheetName);
 
                 for (int j = 5; j <= sheet.LastRowNum; j++)
                 {

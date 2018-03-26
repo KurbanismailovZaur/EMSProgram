@@ -40,6 +40,9 @@ namespace EMSP.App.StateMachineBehaviour.States
         private Button _fileImportWiringButton;
 
         [SerializeField]
+        private Button _fileExportMagneticTensionInSpace;
+
+        [SerializeField]
         private Button _editRemoveModelButton;
 
         [SerializeField]
@@ -87,6 +90,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileCloseProjectButton.interactable = false;
             _fileImportModelButton.interactable = false;
             _fileImportWiringButton.interactable = false;
+            _fileExportMagneticTensionInSpace.interactable = false;
             _editRemoveModelButton.interactable = false;
             _editRemoveWiringButton.interactable = false;
             _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;

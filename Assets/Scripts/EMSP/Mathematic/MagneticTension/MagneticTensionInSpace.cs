@@ -3,6 +3,7 @@ using EMSP.Utility.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -64,7 +65,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         private bool _isCalculated;
 
-        private List<MagneticTensionPoint> _points = new List<MagneticTensionPoint>();
+        private List<MagneticTensionPoint> _mtPoints = new List<MagneticTensionPoint>();
 
         [SerializeField]
         private Material _magneticTensionPointMaterial;
@@ -91,6 +92,8 @@ namespace EMSP.Mathematic.MagneticTension
 
         #region Behaviour
         #region Properties
+        public ReadOnlyCollection<MagneticTensionPoint> MTPoints { get { return _mtPoints.AsReadOnly(); } }
+
         public bool IsVisible
         {
             get { return _isCalculated && gameObject.activeSelf; }
@@ -154,19 +157,19 @@ namespace EMSP.Mathematic.MagneticTension
                 float alpha = Remap(mtInfo.MagneticTension, 0f, maxMagneticTension, 0f, 1f);
 
                 MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create((PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
-                _points.Add(magneticTensionPoint);
+                _mtPoints.Add(magneticTensionPoint);
             }
 
             _isCalculated = true;
 
             Calculated.Invoke(this);
 
-            //FilterPointsByAlpha(0.01f);
+            FilterPointsByAlpha(0.01f);
         }
 
         public void FilterPointsByAlpha(float alphaThresold)
         {
-            foreach (MagneticTensionPoint point in _points)
+            foreach (MagneticTensionPoint point in _mtPoints)
             {
                 if (point.Alpha < alphaThresold)
                 {
@@ -187,12 +190,12 @@ namespace EMSP.Mathematic.MagneticTension
                 return;
             }
 
-            foreach (MagneticTensionPoint point in _points)
+            foreach (MagneticTensionPoint point in _mtPoints)
             {
                 Destroy(point.gameObject);
             }
 
-            _points.Clear();
+            _mtPoints.Clear();
 
             _isCalculated = false;
 

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Grid = EMSP.Environment.Metrics.Grid;
 using EMSP.UI.Dialogs.WiringEditor;
+using EMSP.Data;
 
 namespace EMSP.App
 {
@@ -46,6 +47,8 @@ namespace EMSP.App
 
         [SerializeField]
         private WiringEditorDialog _wiringEditorDialog;
+
+        private Exporter _exporter = new Exporter();
         #endregion
 
         #region Events
@@ -114,6 +117,18 @@ namespace EMSP.App
             }
 
             WiringManager.Instance.CreateNewWiring(results[0]);
+        }
+
+        private void ExportMagneticTensionInSpace()
+        {
+            string path = StandaloneFileBrowser.SaveFilePanel("Save Magnetic Tension in Space", Application.dataPath, GameSettings.Instance.MagneticTensionInSpaceDefaultName, GameSettings.Instance.WiringExtensionFilter);
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            _exporter.ExportMagneticTensionInSpace(path);
         }
 
         private void ExitApplication()
@@ -207,6 +222,9 @@ namespace EMSP.App
                     break;
                 case FileContextMethods.ActionType.ImportWiring:
                     ImportWiring();
+                    break;
+                case FileContextMethods.ActionType.ExportMagneticTensionInSpace:
+                    ExportMagneticTensionInSpace();
                     break;
                 case FileContextMethods.ActionType.Exit:
                     ExitApplication();

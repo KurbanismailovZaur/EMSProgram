@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2922d16d79c940e4c8dd0ee75392c052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wireText: {fileID: 114092441153846334}
   DeleteWireButton: {fileID: 114332673057347640}
   SelectedButtonColor: {r: 0.89411765, g: 0.89411765, b: 0.89411765, a: 1}
   SelectedTextColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}

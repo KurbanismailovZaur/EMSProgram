@@ -445,15 +445,24 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         private Wiring DictionaryToWiring(Dictionary<int, List<Vector3>> dict)
         {
-            Wiring result = new Wiring.Factory().Create();
+            Wiring wiring = new Wiring.Factory().Create();
 
-            foreach(var pList in dict.Values.ToList())
+            WireButton[] wireButtons = _wireButtonContainer.GetComponentsInChildren<WireButton>();
+            List<List<Vector3>> pList = dict.Values.ToList();
+
+            for (int i = 0; i < wireButtons.Length; i++)
             {
-                Wire wire = result.CreateWire();
-                wire.AddRange(pList);
+                Wire wire = wiring.CreateWire(wireButtons[i].WireName);
+                wire.AddRange(pList[i]);
             }
 
-            return result;
+            //foreach(var pList in dict.Values.ToList())
+            //{
+            //    Wire wire = wiring.CreateWire();
+            //    wire.AddRange(pList);
+            //}
+
+            return wiring;
         }
 
         private void ActivateTabNavigation()

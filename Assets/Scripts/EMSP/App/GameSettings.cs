@@ -37,6 +37,8 @@ namespace EMSP.App
         private float _orbitControllerDefaultTargetUpAngle = 0f;
 
         private float _orbitCOntrollerDefaultDistance = 8f;
+
+        private string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
         #endregion
 
         #region Events
@@ -55,6 +57,8 @@ namespace EMSP.App
         public float OrbitControllerDefaultTargetUpAngle { get { return _orbitControllerDefaultTargetUpAngle; } }
 
         public float OrbitControllerDefaultDistance { get { return _orbitCOntrollerDefaultDistance; } }
+
+        public string MagneticTensionInSpaceDefaultName { get { return _magneticTensionInSpaceDefaultName; } }
         #endregion
 
         #region Constructors

@@ -25,6 +25,9 @@ namespace EMSP
 
         #region Fields
         [SerializeField]
+        private Camera _camera;
+
+        [SerializeField]
         private bool _useCameraUp;
         #endregion
 
@@ -41,7 +44,7 @@ namespace EMSP
         #region Methods
         private void LateUpdate()
         {
-            transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position, _useCameraUp ? Camera.main.transform.up : Vector3.up);
+            transform.rotation = Quaternion.LookRotation(transform.position - _camera.transform.position, _useCameraUp ? _camera.transform.up : Vector3.up);
         }
         #endregion
 

@@ -17,6 +17,7 @@ namespace EMSP.UI.Menu.Contexts
             CloseProject,
             ImportModel,
             ImportWiring,
+            ExportMagneticTensionInSpace,
             Exit
         }
         #endregion
@@ -79,6 +80,11 @@ namespace EMSP.UI.Menu.Contexts
         public void ImportWiring()
         {
             Selected.Invoke(this, ActionType.ImportWiring);
+        }
+
+        public void ExportMagneticTensionInSpace()
+        {
+            Selected.Invoke(this, ActionType.ExportMagneticTensionInSpace);
         }
 
         public void Exit()

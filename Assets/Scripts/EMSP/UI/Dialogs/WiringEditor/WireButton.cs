@@ -26,6 +26,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #endregion
 
         #region Fields
+        [SerializeField]
+        private Text _wireText;
 
         static WireButton _currentActiveButton = null;
 
@@ -48,7 +50,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Behaviour
         #region Properties
+        public string WireName { get { return _wireText.text; } set { _wireText.text = value; } }
+
         public static WireButton CurrentActiveWireButton { get { return _currentActiveButton; } }
+
         public int WireNumber { get; set; }
 
         private Image ImageComponent
