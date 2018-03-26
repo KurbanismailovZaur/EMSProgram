@@ -66,6 +66,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private RectTransform _pointsContainer;
 
         public Dictionary<int, List<Vector3>> Wiring = new Dictionary<int, List<Vector3>>();
+        public Dictionary<int, string> WiresNames = new Dictionary<int, string>();
 
         private CanvasGroup _canvasGroup;
         private GameObject _tabNavigationObject;
@@ -104,6 +105,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 foreach (Wire wire in wiring)
                 {
                     Wiring.Add(wireCount, new List<Vector3>());
+                    WiresNames.Add(wireCount, wire.GetName());
+
                     foreach (Vector3 point in wire)
                     {
                         Wiring[wireCount].Add(point);
@@ -111,8 +114,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                     Button wireButton = Instantiate(_wireButtonPrefab);
                     wireButton.transform.SetParent(_wireButtonContainer, false);
-                    wireButton.GetComponentInChildren<Text>().text = string.Format(" {0}", wireCount);
                     wireButton.GetComponent<WireButton>().WireNumber = wireCount;
+                    wireButton.GetComponent<WireButton>().WireName = WiresNames[wireCount];
 
                     wireButton.onClick.AddListener(() =>
                     {
@@ -183,6 +186,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         _deleteWireDialogYesButton.onClick.AddListener(() =>
                         {
                             Wiring.Remove(wireNumber);
+                            WiresNames.Remove(wireNumber);
 
                             int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
                             if(!(wbNumber == 0))
@@ -290,6 +294,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     _deleteWireDialogYesButton.onClick.AddListener(() =>
                     {
                         Wiring.Remove(wireNumber);
+                        WiresNames.Remove(wireNumber);
 
                         int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
                         if (!(wbNumber == 0))
@@ -318,9 +323,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 int numberOfNewWire = (wiresNumbers.Count == 0)? 0: wiresNumbers.Max() + 1;
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
+                WiresNames.Add(numberOfNewWire, string.Format("Wire{0}", numberOfNewWire));
 
                 wireButtonComponent.WireNumber = numberOfNewWire;
-                wireButton.GetComponentInChildren<Text>().text = string.Format(" {0}", numberOfNewWire);
+                wireButtonComponent.WireName = WiresNames[numberOfNewWire];
 
                 addWireButton.transform.SetAsLastSibling();
 
@@ -438,29 +444,20 @@ namespace EMSP.UI.Dialogs.WiringEditor
             Close(false);
 
             if (onWiringEdited != null)
-                onWiringEdited(DictionaryToWiring(Wiring));
+                onWiringEdited(DictionaryToWiring());
 
             Wiring.Clear();
         }
 
-        private Wiring DictionaryToWiring(Dictionary<int, List<Vector3>> dict)
+        private Wiring DictionaryToWiring()
         {
             Wiring wiring = new Wiring.Factory().Create();
 
-            WireButton[] wireButtons = _wireButtonContainer.GetComponentsInChildren<WireButton>();
-            List<List<Vector3>> pList = dict.Values.ToList();
-
-            for (int i = 0; i < wireButtons.Length; i++)
+            foreach (var kvp in Wiring)
             {
-                Wire wire = wiring.CreateWire(wireButtons[i].WireName);
-                wire.AddRange(pList[i]);
+                Wire wire = wiring.CreateWire(WiresNames[kvp.Key]);
+                wire.AddRange(kvp.Value);
             }
-
-            //foreach(var pList in dict.Values.ToList())
-            //{
-            //    Wire wire = wiring.CreateWire();
-            //    wire.AddRange(pList);
-            //}
 
             return wiring;
         }
@@ -484,5 +481,18 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Events handlers
         #endregion
         #endregion
+
+        private void PrintWiring(Wiring wiring)
+        {
+            foreach(Wire wire in wiring)
+            {
+                Debug.Log("==========");
+                Debug.Log(wire.GetName());
+                foreach(var point in wire)
+                {
+                    Debug.Log(string.Format("x: {0}; y: {1}; z:{2}", point.x, point.y, point.z));
+                }
+            }
+        }
     }
 }

@@ -110,7 +110,7 @@ namespace EMSP.Communication
             return true;
         }
 
-        private static bool IsCorrectName(string name)
+        public static bool IsCorrectName(string name)
         {
             return name.All(char.IsLetterOrDigit);
         }
