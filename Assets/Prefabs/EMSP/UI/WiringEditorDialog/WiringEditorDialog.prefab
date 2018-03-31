@@ -1235,7 +1235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e848a4088d31b842a5e3167bf9489d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wireButtonPrefab: {fileID: 114955383763175694, guid: 2db9a6275f4540f47b0505ff4589a358,
+  _wireButtonPrefab: {fileID: 114669241353000714, guid: 2db9a6275f4540f47b0505ff4589a358,
     type: 2}
   _addWireButtonPrefab: {fileID: 114955383763175694, guid: fe89ea972f4e3d4479e9ec4285d4bd0b,
     type: 2}
@@ -2311,7 +2311,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000076293945}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224280247211536464

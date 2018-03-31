@@ -430,7 +430,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
             OnDialogDeactivated();
 
             if (needClearChangedWiring)
+            {
                 Wiring.Clear();
+                WiresNames.Clear();
+            }
 
             WireButton.OnEditorClosing();
             OnDialogActivated = () => { };
@@ -447,6 +450,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 onWiringEdited(DictionaryToWiring());
 
             Wiring.Clear();
+            WiresNames.Clear();
         }
 
         private Wiring DictionaryToWiring()

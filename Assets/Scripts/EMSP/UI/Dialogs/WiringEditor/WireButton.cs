@@ -41,7 +41,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         private Image _image = null;
         private InputField _inputFieldComponent = null;
+        private RectTransform _rectTransform = null;
         private string _preEditName;
+        private float _preEditWidth = -1;
 
         #endregion
 
@@ -87,6 +89,18 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             set { _inputFieldComponent = value; }
         }
+
+        private RectTransform RectTransformComponent
+        {
+            get
+            {
+                if (_rectTransform == null)
+                    _rectTransform = GetComponentInChildren<RectTransform>();
+                return _rectTransform;
+            }
+
+            set { _rectTransform = value; }
+        }
         #endregion
 
         #region Constructors
@@ -104,6 +118,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
             {
                 if (!Wire.IsCorrectName(str) && !string.IsNullOrEmpty(str))
                     InputFieldComponent.text = InputFieldComponent.text.Substring(0, InputFieldComponent.text.Length - 1);
+
+                StartCoroutine(DelayAndCheckWidth());
             });
 
             InputFieldComponent.onEndEdit.AddListener((str) =>
@@ -111,11 +127,24 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (string.IsNullOrEmpty(str) || !IsUniqName(str))
                 {
                     InputFieldComponent.text = _preEditName;
+                    RectTransformComponent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _preEditWidth);
                 }
                 else
                 {
+                    if(str.Length < _preEditName.Length)
+                    {
+                        RectTransformComponent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, str.Length * 8);
+
+                        while(InputFieldComponent.textComponent.text.Length < InputFieldComponent.text.Length)
+                        {
+                            CheckWidth();
+                        }
+
+                    }
+
                     WiringEditorDialog.Instance.WiresNames[WireNumber] = str;
                     WireName = str;
+                    _preEditWidth = RectTransformComponent.rect.size.x;
                 }
             });
         }
@@ -144,6 +173,25 @@ namespace EMSP.UI.Dialogs.WiringEditor
             return true;
         }
 
+        private void CheckWidth()
+        {
+            RectTransformComponent.ForceUpdateRectTransforms();
+            if (InputFieldComponent.textComponent.text.Length < InputFieldComponent.text.Length)
+                RectTransformComponent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, RectTransformComponent.rect.size.x + 15);
+        }
+
+        private IEnumerator DelayAndCheckWidth()
+        {
+            yield return null;
+
+            while (InputFieldComponent.textComponent.text.Length < InputFieldComponent.text.Length)
+            {
+                CheckWidth();
+            }
+
+            if (_preEditWidth == -1)
+                _preEditWidth = RectTransformComponent.rect.size.x;
+        }
 
         #endregion
 
