@@ -164,7 +164,7 @@ namespace EMSP.Mathematic.MagneticTension
 
             Calculated.Invoke(this);
 
-            FilterPointsByAlpha(0.01f);
+            //FilterPointsByAlpha(0.01f);
         }
 
         public void FilterPointsByAlpha(float alphaThresold)
@@ -174,6 +174,10 @@ namespace EMSP.Mathematic.MagneticTension
                 if (point.Alpha < alphaThresold)
                 {
                     point.gameObject.SetActive(false);
+                }
+                else
+                {
+                    point.gameObject.SetActive(true);
                 }
             }
         }
