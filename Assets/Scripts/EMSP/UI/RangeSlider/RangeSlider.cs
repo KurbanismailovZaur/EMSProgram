@@ -41,11 +41,15 @@ namespace EMSP.UI
         [SerializeField]
         private bool _wholeNumbers;
         [SerializeField]
+        private float _minRangeValue;
+        [SerializeField]
+        private float _maxRangeValue;
+        [SerializeField]
+        private float _minRangeLenght;
+        [SerializeField]
         private float _minValue;
         [SerializeField]
         private float _maxValue;
-        [SerializeField]
-        private float _minRangeLenght;
         [SerializeField]
         private float _scrollSensivity = 1;
 
@@ -75,8 +79,8 @@ namespace EMSP.UI
         public float HandleMaxYPosition { get { return _handleMaxRect.anchoredPosition3D.y; } }
 
         public float CurrentRangeDistance { get { return HandleMaxYPosition - HandleMinYPosition; } }
-        public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minValue + HandleMinYPosition * _valuesPerPixel) : _minValue + HandleMinYPosition * _valuesPerPixel; } }
-        public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minValue + HandleMaxYPosition * _valuesPerPixel) : _minValue + HandleMaxYPosition * _valuesPerPixel; } }
+        public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMinYPosition * _valuesPerPixel) : _minRangeValue + HandleMinYPosition * _valuesPerPixel; } }
+        public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMaxYPosition * _valuesPerPixel) : _minRangeValue + HandleMaxYPosition * _valuesPerPixel; } }
 
         private UIGradient BgGradient
         {
@@ -104,6 +108,11 @@ namespace EMSP.UI
             RecalculateFillTransformation();
         }
 
+        private void Start()
+        {
+            UpdateValues();
+        }
+
         private void Update()
         {
             if(Screen.height != _previousScreenHeight || Screen.width != _previousScreenWidth)
@@ -127,18 +136,28 @@ namespace EMSP.UI
 
         private void CalculateInternalValues()
         {
-            _valuesCount = _maxValue - _minValue;
+            _valuesCount = _maxRangeValue - _minRangeValue;
             if (_minRangeLenght > _valuesCount) _minRangeLenght = _valuesCount;
             _valuesPerPixel = _valuesCount / _handleMinRect.parent.GetComponent<RectTransform>().rect.height;
             _minHandlesDistance = ((_minRangeLenght / (_valuesCount / 100)) / 100) * _handleMinRect.parent.GetComponent<RectTransform>().rect.height;
         }
 
+        [ContextMenu("Update values")]
+        private void UpdateValues()
+        {
+            SetMin(_minValue);
+            SetMax(_maxValue);
+        }
+
         public void InvokeValueChanged()
         {
+            _minValue = _minRangeValue + HandleMinYPosition * _valuesPerPixel;
+            _maxValue = _minRangeValue + HandleMaxYPosition * _valuesPerPixel;
+
             if (_wholeNumbers)
-                OnValueChanged.Invoke(this, Convert.ToInt32(_minValue + HandleMinYPosition * _valuesPerPixel), Convert.ToInt32(_minValue + HandleMaxYPosition * _valuesPerPixel));
+                OnValueChanged.Invoke(this, Convert.ToInt32(_minValue), Convert.ToInt32(_maxValue));
             else
-                OnValueChanged.Invoke(this, _minValue + HandleMinYPosition * _valuesPerPixel, _minValue + HandleMaxYPosition * _valuesPerPixel);
+                OnValueChanged.Invoke(this, _minValue, _maxValue);
 
         }
 
@@ -147,12 +166,22 @@ namespace EMSP.UI
             if (minRangeLenght > max - min)
                 throw new Exception("Min range lenght can not be more big than all lenght");
 
-            _minValue = min;
-            _maxValue = max;
+            _minRangeValue = min;
+            _maxRangeValue = max;
             _wholeNumbers = wholeNumbers;
             _minRangeLenght = minRangeLenght;
 
             Awake();
+        }
+
+        public void SetMin(float min)
+        {
+            _handleMinRect.GetComponent<Handle>().SetValue(min);
+        }
+
+        public void SetMax(float max)
+        {
+            _handleMaxRect.GetComponent<Handle>().SetValue(max);
         }
 
         public void SetGradientColors(Color color1, Color color2)
@@ -163,7 +192,6 @@ namespace EMSP.UI
             HandleMinRect.GetComponent<Image>().color = color2;
             HandleMaxRect.GetComponent<Image>().color = color2;
         }
-
         #endregion
 
         #region Indexers

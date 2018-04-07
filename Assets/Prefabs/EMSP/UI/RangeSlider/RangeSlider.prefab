@@ -198,9 +198,11 @@ MonoBehaviour:
   _handleMinRect: {fileID: 224952720453318352}
   _handleMaxRect: {fileID: 224624931550098862}
   _wholeNumbers: 0
-  _minValue: 0
-  _maxValue: 100
-  _minRangeLenght: 0
+  _minRangeValue: 0
+  _maxRangeValue: 100
+  _minRangeLenght: 5
+  _minValue: 10
+  _maxValue: 75
   _scrollSensivity: 10
   OnValueChanged:
     m_PersistentCalls:

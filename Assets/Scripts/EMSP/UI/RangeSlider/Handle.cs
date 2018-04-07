@@ -99,6 +99,11 @@ namespace EMSP.UI
             ValidateAndSetNewYPosition(_lastValue / _rangeSlider.ValuesPerPixel);
         }
 
+        public void SetValue(float value)
+        {
+            ValidateAndSetNewYPosition(value / _rangeSlider.ValuesPerPixel);
+        }
+
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
         {
             float distance = (handleDistance == -1) ? _rangeSlider.MinHandlesDistance : handleDistance;
