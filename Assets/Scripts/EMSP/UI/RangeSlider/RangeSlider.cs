@@ -51,6 +51,10 @@ namespace EMSP.UI
         private float _valuesCount;
         private float _valuesPerPixel;
         private float _minHandlesDistance;
+
+
+        private int _previousScreenHeight;
+        private int _previousScreenWidth;
         #endregion
 
         #region Events
@@ -62,6 +66,7 @@ namespace EMSP.UI
         public RectTransform HandleMinRect { get { return _handleMinRect; } }
         public RectTransform HandleMaxRect { get { return _handleMaxRect; } }
 
+        public float ValuesPerPixel { get { return _valuesPerPixel; } }
         public float MinHandlesDistance { get { return _minHandlesDistance; } }
         public float HandleMinYPosition { get { return _handleMinRect.anchoredPosition3D.y; } }
         public float HandleMaxYPosition { get { return _handleMaxRect.anchoredPosition3D.y; } }
@@ -89,12 +94,24 @@ namespace EMSP.UI
         #region Methods
         private void Awake()
         {
+            _previousScreenHeight = Screen.height;
+            _previousScreenWidth = Screen.width;
+
             CalculateInternalValues();
             RecalculateFillTransformation();
         }
 
         private void Update()
         {
+            if(Screen.height != _previousScreenHeight || Screen.width != _previousScreenWidth)
+            {
+                Awake();
+                _handleMinRect.GetComponent<Handle>().RecalculateInternalValues();
+                _handleMaxRect.GetComponent<Handle>().RecalculateInternalValues();
+
+                return;
+            }
+
             RecalculateFillTransformation();
         }
 
@@ -121,6 +138,7 @@ namespace EMSP.UI
                 OnValueChanged.Invoke(this, _minValue + HandleMinYPosition * _valuesPerPixel, _minValue + HandleMaxYPosition * _valuesPerPixel);
 
         }
+
         public void SetRangeLimits(float min, float max, bool wholeNumbers = false, float minRangeLenght = 0)
         {
             if (minRangeLenght > max - min)
@@ -133,6 +151,7 @@ namespace EMSP.UI
 
             Awake();
         }
+
         public void SetGradientColors(Color color1, Color color2)
         {
             BgGradient.color2 = color1;

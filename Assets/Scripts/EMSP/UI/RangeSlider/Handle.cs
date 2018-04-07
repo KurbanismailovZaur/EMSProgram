@@ -35,6 +35,8 @@ namespace EMSP.UI
         private float _maxValue;
         private RangeSlider _rangeSlider;
         private bool _isDragByUser = false;
+
+        private float _lastValue;
         #endregion
 
         #region Events
@@ -81,14 +83,21 @@ namespace EMSP.UI
 
             if(IsMin)
             {
+                _lastValue = _rangeSlider.CurrentMinValue;
                 _textField.text = _rangeSlider.CurrentMinValue.ToString();
             }
             else
             {
+                _lastValue = _rangeSlider.CurrentMaxValue;
                 _textField.text = _rangeSlider.CurrentMaxValue.ToString();
             }
         }
 
+        public void RecalculateInternalValues()
+        {
+            _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
+            ValidateAndSetNewYPosition(_lastValue / _rangeSlider.ValuesPerPixel);
+        }
 
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
         {
