@@ -73,6 +73,15 @@ namespace EMSP.UI
         public void OnEndDrag(PointerEventData eventData)
         {
         }
+
+        public void OnScroll(float deltaY)
+        {
+            _currentRange = _rangeSlider.CurrentRangeDistance;
+
+            _minHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
+            _maxHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
+            _rangeSlider.InvokeValueChanged();
+        }
         #endregion
         #endregion
     }

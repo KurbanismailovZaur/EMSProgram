@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace EMSP.UI
 {
-    public class RangeSlider : MonoBehaviour
+    public class RangeSlider : MonoBehaviour, IScrollHandler
     {
         #region Entities
         #region Enums
@@ -45,6 +46,8 @@ namespace EMSP.UI
         private float _maxValue;
         [SerializeField]
         private float _minRangeLenght;
+        [SerializeField]
+        private float _scrollSensivity = 1;
 
         private UIGradient _bgGradient = null;
 
@@ -160,12 +163,19 @@ namespace EMSP.UI
             HandleMinRect.GetComponent<Image>().color = color2;
             HandleMaxRect.GetComponent<Image>().color = color2;
         }
+
         #endregion
 
         #region Indexers
         #endregion
 
         #region Events handlers
+
+        public void OnScroll(PointerEventData eventData)
+        {
+            GetComponentInChildren<Fill>().OnScroll(eventData.scrollDelta.y * _scrollSensivity);
+        }
+
         #endregion
         #endregion
     }
