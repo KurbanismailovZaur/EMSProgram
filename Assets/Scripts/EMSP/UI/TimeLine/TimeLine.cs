@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System;
+using UnityEngine.UI;
 
 namespace EMSP.UI
 {
@@ -35,6 +36,8 @@ namespace EMSP.UI
         private RectTransform _handleRect;
         [SerializeField]
         private RectTransform _timeStepPrefab;
+        [SerializeField]
+        private Text _textField;
 
         [SerializeField]
         private GameObject _playButton;
@@ -91,6 +94,7 @@ namespace EMSP.UI
             m_TimeStepSignCount = stepCount + 1;
             m_InternalTime = 0;
             _handleRect.anchoredPosition3D = Vector3.zero;
+            _textField.text = _startTime.ToString();
 
             CalculateInternalValues();
             DrawTimeSteps();
@@ -118,8 +122,11 @@ namespace EMSP.UI
 
             _handleRect.anchoredPosition3D = new Vector3(internalTimeCandidate / m_TimePerPixel, 0, 0);
 
-            if(hasChanged)
+            if (hasChanged)
+            {
+                _textField.text = (m_InternalTime + _startTime).ToString();
                 Changed.Invoke(this, m_InternalTime + _startTime);
+            }
         }
 
         public void Play()
