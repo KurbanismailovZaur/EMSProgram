@@ -24,9 +24,7 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Fields
-        public const float PI = 3.14159265359f;
-
-        public const float MAGNETIC_CONSTANT = 4f * PI * 1e-7f;
+        public const float MAGNETIC_CONSTANT = 4f * Mathf.PI * 1e-7f;
         #endregion
 
         #region Events

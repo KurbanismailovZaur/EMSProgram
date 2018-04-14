@@ -79,7 +79,7 @@ namespace EMSP.Mathematic.MagneticTension
             float perpendicularLength = acLength >= float.MinValue ? acLength * Mathf.Sin(Mathf.Deg2Rad * alpha1Angle) : 0f;
 
             // Calculate induction.
-            float induction = perpendicularLength != 0f ? MAGNETIC_CONSTANT / (4 * PI) * amperage / perpendicularLength * (Mathf.Cos(Mathf.Deg2Rad * alpha1Angle) - Mathf.Cos(Mathf.Deg2Rad * alpha2Angle)) : 0f;
+            float induction = perpendicularLength != 0f ? MAGNETIC_CONSTANT / (4 * Mathf.PI) * amperage / perpendicularLength * (Mathf.Cos(Mathf.Deg2Rad * alpha1Angle) - Mathf.Cos(Mathf.Deg2Rad * alpha2Angle)) : 0f;
 
             // Calculate induction direction.
             Vector3 inductionDirection = new Vector3
@@ -103,8 +103,10 @@ namespace EMSP.Mathematic.MagneticTension
             return ppInductionDirection;
         }
 
-        public Vector3 Calculate(Wire wire, Vector3 targetPoint, float amperage)
+        public Vector3 Calculate(Wire wire, Vector3 targetPoint, float time)
         {
+            float amperage = wire.I0 * Mathf.Sin(2 * Mathf.PI * wire.Frequency* time);
+
             ReadOnlyCollection<Vector3> points = wire.WorldPoints;
 
             Vector3 result = new Vector3();
