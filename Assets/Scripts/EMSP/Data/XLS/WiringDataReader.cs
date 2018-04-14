@@ -59,7 +59,8 @@ namespace EMSP.Data.XLS
             {
                 ISheet sheet = workbook.GetSheetAt(i);
 
-                Wire wire = wiring.CreateWire(sheet.SheetName);
+                // TODO: need read from xls
+                Wire wire = wiring.CreateWire(sheet.SheetName, 2f, 20f);
 
                 for (int j = 5; j <= sheet.LastRowNum; j++)
                 {

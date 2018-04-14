@@ -459,7 +459,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             foreach (var kvp in Wiring)
             {
-                Wire wire = wiring.CreateWire(WiresNames[kvp.Key]);
+                // TODO: change it
+                Wire wire = wiring.CreateWire(WiresNames[kvp.Key], 2f, 20f);
                 wire.AddRange(kvp.Value);
             }
 

@@ -78,9 +78,9 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
-        public Wire CreateWire(string name)
+        public Wire CreateWire(string name, float i0, float frequency)
         {
-            Wire wire = _wireFactory.Create();
+            Wire wire = _wireFactory.Create(i0, frequency);
             wire.SetName(name);
             wire.transform.SetParent(transform, false);
 
