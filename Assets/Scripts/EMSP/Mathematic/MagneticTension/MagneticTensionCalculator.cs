@@ -70,7 +70,7 @@ namespace EMSP.Mathematic.MagneticTension
             float bcLength = Vector3.Distance(pointB, pointC);
 
             // Calculate CAB angle.
-            float alpha1Angle =  Vector3.Angle(pointC - pointA, pointB - pointA);
+            float alpha1Angle = Mathf.Rad2Deg * Mathf.Acos((((pointC.x - pointA.x) * (pointB.x - pointA.x) + (pointC.y - pointA.y) * (pointB.y - pointA.y) + (pointC.z - pointA.z) * (pointB.z - pointA.z)) / (abLength * acLength)));
 
             // Calculate ABC (inversed) angle.
             float alpha2Angle = Vector3.Angle(pointC - pointB, pointB - pointA);

@@ -69,7 +69,7 @@ namespace EMSP.App.StateMachineBehaviour
 
             if (stateMachines.Length > 1)
             {
-                _parentStateMachine = stateMachines[1];
+                _parentStateMachine = stateMachines[stateMachines.Length - 1];
             }
         }
 
