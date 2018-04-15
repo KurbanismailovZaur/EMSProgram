@@ -88,7 +88,7 @@ namespace EMSP.Data
                     cell0.SetCellValue(mtPoints[i].transform.position.x);
                     cell1.SetCellValue(mtPoints[i].transform.position.y);
                     cell2.SetCellValue(mtPoints[i].transform.position.z);
-                    cell3.SetCellValue(mtPoints[i].MagneticTension);
+                    cell3.SetCellValue(mtPoints[i].MagneticTensionsInTime[0].MagneticTension);
                 }
 
                 workbook.Write(stream);

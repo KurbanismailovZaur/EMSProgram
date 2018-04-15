@@ -118,13 +118,13 @@ namespace EMSP.Mathematic.MagneticTension
             return result;
         }
 
-        public float Calculate(Wiring wires, Vector3 point, float amperage)
+        public float Calculate(Wiring wires, Vector3 point, float time)
         {
             Vector3 result = new Vector3();
 
             foreach (Wire wire in wires)
             {
-                result += Calculate(wire, point, amperage);
+                result += Calculate(wire, point, time);
             }
 
             return result.magnitude;

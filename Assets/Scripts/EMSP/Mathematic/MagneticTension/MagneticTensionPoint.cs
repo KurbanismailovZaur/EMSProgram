@@ -20,7 +20,7 @@ namespace EMSP.Mathematic.MagneticTension
         #region Classes
         public class Factory
         {
-            public MagneticTensionPoint Create(PrimitiveType primitiveType, Transform parent, Material material, float size, float alpha, MagneticTensionInSpace.MagneticTensionsInfo mtInfo)
+            public MagneticTensionPoint Create(PrimitiveType primitiveType, Transform parent, Material material, float size, float alpha, MagneticTensionInfo mtInfo)
             {
                 MagneticTensionPoint magneticTensionPoint = GameObject.CreatePrimitive(primitiveType).AddComponent<MagneticTensionPoint>();
                 magneticTensionPoint.name = "Point";
@@ -35,7 +35,7 @@ namespace EMSP.Mathematic.MagneticTension
 
                 magneticTensionRenderer.material = magneticTensionPoint._material;
 
-                magneticTensionPoint._magneticTension = mtInfo.MagneticTension;
+                magneticTensionPoint._magneticTensionsInTime = mtInfo.MagneticTensionsInTime;
 
                 return magneticTensionPoint;
             }
@@ -49,7 +49,7 @@ namespace EMSP.Mathematic.MagneticTension
         #region Fields
         private Material _material;
 
-        private float _magneticTension;
+        private MagneticTensionInTime[] _magneticTensionsInTime;
         #endregion
 
         #region Events
@@ -57,7 +57,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         #region Behaviour
         #region Properties
-        public float MagneticTension { get { return _magneticTension; } }
+        public MagneticTensionInTime[] MagneticTensionsInTime { get { return _magneticTensionsInTime; } }
 
         public float Alpha { get { return _material.color.a; } }
         #endregion

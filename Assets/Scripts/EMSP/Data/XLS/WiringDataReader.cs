@@ -41,10 +41,10 @@ namespace EMSP.Data.XLS
 		#endregion
 		
 		#region Methods
-        public Wiring ReadWiringFromFile(string pathToXLS)
+        public bool ReadWiringFromFile(string pathToXLS, out Wiring wiring)
         {
             Wiring.Factory wiringFactory = new Wiring.Factory();
-            Wiring wiring = wiringFactory.Create();
+            wiring = wiringFactory.Create();
 
             HSSFWorkbook workbook;
 
@@ -59,14 +59,29 @@ namespace EMSP.Data.XLS
             {
                 ISheet sheet = workbook.GetSheetAt(i);
 
-                // TODO: need read from xls
-                Wire wire = wiring.CreateWire(sheet.SheetName, 2f, 20f);
+                IRow amperageRow = sheet.GetRow(0);
+                if (!IsNumericCell(amperageRow, 1))
+                {
+                    return false;
+                }
 
-                for (int j = 5; j <= sheet.LastRowNum; j++)
+                float amperage = (float)amperageRow.GetCell(1).NumericCellValue;
+
+                IRow frequencyRow = sheet.GetRow(1);
+                if (!IsNumericCell(frequencyRow, 1))
+                {
+                    return false;
+                }
+
+                float frequency = (float)frequencyRow.GetCell(1).NumericCellValue;
+
+                Wire wire = wiring.CreateWire(sheet.SheetName, amperage, frequency);
+
+                for (int j = 4; j <= sheet.LastRowNum; j++)
                 {
                     IRow row = sheet.GetRow(j);
 
-                    if (!IsCorrectRow(row))
+                    if (!IsCorrectNodeRow(row))
                     {
                         break;
                     }
@@ -75,7 +90,7 @@ namespace EMSP.Data.XLS
                 }
             }
 
-            return wiring;
+            return true;
         }
 
         private Vector3 ReadNode(IRow row)
@@ -89,7 +104,7 @@ namespace EMSP.Data.XLS
             return node;
         }
 
-        private bool IsCorrectRow(IRow row)
+        private bool IsCorrectNodeRow(IRow row)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -102,6 +117,13 @@ namespace EMSP.Data.XLS
             }
 
             return true;
+        }
+
+        private bool IsNumericCell(IRow row, int columnIndex)
+        {
+            ICell cell = row.GetCell(columnIndex);
+
+            return cell.CellType == CellType.Numeric;
         }
 		#endregion
 		
