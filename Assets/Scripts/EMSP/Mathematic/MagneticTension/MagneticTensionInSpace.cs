@@ -65,6 +65,8 @@ namespace EMSP.Mathematic.MagneticTension
 
         [SerializeField]
         private MeshType _meshType;
+
+        private float _maxMagneticTensionInTime;
         #endregion
 
         #region Events
@@ -78,6 +80,8 @@ namespace EMSP.Mathematic.MagneticTension
         #region Behaviour
         #region Properties
         public ReadOnlyCollection<MagneticTensionPoint> MTPoints { get { return _mtPoints.AsReadOnly(); } }
+
+        public float MaxMagneticTensionInTime { get { return _maxMagneticTensionInTime; } }
 
         public bool IsVisible
         {
@@ -140,18 +144,18 @@ namespace EMSP.Mathematic.MagneticTension
                 }
             }
 
-            float maxMagneticTension = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime[0].MagneticTension);
+            _maxMagneticTensionInTime = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime.Max(y => y.MagneticTension));
 
             foreach (MagneticTensionInfo mtInfo in magneticTensionsInfo)
             {
                 float alpha = 0;
 
-                if (maxMagneticTension != 0f)
+                if (_maxMagneticTensionInTime != 0f)
                 {
-                    alpha = Remap(mtInfo.MagneticTensionsInTime[0].MagneticTension, 0f, maxMagneticTension, 0f, 1f);
+                    alpha = mtInfo.MagneticTensionsInTime[0].MagneticTension.Remap(0f, _maxMagneticTensionInTime, 0f, 1f);
                 }
 
-                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create((PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
+                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create(this, (PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
                 _mtPoints.Add(magneticTensionPoint);
             }
 
@@ -177,9 +181,12 @@ namespace EMSP.Mathematic.MagneticTension
             }
         }
 
-        private float Remap(float value, float iMin, float iMax, float oMin, float oMax)
+        public void MovePointsTimeForwardAndSetAlpha()
         {
-            return oMin + (value - iMin) * (oMax - oMin) / (iMax - iMin);
+            foreach (MagneticTensionPoint mtPoint in _mtPoints)
+            {
+                mtPoint.MoveTimeForwardAndSetAlpha();
+            }
         }
 
         public void DestroyMagneticTensions()

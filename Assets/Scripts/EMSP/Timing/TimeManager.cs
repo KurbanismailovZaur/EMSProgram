@@ -38,6 +38,8 @@ namespace EMSP.Timing
         [Range(3, 256)]
         private int _stepsCount = 36;
 
+        private float _delta;
+        
         private List<float> _steps = new List<float>();
         #endregion
 
@@ -76,6 +78,8 @@ namespace EMSP.Timing
             }
         }
 
+        public float Delta { get { return _delta; } }
+
         public ReadOnlyCollection<float> Steps { get { return _steps.AsReadOnly(); } }
         #endregion
 
@@ -91,14 +95,14 @@ namespace EMSP.Timing
         private void CalculateSteps()
         {
             float distance = _endTime - _startTime;
-            float delta = distance / _stepsCount;
+            _delta = distance / _stepsCount;
 
             _steps.Clear();
             _steps.Add(_startTime);
 
             for (int i = 0; i < _stepsCount - 2; i++)
             {
-                _steps.Add(_startTime + (delta * (i + 1)));
+                _steps.Add(_startTime + (_delta * (i + 1)));
             }
 
             _steps.Add(_endTime);

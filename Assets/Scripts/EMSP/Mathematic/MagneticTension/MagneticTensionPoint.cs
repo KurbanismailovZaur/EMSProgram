@@ -20,13 +20,15 @@ namespace EMSP.Mathematic.MagneticTension
         #region Classes
         public class Factory
         {
-            public MagneticTensionPoint Create(PrimitiveType primitiveType, Transform parent, Material material, float size, float alpha, MagneticTensionInfo mtInfo)
+            public MagneticTensionPoint Create(MagneticTensionInSpace magneticTensionInSpace, PrimitiveType primitiveType, Transform parent, Material material, float size, float alpha, MagneticTensionInfo mtInfo)
             {
                 MagneticTensionPoint magneticTensionPoint = GameObject.CreatePrimitive(primitiveType).AddComponent<MagneticTensionPoint>();
                 magneticTensionPoint.name = "Point";
                 magneticTensionPoint.transform.position = mtInfo.Point;
                 magneticTensionPoint.transform.localScale = new Vector3(size, size, size);
                 magneticTensionPoint.transform.SetParent(parent, true);
+
+                magneticTensionPoint._magneticTensionInSpace = magneticTensionInSpace;
 
                 Renderer magneticTensionRenderer = magneticTensionPoint.GetComponent<Renderer>();
 
@@ -47,9 +49,13 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Fields
+        private MagneticTensionInSpace _magneticTensionInSpace;
+
         private Material _material;
 
         private MagneticTensionInTime[] _magneticTensionsInTime;
+
+        private int _timeIndex;
         #endregion
 
         #region Events
@@ -66,6 +72,17 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Methods
+        public void MoveTimeForwardAndSetAlpha()
+        {
+            _timeIndex += 1;
+
+            if (_timeIndex >= _magneticTensionsInTime.Length)
+            {
+                _timeIndex = 0;
+            }
+
+            _material.SetAlpha(_magneticTensionsInTime[_timeIndex].MagneticTension.Remap(0f, _magneticTensionInSpace.MaxMagneticTensionInTime, 0f, 1f));
+        }
         #endregion
 
         #region Indexers
