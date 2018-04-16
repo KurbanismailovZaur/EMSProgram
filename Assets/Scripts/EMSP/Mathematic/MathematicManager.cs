@@ -35,9 +35,6 @@ namespace EMSP.Mathematic
         [Range(8, 128)]
         private int _rangeLength = 16;
 
-        [SerializeField]
-        private float _amperage = 2f;
-
         [Header("Mathematics")]
         [SerializeField]
         private MagneticTensionInSpace _magneticTensionInSpace;
@@ -51,8 +48,6 @@ namespace EMSP.Mathematic
         #region Behaviour
         #region Properties
         public int RangeLength { get { return _rangeLength; } }
-
-        public float Amperage { get { return _amperage; } }
 
         public MagneticTensionInSpace MagneticTensionInSpace { get { return _magneticTensionInSpace; } }
         #endregion

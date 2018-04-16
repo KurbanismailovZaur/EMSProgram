@@ -56,8 +56,6 @@ namespace EMSP.Mathematic.MagneticTension
         private Material _material;
 
         private MagneticTensionInTime[] _magneticTensionsInTime;
-
-        private int _timeIndex;
         #endregion
 
         #region Events
@@ -74,16 +72,9 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Methods
-        public void MoveTimeForwardAndSetAlpha()
+        public void SetToTime(int timeIndex)
         {
-            _timeIndex += 1;
-
-            if (_timeIndex >= _magneticTensionsInTime.Length)
-            {
-                _timeIndex = 0;
-            }
-
-            _material.color = _magneticTensionInSpace.GetTensionColorFromGradient(_magneticTensionsInTime[_timeIndex].MagneticTension.Remap(0f, _magneticTensionInSpace.MaxMagneticTensionInTime, 0f, 1f));
+            _material.color = _magneticTensionInSpace.GetTensionColorFromGradient(_magneticTensionsInTime[timeIndex].MagneticTension.Remap(0f, _magneticTensionInSpace.MaxMagneticTensionInTime, 0f, 1f));
         }
         #endregion
 

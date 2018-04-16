@@ -1,8 +1,10 @@
 ﻿using Numba;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Timing
 {
@@ -19,6 +21,11 @@ namespace EMSP.Timing
         #endregion
 
         #region Classes
+        [Serializable]
+        public class TimeParametersChangedEvent : UnityEvent<TimeManager> { }
+
+        [Serializable]
+        public class TimeIndexChangedEvent : UnityEvent<TimeManager, int> { }
         #endregion
 
         #region Interfaces
@@ -39,11 +46,16 @@ namespace EMSP.Timing
         private int _stepsCount = 36;
 
         private float _delta;
-        
+
         private List<float> _steps = new List<float>();
+
+        private int _timeIndex;
         #endregion
 
         #region Events
+        public TimeParametersChangedEvent TimeParametersChanged = new TimeParametersChangedEvent();
+
+        public TimeIndexChangedEvent TimeIndexChanged = new TimeIndexChangedEvent();
         #endregion
 
         #region Behaviour
@@ -53,7 +65,15 @@ namespace EMSP.Timing
             get { return _startTime; }
             set
             {
-                _startTime = Mathf.Max(value, 0f);
+                float startTime = Mathf.Max(value, 0f);
+
+                if (_startTime == startTime)
+                {
+                    return;
+                }
+
+                _startTime = startTime;
+
                 CalculateSteps();
             }
         }
@@ -63,7 +83,15 @@ namespace EMSP.Timing
             get { return _endTime; }
             set
             {
-                _endTime = Mathf.Max(value, 0f);
+                float endTime = Mathf.Max(value, 0f);
+
+                if (_endTime == endTime)
+                {
+                    return;
+                }
+
+                _endTime = endTime;
+
                 CalculateSteps();
             }
         }
@@ -73,7 +101,15 @@ namespace EMSP.Timing
             get { return _stepsCount; }
             set
             {
-                _stepsCount = Mathf.Max(value, 3);
+                int stepsCount = Mathf.Max(value, 3);
+
+                if (_stepsCount == stepsCount)
+                {
+                    return;
+                }
+
+                _stepsCount = stepsCount;
+
                 CalculateSteps();
             }
         }
@@ -81,6 +117,24 @@ namespace EMSP.Timing
         public float Delta { get { return _delta; } }
 
         public ReadOnlyCollection<float> Steps { get { return _steps.AsReadOnly(); } }
+
+        public int TimeIndex
+        {
+            get { return _timeIndex; }
+            set
+            {
+                int timeIndex = Mathf.Clamp(value, 0, _stepsCount - 1);
+
+                if (_timeIndex == timeIndex)
+                {
+                    return;
+                }
+
+                _timeIndex = timeIndex;
+
+                TimeIndexChanged.Invoke(this, _timeIndex);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -106,6 +160,18 @@ namespace EMSP.Timing
             }
 
             _steps.Add(_endTime);
+
+            TimeParametersChanged.Invoke(this);
+        }
+
+        public void MoveTimeToNextStep()
+        {
+            TimeIndex += 1;
+        }
+
+        public void MoveTimeToPreviousStep()
+        {
+            TimeIndex -= 1;
         }
         #endregion
 

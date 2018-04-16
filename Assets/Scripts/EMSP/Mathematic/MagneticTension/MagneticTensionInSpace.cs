@@ -184,11 +184,11 @@ namespace EMSP.Mathematic.MagneticTension
             }
         }
 
-        public void MovePointsTimeForwardAndSetAlpha()
+        public void SetPointsToTime(int timeIndex)
         {
             foreach (MagneticTensionPoint mtPoint in _mtPoints)
             {
-                mtPoint.MoveTimeForwardAndSetAlpha();
+                mtPoint.SetToTime(timeIndex);
             }
         }
 

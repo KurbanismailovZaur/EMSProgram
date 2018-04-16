@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System;
 using UnityEngine.UI;
+using EMSP.Timing;
 
 namespace EMSP.UI
 {
@@ -80,6 +81,10 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
+        private void Start()
+        {
+            SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
+        }
 
         public void SetTimeParameters(float start, float end, int stepCount)
         {
@@ -266,6 +271,7 @@ namespace EMSP.UI
 
         #endregion
         #endregion
+
         public float StTime;
         public float EnTime;
         public int StCount;

@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: MagneticTension
-  m_Shader: {fileID: 4800000, guid: 7d4d5a53b3b8d3647bcb804ac2a8fffa, type: 3}
+  m_Name: MagneticTension(unlit)
+  m_Shader: {fileID: 4800000, guid: 726fbcfe6864ada43b1a0f458812af8e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

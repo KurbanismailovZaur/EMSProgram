@@ -62,7 +62,7 @@ namespace Mynamespace
             {
                 yield return new WaitForSeconds(TimeManager.Instance.Delta);
 
-                MathematicManager.Instance.MagneticTensionInSpace.MovePointsTimeForwardAndSetAlpha();
+                TimeManager.Instance.MoveTimeToNextStep();
             }
         }
         #endregion
