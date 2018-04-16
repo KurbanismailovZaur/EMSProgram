@@ -67,6 +67,9 @@ namespace EMSP.Mathematic.MagneticTension
         private MeshType _meshType;
 
         private float _maxMagneticTensionInTime;
+
+        [SerializeField]
+        private Gradient _tensionsGradient;
         #endregion
 
         #region Events
@@ -148,14 +151,14 @@ namespace EMSP.Mathematic.MagneticTension
 
             foreach (MagneticTensionInfo mtInfo in magneticTensionsInfo)
             {
-                float alpha = 0;
+                float gradientValue = 0;
 
                 if (_maxMagneticTensionInTime != 0f)
                 {
-                    alpha = mtInfo.MagneticTensionsInTime[0].MagneticTension.Remap(0f, _maxMagneticTensionInTime, 0f, 1f);
+                    gradientValue = mtInfo.MagneticTensionsInTime[0].MagneticTension.Remap(0f, _maxMagneticTensionInTime, 0f, 1f);
                 }
 
-                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create(this, (PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), alpha, mtInfo);
+                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create(this, (PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, step + (step * _pointSizeStretchPercent), gradientValue, mtInfo);
                 _mtPoints.Add(magneticTensionPoint);
             }
 
@@ -187,6 +190,11 @@ namespace EMSP.Mathematic.MagneticTension
             {
                 mtPoint.MoveTimeForwardAndSetAlpha();
             }
+        }
+
+        public Color GetTensionColorFromGradient(float time)
+        {
+            return _tensionsGradient.Evaluate(time);
         }
 
         public void DestroyMagneticTensions()

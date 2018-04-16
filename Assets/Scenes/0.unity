@@ -1999,7 +1999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startTime: 0
   _endTime: 0.1
-  _stepsCount: 128
+  _stepsCount: 36
 --- !u!4 &917816433
 Transform:
   m_ObjectHideFlags: 0
@@ -2811,7 +2811,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000007265271
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}
@@ -7635,6 +7635,121 @@ Prefab:
         type: 2}
       propertyPath: _rangeLength
       value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key0.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key0.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key1.b
+      value: 0.19705883
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key2.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key2.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key2.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.ctime1
+      value: 32768
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.ctime2
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.m_NumColorKeys
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key3.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key3.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key3.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.ctime3
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.ctime0
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key1.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.atime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key0.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key4.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.ctime4
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _tensionsGradient.key0.g
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
