@@ -39,6 +39,10 @@ namespace EMSP.UI
         private RectTransform _timeStepPrefab;
         [SerializeField]
         private Text _textField;
+        [SerializeField]
+        private Text _startTimeTextField;
+        [SerializeField]
+        private Text _endTimeTextField;
 
         [SerializeField]
         private GameObject _playButton;
@@ -100,6 +104,8 @@ namespace EMSP.UI
             m_InternalTime = 0;
             _handleRect.anchoredPosition3D = Vector3.zero;
             _textField.text = _startTime.ToString();
+            _startTimeTextField.text = _startTime.ToString();
+            _endTimeTextField.text = _endTime.ToString();
 
             CalculateInternalValues();
             DrawTimeSteps();
@@ -139,7 +145,7 @@ namespace EMSP.UI
             if (_isPlaying) return;
 
             _isPlaying = true;
-            StartCoroutine(PlayingProcess());
+            StartCoroutine("PlayingProcess");
 
             _playButton.SetActive(false);
             _stopButton.SetActive(true);
@@ -150,6 +156,7 @@ namespace EMSP.UI
             if (!_isPlaying) return;
 
             _isPlaying = false;
+            StopCoroutine("PlayingProcess");
 
             _playButton.SetActive(true);
             _stopButton.SetActive(false);
@@ -242,6 +249,8 @@ namespace EMSP.UI
         #region Events handlers
         public void OnPointerDown(PointerEventData eventData)
         {
+            Stop();
+
             _handleRect.position = eventData.pressPosition;
             _handleRect.ForceUpdateRectTransforms();
             SetCurrentTime(GetTimeFromAnchoredPosition(_handleRect.anchoredPosition3D.x));
