@@ -13,6 +13,8 @@ using UnityEngine;
 using Grid = EMSP.Environment.Metrics.Grid;
 using EMSP.UI.Dialogs.WiringEditor;
 using EMSP.Data;
+using EMSP.Mathematic.MagneticTension;
+using EMSP.Timing;
 
 namespace EMSP.App
 {
@@ -49,6 +51,9 @@ namespace EMSP.App
         private WiringEditorDialog _wiringEditorDialog;
 
         private Exporter _exporter = new Exporter();
+
+        [SerializeField]
+        private TimeLine _timeLine;
         #endregion
 
         #region Events
@@ -320,6 +325,22 @@ namespace EMSP.App
         private void WiringEditorDialog_OnWiringEdited(Wiring wiring)
         {
             WiringManager.Instance.CreateNewWiring(wiring);
+        }
+
+        public void MagneticTensionInSpace_VisibilityChanged(MagneticTensionInSpace magneticTensionInSpace, bool state)
+        {
+            if (state)
+            {
+                _timeLine.Show();
+                return;
+            }
+
+            _timeLine.Hide();
+        }
+
+        public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
+        {
+            MathematicManager.Instance.MagneticTensionInSpace.SetPointsToTime(index);
         }
         #endregion
         #endregion

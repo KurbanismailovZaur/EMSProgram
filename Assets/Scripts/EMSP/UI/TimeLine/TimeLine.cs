@@ -119,7 +119,6 @@ namespace EMSP.UI
         }
 
 
-
         public void SetTimeParameters(float start, float end, int stepCount)
         {
             if (start < 0 || end <= 0 || start == end || stepCount < 1)
@@ -243,6 +242,17 @@ namespace EMSP.UI
         }
 
 
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+
         private void CalculateInternalValues()
         {
             m_ScreenWidth = Screen.width;
@@ -306,7 +316,7 @@ namespace EMSP.UI
                 if (TimeManager.Instance.TimeIndex == _stepCount)
                     TimeManager.Instance.TimeIndex = 0;
                 else
-                    TimeManager.Instance.MoveTimeToNextStep();
+                    ++TimeManager.Instance.TimeIndex;
 
             }
             yield return null;
@@ -325,9 +335,9 @@ namespace EMSP.UI
 
 
                 if (currentPos >= rectTR.position.x + m_StepWidth)
-                    timeManager.MoveTimeToNextStep();
+                    ++timeManager.TimeIndex;
                 else if (currentPos <= rectTR.position.x - m_StepWidth)
-                    timeManager.MoveTimeToPreviousStep();
+                    --timeManager.TimeIndex;
             }
         }
 
