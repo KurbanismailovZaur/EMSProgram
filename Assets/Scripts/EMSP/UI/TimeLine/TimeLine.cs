@@ -110,6 +110,18 @@ namespace EMSP.UI
                 DrawTimeSteps();
                 SetCurrentTime(m_InternalTime + _startTime);
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (_isPlaying)
+                {
+                    Stop();
+                }
+                else
+                {
+                    Play();
+                }
+            }
         }
 
         private void OnDestroy()
