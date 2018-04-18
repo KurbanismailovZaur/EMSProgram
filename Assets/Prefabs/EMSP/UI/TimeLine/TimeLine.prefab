@@ -508,10 +508,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: EMSP.UI.TimeLine+TimeLineEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  StTime: 11.223
-  EnTime: 15.4833
-  StCount: 17
-  CurTime: 0
 --- !u!114 &114739564150450282
 MonoBehaviour:
   m_ObjectHideFlags: 1

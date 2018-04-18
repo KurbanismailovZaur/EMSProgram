@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using System;
 using UnityEngine.UI;
 using EMSP.Timing;
+using System.Collections.ObjectModel;
 
 namespace EMSP.UI
 {
@@ -85,10 +86,39 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
+        private void Awake()
+        {
+            m_ScreenWidth = Screen.width;
+            m_ScreenHeight = Screen.height;
+        }
+
         private void Start()
         {
-            SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
+            //SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
+            TimeManager.Instance.TimeParametersChanged.AddListener(SetTimeParameters);
+            TimeManager.Instance.TimeIndexChanged.AddListener(SetCurrentTime);
+            TimeManager.Instance.StartTime = 1.3f;
+            TimeManager.Instance.EndTime = 43.5f;
+            TimeManager.Instance.StepsCount = 40;
         }
+
+        private void Update()
+        {
+            if (m_ScreenWidth != Screen.width || m_ScreenHeight != Screen.height)
+            {
+                CalculateInternalValues();
+                DrawTimeSteps();
+                SetCurrentTime(m_InternalTime + _startTime);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            TimeManager.Instance.TimeParametersChanged.RemoveListener(SetTimeParameters);
+            TimeManager.Instance.TimeIndexChanged.RemoveListener(SetCurrentTime);
+        }
+
+
 
         public void SetTimeParameters(float start, float end, int stepCount)
         {
@@ -110,6 +140,25 @@ namespace EMSP.UI
             CalculateInternalValues();
             DrawTimeSteps();
         }
+
+        public void SetTimeParameters(TimeManager timeManager)
+        {
+            if (_isPlaying) Stop();
+
+            _startTime = timeManager.StartTime;
+            _endTime = timeManager.EndTime;
+            _stepCount = timeManager.StepsCount;
+            m_TimeStepSignCount = timeManager.Steps.Count;
+            m_InternalTime = 0;
+            _handleRect.anchoredPosition3D = Vector3.zero;
+            _textField.text = _startTime.ToString();
+            _startTimeTextField.text = _startTime.ToString();
+            _endTimeTextField.text = _endTime.ToString();
+
+            CalculateInternalValues();
+            DrawTimeSteps();
+        }
+
 
         public void SetCurrentTime(float time)
         {
@@ -140,6 +189,37 @@ namespace EMSP.UI
             }
         }
 
+        public void SetCurrentTime(TimeManager timeManager, int stepIndex)
+        {
+            float time = timeManager.Steps[stepIndex];
+            bool hasChanged = true;
+
+            if (time < _startTime)
+                time = _startTime;
+            else if (time > _endTime)
+                time = _endTime;
+
+            int stepCountsInTime = Convert.ToInt32(time / m_TimePerStep) - Convert.ToInt32(_startTime / m_TimePerStep);
+            float internalTimeCandidate = stepCountsInTime * m_TimePerStep;
+
+            if (m_InternalTime == internalTimeCandidate)
+            {
+                if (m_IsDragging) return;
+                hasChanged = false;
+            }
+
+            m_InternalTime = internalTimeCandidate;
+
+            _handleRect.anchoredPosition3D = new Vector3(internalTimeCandidate / m_TimePerPixel, 0, 0);
+
+            if (hasChanged)
+            {
+                _textField.text = (m_InternalTime + _startTime).ToString();
+                Changed.Invoke(this, time);
+            }
+        }
+
+
         public void Play()
         {
             if (_isPlaying) return;
@@ -162,21 +242,6 @@ namespace EMSP.UI
             _stopButton.SetActive(false);
         }
 
-        private void Awake()
-        {
-            m_ScreenWidth = Screen.width;
-            m_ScreenHeight = Screen.height;
-        }
-
-        private void Update()
-        {
-            if (m_ScreenWidth != Screen.width || m_ScreenHeight != Screen.height)
-            {
-                CalculateInternalValues();
-                DrawTimeSteps();
-                SetCurrentTime(m_InternalTime + _startTime);
-            }
-        }
 
         private void CalculateInternalValues()
         {
@@ -234,11 +299,36 @@ namespace EMSP.UI
                 yield return new WaitForSeconds(m_TimePerStep);
                 if (!_isPlaying) break;
 
-                float time = _startTime + m_InternalTime + m_TimePerStep;
-                if (time > _endTime) time = _startTime;
-                SetCurrentTime(time);
+                //float time = _startTime + m_InternalTime + m_TimePerStep;
+                //if (time > _endTime) time = _startTime;
+                //SetCurrentTime(time);
+
+                if (TimeManager.Instance.TimeIndex == _stepCount)
+                    TimeManager.Instance.TimeIndex = 0;
+                else
+                    TimeManager.Instance.MoveTimeToNextStep();
+
             }
             yield return null;
+        }
+
+        private IEnumerator DraggingProcess()
+        {
+            while (m_IsDragging)
+            {
+                yield return new WaitForEndOfFrame();
+                if (!m_IsDragging) break;
+
+                TimeManager timeManager = TimeManager.Instance;
+                float currentPos = Input.mousePosition.x;
+                RectTransform rectTR = m_TimeSteps[timeManager.TimeIndex].GetComponent<RectTransform>();
+
+
+                if (currentPos >= rectTR.position.x + m_StepWidth)
+                    timeManager.MoveTimeToNextStep();
+                else if (currentPos <= rectTR.position.x - m_StepWidth)
+                    timeManager.MoveTimeToPreviousStep();
+            }
         }
 
         #endregion
@@ -247,61 +337,58 @@ namespace EMSP.UI
         #endregion
 
         #region Events handlers
+
         public void OnPointerDown(PointerEventData eventData)
         {
             Stop();
 
-            _handleRect.position = eventData.pressPosition;
-            _handleRect.ForceUpdateRectTransforms();
-            SetCurrentTime(GetTimeFromAnchoredPosition(_handleRect.anchoredPosition3D.x));
+            //_handleRect.position = eventData.pressPosition;
+            //_handleRect.ForceUpdateRectTransforms();
+            //SetCurrentTime(GetTimeFromAnchoredPosition(_handleRect.anchoredPosition3D.x));
+
+            float currentPosX = Input.mousePosition.x;
+            int index = 0;
+
+            foreach(var go in m_TimeSteps)
+            {
+                var tr = go.GetComponent<RectTransform>();
+                float leftX = tr.position.x - tr.rect.width / 2 - m_StepWidth / 2;
+                float rightX = tr.position.x + tr.rect.width / 2 + m_StepWidth / 2;
+
+                if (currentPosX >= leftX && currentPosX <= rightX)
+                    break;
+
+                ++index;
+            }
+
+            TimeManager.Instance.TimeIndex = index;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             m_IsDragging = true;
+            StartCoroutine("DraggingProcess");
         }
 
         float _dragDelta;
         public void OnDrag(PointerEventData eventData)
         {
-            _dragDelta += eventData.delta.x;
-            if (Math.Abs(_dragDelta) >= m_StepWidth)
-            {         
-                SetCurrentTime(GetTimeFromAnchoredPosition(_handleRect.anchoredPosition3D.x + m_StepWidth * Math.Sign(_dragDelta)));
-                _dragDelta = 0;
-            }
+            //_dragDelta += eventData.delta.x;
+            //if (Math.Abs(_dragDelta) >= m_StepWidth)
+            //{         
+            //    SetCurrentTime(GetTimeFromAnchoredPosition(_handleRect.anchoredPosition3D.x + m_StepWidth * Math.Sign(_dragDelta)));
+            //    _dragDelta = 0;
+            //}
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            StopCoroutine("DraggingProcess");
             m_IsDragging = false;
             _dragDelta = 0;
         }
 
         #endregion
         #endregion
-
-        public float StTime;
-        public float EnTime;
-        public int StCount;
-        [ContextMenu("SetTimeParameters")]
-        void Test()
-        {
-            Changed.RemoveAllListeners();
-
-            SetTimeParameters(StTime, EnTime, StCount);
-
-            Changed.AddListener((tl, t) =>
-            {
-                Debug.Log(t.ToString());
-            });
-        }
-
-        public float CurTime;
-        [ContextMenu("Set Time")]
-        void Test2()
-        {
-            SetCurrentTime(CurTime);
-        }
     }
 }
