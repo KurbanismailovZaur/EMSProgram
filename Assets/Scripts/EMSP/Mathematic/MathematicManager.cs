@@ -76,6 +76,16 @@ namespace EMSP.Mathematic
             }
         }
 
+        public void Hide(CalculationType calculationType)
+        {
+            switch (calculationType)
+            {
+                case CalculationType.MagneticTensionInSpace:
+                    _magneticTensionInSpace.IsVisible = false;
+                    break;
+            }
+        }
+
         public void DestroyCalculations()
         {
             MagneticTensionInSpace.DestroyMagneticTensions();

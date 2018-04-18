@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace Mynamespace
 {
-	public class Test : MonoBehaviour 
-	{
+    public class Test : MonoBehaviour
+    {
         #region Entities
         #region Enums
         #endregion
@@ -62,7 +62,14 @@ namespace Mynamespace
             {
                 yield return new WaitForSeconds(TimeManager.Instance.Delta);
 
-                TimeManager.Instance.MoveTimeToNextStep();
+                if (TimeManager.Instance.TimeIndex == TimeManager.Instance.StepsCount - 1)
+                {
+                    TimeManager.Instance.TimeIndex = 0;
+                }
+                else
+                {
+                    TimeManager.Instance.TimeIndex += 1;
+                }
             }
         }
         #endregion

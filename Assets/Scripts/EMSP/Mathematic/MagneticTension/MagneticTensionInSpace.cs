@@ -114,8 +114,6 @@ namespace EMSP.Mathematic.MagneticTension
                 DestroyMagneticTensions();
             }
 
-            gameObject.SetActive(true);
-
             float rangeLength = MathematicManager.Instance.RangeLength;
 
             Bounds wiringBounds = WiringManager.Instance.Wiring.GetBounds();
@@ -211,6 +209,7 @@ namespace EMSP.Mathematic.MagneticTension
 
             _mtPoints.Clear();
 
+            IsVisible = false;
             _isCalculated = false;
 
             Destroyed.Invoke(this);

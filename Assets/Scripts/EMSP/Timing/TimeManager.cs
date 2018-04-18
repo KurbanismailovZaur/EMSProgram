@@ -162,16 +162,8 @@ namespace EMSP.Timing
             _steps.Add(_endTime);
 
             TimeParametersChanged.Invoke(this);
-        }
 
-        public void MoveTimeToNextStep()
-        {
-            TimeIndex += 1;
-        }
-
-        public void MoveTimeToPreviousStep()
-        {
-            TimeIndex -= 1;
+            TimeIndex = 0;
         }
         #endregion
 

@@ -85,9 +85,25 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
+        private void Awake()
+        {
+            m_ScreenWidth = Screen.width;
+            m_ScreenHeight = Screen.height;
+        }
+
         private void Start()
         {
             SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
+        }
+
+        private void Update()
+        {
+            if (m_ScreenWidth != Screen.width || m_ScreenHeight != Screen.height)
+            {
+                CalculateInternalValues();
+                DrawTimeSteps();
+                SetCurrentTime(m_InternalTime + _startTime);
+            }
         }
 
         public void SetTimeParameters(float start, float end, int stepCount)
@@ -162,22 +178,6 @@ namespace EMSP.UI
             _stopButton.SetActive(false);
         }
 
-        private void Awake()
-        {
-            m_ScreenWidth = Screen.width;
-            m_ScreenHeight = Screen.height;
-        }
-
-        private void Update()
-        {
-            if (m_ScreenWidth != Screen.width || m_ScreenHeight != Screen.height)
-            {
-                CalculateInternalValues();
-                DrawTimeSteps();
-                SetCurrentTime(m_InternalTime + _startTime);
-            }
-        }
-
         private void CalculateInternalValues()
         {
             m_ScreenWidth = Screen.width;
@@ -241,6 +241,15 @@ namespace EMSP.UI
             yield return null;
         }
 
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
         #endregion
 
         #region Indexers
