@@ -135,7 +135,7 @@ namespace EMSP.Mathematic.MagneticTension
 
                         MagneticTensionInTime[] magneticTensionsInTime = new MagneticTensionInTime[TimeManager.Instance.StepsCount];
 
-                        for (int w = 0; w < TimeManager.Instance.Steps.Count; w++)
+                        for (int w = 0; w < TimeManager.Instance.StepsCount; w++)
                         {
                             magneticTensionsInTime[w] = new MagneticTensionInTime(TimeManager.Instance.Steps[w], _mtCalculator.Calculate(WiringManager.Instance.Wiring, point, TimeManager.Instance.Steps[w]));
                         }

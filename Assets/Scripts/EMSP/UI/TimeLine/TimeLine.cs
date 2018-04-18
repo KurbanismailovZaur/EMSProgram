@@ -90,16 +90,8 @@ namespace EMSP.UI
         {
             m_ScreenWidth = Screen.width;
             m_ScreenHeight = Screen.height;
-        }
 
-        private void Start()
-        {
-            //SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
-            TimeManager.Instance.TimeParametersChanged.AddListener(SetTimeParameters);
-            TimeManager.Instance.TimeIndexChanged.AddListener(SetCurrentTime);
-            TimeManager.Instance.StartTime = 1.3f;
-            TimeManager.Instance.EndTime = 43.5f;
-            TimeManager.Instance.StepsCount = 40;
+            SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
         }
 
         private void Update()

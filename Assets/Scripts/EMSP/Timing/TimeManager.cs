@@ -154,9 +154,9 @@ namespace EMSP.Timing
             _steps.Clear();
             _steps.Add(_startTime);
 
-            for (int i = 0; i < _stepsCount - 1; i++)
+            for (int i = 1; i < _stepsCount - 1; i++)
             {
-                _steps.Add(_startTime + (_delta * (i + 1)));
+                _steps.Add(_startTime + (_delta * i));
             }
 
             _steps.Add(_endTime);
