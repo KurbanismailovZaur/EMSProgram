@@ -149,7 +149,7 @@ namespace EMSP.Timing
         private void CalculateSteps()
         {
             float distance = _endTime - _startTime;
-            _delta = distance / _stepsCount;
+            _delta = distance / (_stepsCount - 1);
 
             _steps.Clear();
             _steps.Add(_startTime);
