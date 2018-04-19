@@ -144,7 +144,7 @@ namespace EMSP.UI
             DrawTimeSteps();
         }
 
-        public void SetTimeParameters(TimeManager timeManager)
+        private void SetTimeParameters(TimeManager timeManager)
         {
             if (_isPlaying) Stop();
 
@@ -188,11 +188,11 @@ namespace EMSP.UI
             if (hasChanged)
             {
                 _textField.text = (m_InternalTime + _startTime).ToString();
-                Changed.Invoke(this, m_InternalTime + _startTime);
+                Changed.Invoke(this, Convert.ToSingle(Math.Round(m_InternalTime + _startTime, 6)));
             }
         }
 
-        public void SetCurrentTime(TimeManager timeManager, int stepIndex)
+        private void SetCurrentTime(TimeManager timeManager, int stepIndex)
         {
             float time = timeManager.Steps[stepIndex];
             bool hasChanged = true;
@@ -339,9 +339,15 @@ namespace EMSP.UI
 
 
                 if (currentPos >= rectTR.position.x + m_StepWidth)
-                    ++timeManager.TimeIndex;
+                {
+                    int count = (int)Math.Floor((currentPos - rectTR.position.x) / m_StepWidth);
+                    timeManager.TimeIndex = timeManager.TimeIndex + count;
+                }
                 else if (currentPos <= rectTR.position.x - m_StepWidth)
-                    --timeManager.TimeIndex;
+                {
+                    int count = (int)Math.Floor((rectTR.position.x - currentPos) / m_StepWidth);
+                    timeManager.TimeIndex = timeManager.TimeIndex - count;
+                }
             }
         }
 
@@ -400,6 +406,16 @@ namespace EMSP.UI
             StopCoroutine("DraggingProcess");
             m_IsDragging = false;
             _dragDelta = 0;
+        }
+
+        public void TimeManager_TimeParametersChanged(TimeManager timeManager)
+        {
+            SetTimeParameters(timeManager);
+        }
+
+        public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
+        {
+            SetCurrentTime(timeManager, index);
         }
 
         #endregion
