@@ -132,8 +132,8 @@ namespace EMSP.UI
 
             _startTime = start;
             _endTime = end;
-            _stepCount = stepCount;
-            m_TimeStepSignCount = stepCount + 1;
+            _stepCount = stepCount - 1;
+            m_TimeStepSignCount = _stepCount + 1;
             m_InternalTime = 0;
             _handleRect.anchoredPosition3D = Vector3.zero;
             _textField.text = _startTime.ToString();
@@ -150,7 +150,7 @@ namespace EMSP.UI
 
             _startTime = timeManager.StartTime;
             _endTime = timeManager.EndTime;
-            _stepCount = timeManager.StepsCount;
+            _stepCount = timeManager.StepsCount - 1;
             m_TimeStepSignCount = timeManager.Steps.Count;
             m_InternalTime = 0;
             _handleRect.anchoredPosition3D = Vector3.zero;

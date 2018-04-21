@@ -123,7 +123,7 @@ namespace EMSP.Timing
             get { return _timeIndex; }
             set
             {
-                int timeIndex = Mathf.Clamp(value, 0, _stepsCount);
+                int timeIndex = Mathf.Clamp(value, 0, _stepsCount - 1);
 
                 if (_timeIndex == timeIndex)
                 {
