@@ -1534,6 +1534,46 @@ MonoBehaviour:
   _viewComputationMagneticTensionInSpaceIsVisibleButton: {fileID: 835017970}
   _viewGridVisibilityButton: {fileID: 1878075472}
   _calculationsComputationMagneticTensionInSpaceButton: {fileID: 1649474353}
+--- !u!1 &563285367 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1644292962298444, guid: c6fa5d62c031c0b4692c95a8fe29a7c8,
+    type: 2}
+  m_PrefabInternal: {fileID: 852305320}
+--- !u!114 &563285371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 563285367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
+--- !u!114 &563285372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 563285367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -405508275, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 4
+    m_Right: 4
+    m_Top: 4
+    m_Bottom: 4
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
 --- !u!1 &661955705
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,6 +1936,18 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1443118423251542, guid: c6fa5d62c031c0b4692c95a8fe29a7c8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1354320369487720, guid: c6fa5d62c031c0b4692c95a8fe29a7c8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1543064361604816, guid: c6fa5d62c031c0b4692c95a8fe29a7c8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c6fa5d62c031c0b4692c95a8fe29a7c8, type: 2}
   m_IsPrefabParent: 0
@@ -2116,7 +2168,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 135526926}
-        m_MethodName: SetTimeParameters
+        m_MethodName: TimeManager_TimeParametersChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2143,7 +2195,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 135526926}
-        m_MethodName: SetCurrentTime
+        m_MethodName: TimeManager_TimeIndexChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2966,7 +3018,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.0000061127944
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}

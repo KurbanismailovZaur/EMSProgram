@@ -116,13 +116,6 @@ namespace EMSP.UI
             }
         }
 
-        private void OnDestroy()
-        {
-            TimeManager.Instance.TimeParametersChanged.RemoveListener(SetTimeParameters);
-            TimeManager.Instance.TimeIndexChanged.RemoveListener(SetCurrentTime);
-        }
-
-
         public void SetTimeParameters(float start, float end, int stepCount)
         {
             if (start < 0 || end <= 0 || start == end || stepCount < 1)
@@ -187,41 +180,26 @@ namespace EMSP.UI
 
             if (hasChanged)
             {
-                _textField.text = (m_InternalTime + _startTime).ToString();
-                Changed.Invoke(this, Convert.ToSingle(Math.Round(m_InternalTime + _startTime, 6)));
+                float resultTime = m_InternalTime + _startTime;
+
+                string outputTimeString = resultTime.ToString("0.00000");
+
+                //if (outputTimeString.Substring(outputTimeString.IndexOf('.')).Length >= 7)
+                //{
+                //    outputTimeString = resultTime.ToString("0.00000");
+                //}
+
+                _textField.text = string.Format("{0} sec", outputTimeString);
+
+                Changed.Invoke(this, resultTime);
             }
         }
 
-        private void SetCurrentTime(TimeManager timeManager, int stepIndex)
+        private void SetCurrentTime(TimeManager timeManager)
         {
-            float time = timeManager.Steps[stepIndex];
-            bool hasChanged = true;
-
-            if (time < _startTime)
-                time = _startTime;
-            else if (time > _endTime)
-                time = _endTime;
-
-            int stepCountsInTime = Convert.ToInt32(time / m_TimePerStep) - Convert.ToInt32(_startTime / m_TimePerStep);
-            float internalTimeCandidate = stepCountsInTime * m_TimePerStep;
-
-            if (m_InternalTime == internalTimeCandidate)
-            {
-                if (m_IsDragging) return;
-                hasChanged = false;
-            }
-
-            m_InternalTime = internalTimeCandidate;
-
-            _handleRect.anchoredPosition3D = new Vector3(internalTimeCandidate / m_TimePerPixel, 0, 0);
-
-            if (hasChanged)
-            {
-                _textField.text = (m_InternalTime + _startTime).ToString();
-                Changed.Invoke(this, time);
-            }
+            float time = timeManager.Steps[timeManager.TimeIndex];
+            SetCurrentTime(time);
         }
-
 
         public void Play()
         {
@@ -415,7 +393,7 @@ namespace EMSP.UI
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
-            SetCurrentTime(timeManager, index);
+            SetCurrentTime(timeManager);
         }
 
         #endregion

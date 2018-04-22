@@ -105,7 +105,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         public Vector3 Calculate(Wire wire, Vector3 targetPoint, float time)
         {
-            float amperage = wire.I0 * Mathf.Sin(2 * Mathf.PI * wire.Frequency* time);
+            float amperage = wire.Amplitude * Mathf.Sin(2 * Mathf.PI * wire.Frequency* time);
 
             ReadOnlyCollection<Vector3> points = wire.WorldPoints;
 

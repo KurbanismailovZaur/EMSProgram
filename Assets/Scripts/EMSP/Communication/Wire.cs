@@ -25,11 +25,11 @@ namespace EMSP.Communication
         #region Classes
         public class Factory
         {
-            public Wire Create(float i0, float frequency)
+            public Wire Create(float amplitude, float frequency)
             {
                 Wire wire = new GameObject("Wire").AddComponent<Wire>();
                 wire._name = "Sheet1";
-                wire._i0 = i0;
+                wire._amplitude = amplitude;
                 wire._frequency = frequency;
 
                 wire._lineRenderer = wire.GetComponent<LineRenderer>();
@@ -53,7 +53,7 @@ namespace EMSP.Communication
         #region Fields
         private string _name;
 
-        private float _i0;
+        private float _amplitude;
 
         private float _frequency;
 
@@ -87,7 +87,7 @@ namespace EMSP.Communication
 
         public int Count { get { return _localPoints.Count; } }
 
-        public float I0 { get { return _i0; } }
+        public float Amplitude { get { return _amplitude; } }
 
         public float Frequency { get { return _frequency; } }
 
