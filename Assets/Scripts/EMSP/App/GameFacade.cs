@@ -276,6 +276,8 @@ namespace EMSP.App
                     break;
             }
 
+            TimeManager.Instance.TimeIndex = 0;
+
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
