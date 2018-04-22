@@ -33,7 +33,10 @@ namespace EMSP.UI
         private Text _textField;
         private RectTransform _rectTransform;
         private float _maxValue;
+
+        [SerializeField]
         private RangeSlider _rangeSlider;
+
         private bool _isDragByUser = false;
 
         private float _lastValue;
@@ -60,11 +63,6 @@ namespace EMSP.UI
         {
             _rectTransform = GetComponent<RectTransform>();
             _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
-        }
-
-        private void Start()
-        {
-            _rangeSlider = GetComponentInParent<RangeSlider>();
         }
 
         private void Update()

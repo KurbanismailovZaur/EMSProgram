@@ -162,33 +162,38 @@ namespace EMSP
 
         private void CalculateViewportStartFlag()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.mouseScrollDelta.y != 0f)
             {
-                if (EventSystem.current.IsPointerOverGameObject())
+                ForceCalculateViewportStartFlag();
+            }
+        }
+
+        private void ForceCalculateViewportStartFlag()
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                PointerEventData pointerData = new PointerEventData(EventSystem.current)
                 {
-                    PointerEventData pointerData = new PointerEventData(EventSystem.current)
-                    {
-                        pointerId = -1,
-                    };
+                    pointerId = -1,
+                };
 
-                    pointerData.position = Input.mousePosition;
+                pointerData.position = Input.mousePosition;
 
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    EventSystem.current.RaycastAll(pointerData, results);
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerData, results);
 
-                    if (results.TrueForAll(x => x.gameObject.layer == LayerMask.NameToLayer("Gizmos")))
-                    {
-                        _isStartInViewport = true;
-                    }
-                    else
-                    {
-                        _isStartInViewport = false;
-                    }
-                }
-                else
+                if (results.TrueForAll(x => x.gameObject.layer == LayerMask.NameToLayer("Gizmos")))
                 {
                     _isStartInViewport = true;
                 }
+                else
+                {
+                    _isStartInViewport = false;
+                }
+            }
+            else
+            {
+                _isStartInViewport = true;
             }
         }
 
@@ -197,7 +202,10 @@ namespace EMSP
             CalculateViewportStartFlag();
 
             float scrollWheel = -Input.GetAxis("Mouse ScrollWheel");
-            Distance += scrollWheel * _autoControlByMouseScrollMultiplier;
+            if (_isStartInViewport)
+            {
+                Distance += scrollWheel * _autoControlByMouseScrollMultiplier;
+            }
 
             if (Input.GetMouseButton(0) && _isStartInViewport)
             {

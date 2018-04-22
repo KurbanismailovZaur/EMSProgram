@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EMSP
 {
     [Serializable]
-    public class Range
+    public struct Range
     {
         #region Entities
         #region Enums
@@ -64,8 +64,6 @@ namespace EMSP
         #endregion
 
         #region Constructors
-        public Range() : this(0f, 0f) { }
-
         public Range(float start, float end)
         {
             _start = start;
