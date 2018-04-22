@@ -54,6 +54,9 @@ namespace EMSP.App
 
         [SerializeField]
         private TimeLine _timeLine;
+
+        //[SerializeField]
+        //private RangeSlider _magneticTensionFilter
         #endregion
 
         #region Events
