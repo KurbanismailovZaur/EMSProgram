@@ -33,35 +33,48 @@ namespace EMSP.UI
         #region Fields
         [SerializeField]
         private RectTransform _fillRect;
+
         [SerializeField]
-        private RectTransform _handleMinRect;
+        private Handle _handleMin;
+
         [SerializeField]
-        private RectTransform _handleMaxRect;
+        private Handle _handleMax;
 
         [SerializeField]
         private bool _wholeNumbers;
+
         [SerializeField]
         private float _minRangeValue;
+
         [SerializeField]
         private float _maxRangeValue;
+
         [SerializeField]
         private float _minRangeLenght;
+
         [SerializeField]
         private float _minValue;
+
         [SerializeField]
         private float _maxValue;
+
         [SerializeField]
         private float _scrollSensivity = 1;
 
         private UIGradient _bgGradient = null;
 
         private float _valuesCount;
+
         private float _valuesPerPixel;
+
         private float _minHandlesDistance;
 
-
         private int _previousScreenHeight;
+
         private int _previousScreenWidth;
+
+        [SerializeField]
+        private Fill _fill;
         #endregion
 
         #region Events
@@ -70,13 +83,13 @@ namespace EMSP.UI
 
         #region Behaviour
         #region Properties
-        public RectTransform HandleMinRect { get { return _handleMinRect; } }
-        public RectTransform HandleMaxRect { get { return _handleMaxRect; } }
+        public Handle HandleMin { get { return _handleMin; } }
+        public Handle HandleMax { get { return _handleMax; } }
 
         public float ValuesPerPixel { get { return _valuesPerPixel; } }
         public float MinHandlesDistance { get { return _minHandlesDistance; } }
-        public float HandleMinYPosition { get { return _handleMinRect.anchoredPosition3D.y; } }
-        public float HandleMaxYPosition { get { return _handleMaxRect.anchoredPosition3D.y; } }
+        public float HandleMinYPosition { get { return _handleMin.RectTransform.anchoredPosition3D.y; } }
+        public float HandleMaxYPosition { get { return _handleMax.RectTransform.anchoredPosition3D.y; } }
 
         public float CurrentRangeDistance { get { return HandleMaxYPosition - HandleMinYPosition; } }
         public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMinYPosition * _valuesPerPixel) : _minRangeValue + HandleMinYPosition * _valuesPerPixel; } }
@@ -101,6 +114,12 @@ namespace EMSP.UI
         #region Methods
         private void Awake()
         {
+            RecalculateAll();
+            UpdateValues();
+        }
+
+        private void RecalculateAll()
+        {
             _previousScreenHeight = Screen.height;
             _previousScreenWidth = Screen.width;
 
@@ -108,18 +127,14 @@ namespace EMSP.UI
             RecalculateFillTransformation();
         }
 
-        private void Start()
-        {
-            UpdateValues();
-        }
-
         private void Update()
         {
-            if(Screen.height != _previousScreenHeight || Screen.width != _previousScreenWidth)
+            if (IsScreenSizeChanged())
             {
-                Awake();
-                _handleMinRect.GetComponent<Handle>().RecalculateInternalValues();
-                _handleMaxRect.GetComponent<Handle>().RecalculateInternalValues();
+                RecalculateAll();
+
+                _handleMin.RecalculateInternalValues();
+                _handleMax.RecalculateInternalValues();
 
                 return;
             }
@@ -127,19 +142,25 @@ namespace EMSP.UI
             RecalculateFillTransformation();
         }
 
+        private bool IsScreenSizeChanged()
+        {
+            return Screen.height != _previousScreenHeight || Screen.width != _previousScreenWidth;
+        }
+
         private void RecalculateFillTransformation()
         {
-            float _height = _handleMaxRect.anchoredPosition3D.y - _handleMinRect.anchoredPosition3D.y - _handleMaxRect.rect.height;
+            float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y - _handleMax.RectTransform.rect.height;
+
             _fillRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height);
-            _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMinRect.anchoredPosition3D.y + _handleMaxRect.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
+            _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
         }
 
         private void CalculateInternalValues()
         {
             _valuesCount = _maxRangeValue - _minRangeValue;
             if (_minRangeLenght > _valuesCount) _minRangeLenght = _valuesCount;
-            _valuesPerPixel = _valuesCount / _handleMinRect.parent.GetComponent<RectTransform>().rect.height;
-            _minHandlesDistance = ((_minRangeLenght / (_valuesCount / 100)) / 100) * _handleMinRect.parent.GetComponent<RectTransform>().rect.height;
+            _valuesPerPixel = _valuesCount / ((RectTransform)_handleMin.transform.parent).rect.height;
+            _minHandlesDistance = ((_minRangeLenght / (_valuesCount / 100)) / 100) * ((RectTransform)_handleMin.transform.parent).rect.height;
         }
 
         [ContextMenu("Update values")]
@@ -155,33 +176,38 @@ namespace EMSP.UI
             _maxValue = _minRangeValue + HandleMaxYPosition * _valuesPerPixel;
 
             if (_wholeNumbers)
+            {
                 OnValueChanged.Invoke(this, Convert.ToInt32(_minValue), Convert.ToInt32(_maxValue));
+            }
             else
+            {
                 OnValueChanged.Invoke(this, _minValue, _maxValue);
-
+            }
         }
 
         public void SetRangeLimits(float min, float max, bool wholeNumbers = false, float minRangeLenght = 0)
         {
             if (minRangeLenght > max - min)
+            {
                 throw new Exception("Min range lenght can not be more big than all lenght");
+            }
 
             _minRangeValue = min;
             _maxRangeValue = max;
             _wholeNumbers = wholeNumbers;
             _minRangeLenght = minRangeLenght;
 
-            Awake();
+            RecalculateAll();
         }
 
         public void SetMin(float min)
         {
-            _handleMinRect.GetComponent<Handle>().SetValue(min);
+            _handleMin.SetValue(min);
         }
 
         public void SetMax(float max)
         {
-            _handleMaxRect.GetComponent<Handle>().SetValue(max);
+            _handleMax.SetValue(max);
         }
 
         public void SetGradientColors(Color color1, Color color2)
@@ -189,8 +215,8 @@ namespace EMSP.UI
             BgGradient.color2 = color1;
             BgGradient.color1 = color2;
 
-            HandleMinRect.GetComponent<Image>().color = color2;
-            HandleMaxRect.GetComponent<Image>().color = color2;
+            _handleMin.Image.color = color2;
+            _handleMax.Image.color = color2;
         }
         #endregion
 
@@ -198,12 +224,10 @@ namespace EMSP.UI
         #endregion
 
         #region Events handlers
-
         public void OnScroll(PointerEventData eventData)
         {
-            GetComponentInChildren<Fill>().OnScroll(eventData.scrollDelta.y * _scrollSensivity);
+            _fill.OnScroll(eventData.scrollDelta.y * _scrollSensivity);
         }
-
         #endregion
         #endregion
     }

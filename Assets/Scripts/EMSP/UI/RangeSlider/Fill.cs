@@ -27,9 +27,8 @@ namespace EMSP.UI
         #endregion
 
         #region Fields
+        [SerializeField]
         private RangeSlider _rangeSlider;
-        private Handle _minHandle;
-        private Handle _maxHandle;
 
         private float _currentRange;
         #endregion
@@ -45,13 +44,6 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
-        private void Start()
-        {
-            _rangeSlider = GetComponentInParent<RangeSlider>();
-            _minHandle = _rangeSlider.HandleMinRect.GetComponent<Handle>();
-            _maxHandle = _rangeSlider.HandleMaxRect.GetComponent<Handle>();
-        }
-
         #endregion
 
         #region Indexers
@@ -65,8 +57,9 @@ namespace EMSP.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            _minHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + eventData.delta.y, _currentRange);
-            _maxHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + eventData.delta.y, _currentRange);
+            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + eventData.delta.y, _currentRange);
+            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + eventData.delta.y, _currentRange);
+
             _rangeSlider.InvokeValueChanged();
         }
 
@@ -78,8 +71,9 @@ namespace EMSP.UI
         {
             _currentRange = _rangeSlider.CurrentRangeDistance;
 
-            _minHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
-            _maxHandle.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
+            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
+            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
+
             _rangeSlider.InvokeValueChanged();
         }
         #endregion

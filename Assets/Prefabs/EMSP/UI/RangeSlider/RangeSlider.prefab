@@ -195,8 +195,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fillRect: {fileID: 224055625898440926}
-  _handleMinRect: {fileID: 224952720453318352}
-  _handleMaxRect: {fileID: 224624931550098862}
+  _handleMin: {fileID: 114290309504418928}
+  _handleMax: {fileID: 114584506850025506}
   _wholeNumbers: 0
   _minRangeValue: 10
   _maxRangeValue: 75
@@ -204,6 +204,7 @@ MonoBehaviour:
   _minValue: 15
   _maxValue: 30
   _scrollSensivity: 10
+  _fill: {fileID: 114575481389858754}
   OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsMin: 1
   _textField: {fileID: 114601181646088022}
+  _image: {fileID: 114262331085586980}
 --- !u!114 &114341286955113034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -353,6 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4439bb500d13b504d9bbe8c5fc7c7471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rangeSlider: {fileID: 114005347885294774}
 --- !u!114 &114584506850025506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -366,6 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsMin: 0
   _textField: {fileID: 114747925760124452}
+  _image: {fileID: 114751388725483336}
 --- !u!114 &114585115694236202
 MonoBehaviour:
   m_ObjectHideFlags: 1

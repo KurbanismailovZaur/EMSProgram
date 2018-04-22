@@ -37,6 +37,9 @@ namespace EMSP.UI
         private bool _isDragByUser = false;
 
         private float _lastValue;
+
+        [SerializeField]
+        private Image _image;
         #endregion
 
         #region Events
@@ -44,6 +47,9 @@ namespace EMSP.UI
 
         #region Behaviour
         #region Properties
+        public RectTransform RectTransform { get { return (RectTransform)transform; } }
+
+        public Image Image { get { return _image; } }
         #endregion
 
         #region Constructors
