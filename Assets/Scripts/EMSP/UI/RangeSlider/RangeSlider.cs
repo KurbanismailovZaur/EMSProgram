@@ -22,7 +22,7 @@ namespace EMSP.UI
 
         #region Classes
         [Serializable]
-        public class RangeSliderEvent : UnityEvent<RangeSlider, float, float> { }
+        public class RangeSliderEvent : UnityEvent<RangeSlider, Range> { }
         #endregion
 
         #region Interfaces
@@ -176,11 +176,11 @@ namespace EMSP.UI
 
             if (_wholeNumbers)
             {
-                OnValueChanged.Invoke(this, Convert.ToInt32(_minValue), Convert.ToInt32(_maxValue));
+                OnValueChanged.Invoke(this, new Range(Convert.ToInt32(_minValue), Convert.ToInt32(_maxValue)));
             }
             else
             {
-                OnValueChanged.Invoke(this, _minValue, _maxValue);
+                OnValueChanged.Invoke(this, new Range(_minValue, _maxValue));
             }
         }
 
@@ -211,7 +211,7 @@ namespace EMSP.UI
 
         public void SetGradientColors(Color color0, Color color1, Color color2, Color color3, Color color4, Color color5, Color color6, Color color7)
         {
-            BgGradient.SetColor("_Color0",color0);
+            BgGradient.SetColor("_Color0", color0);
             BgGradient.SetColor("_Color1", color1);
             BgGradient.SetColor("_Color2", color2);
             BgGradient.SetColor("_Color3", color3);
@@ -219,7 +219,6 @@ namespace EMSP.UI
             BgGradient.SetColor("_Color5", color5);
             BgGradient.SetColor("_Color6", color6);
             BgGradient.SetColor("_Color7", color7);
-
         }
         #endregion
 
