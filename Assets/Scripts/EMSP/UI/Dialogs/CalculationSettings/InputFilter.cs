@@ -83,9 +83,11 @@ namespace EMSP.UI.Dialogs.CalculationSettings
                 pointsCount = int.Parse(data);
             }
 
-            if (pointsCount < GameSettings.Instance.CalculationMinRange)
+            int minPointsCountAllowed = (int)Mathf.Pow(GameSettings.Instance.CalculationMinRange, 3);
+
+            if (pointsCount < minPointsCountAllowed)
             {
-                pointsCount = (int)Mathf.Pow(GameSettings.Instance.CalculationMinRange, 3);
+                pointsCount = minPointsCountAllowed;
             }
 
             float baseValue = Mathf.Pow(pointsCount, 1f / 3f);
@@ -99,16 +101,9 @@ namespace EMSP.UI.Dialogs.CalculationSettings
             int minDiff = pointsCount - minPointsCount;
             int maxDiff = maxPointsCount - pointsCount;
 
-            int resultRangeLength = minDiff <= maxDiff ? baseMin : baseMax;
+            int resultPointsCount = minDiff <= maxDiff ? minPointsCount : maxPointsCount;
 
-            if (resultRangeLength != MathematicManager.Instance.RangeLength)
-            {
-                RangeLengthCalculated.Invoke(this, resultRangeLength);
-            }
-            else
-            {
-                SetRangeLengthText(resultRangeLength);
-            }
+            _inputField.text = resultPointsCount.ToString();
         }
         #endregion
         #endregion

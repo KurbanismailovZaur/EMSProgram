@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.CalculationSettings
 {
-    [RequireComponent(typeof(RawImage))]
-    public class Tab : MonoBehaviour
-    {
+    [RequireComponent(typeof(CanvasGroup))]
+	public abstract class Panel : MonoBehaviour 
+	{
         #region Entities
         #region Enums
         #endregion
@@ -21,8 +18,6 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Classes
-        [Serializable]
-        public class ClickedEvent : UnityEvent<Tab> { }
         #endregion
 
         #region Interfaces
@@ -30,27 +25,14 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Fields
-        private RawImage _image;
-
-        private bool _isSelected;
-
-        [SerializeField]
-        private Panel _associatedPanel;
+        private CanvasGroup _canvasGroup;
         #endregion
 
         #region Events
-        public ClickedEvent Clicked = new ClickedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public Color Color
-        {
-            get { return _image.color; }
-            set { _image.color = value; }
-        }
-
-        public Panel AssociatedPanel { get { return _associatedPanel; } }
         #endregion
 
         #region Constructors
@@ -59,7 +41,21 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #region Methods
         private void Awake()
         {
-            _image = GetComponent<RawImage>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        public void Show()
+        {
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
+        }
+
+        public void Hide()
+        {
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
         #endregion
 
@@ -67,10 +63,6 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Events handlers
-        public void Button_OnClick()
-        {
-            Clicked.Invoke(this);
-        }
         #endregion
         #endregion
     }

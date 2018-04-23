@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.CalculationSettings
 {
-	public class GeneralPanel : MonoBehaviour 
+	public class GeneralPanel : Panel 
 	{
         #region Entities
         #region Enums
