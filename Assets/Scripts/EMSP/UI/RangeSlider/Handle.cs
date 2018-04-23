@@ -135,15 +135,17 @@ namespace EMSP.UI
         #endregion
 
         #region Events handlers
+
+        private float offset;
         public void OnBeginDrag(PointerEventData eventData)
         {
+            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rectTransform.rect.height / 2;
             _isDragByUser = true;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            float newYPos = _rectTransform.anchoredPosition3D.y + eventData.delta.y;
-            ValidateAndSetNewYPosition(newYPos);
+            ValidateAndSetNewYPosition(Input.mousePosition.y - offset);
             _rangeSlider.InvokeValueChanged();
         }
 

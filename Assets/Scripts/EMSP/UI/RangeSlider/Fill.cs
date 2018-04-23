@@ -50,15 +50,18 @@ namespace EMSP.UI
         #endregion
 
         #region Events handlers
+
+        private float offset;
         public void OnBeginDrag(PointerEventData eventData)
         {
             _currentRange = _rangeSlider.CurrentRangeDistance;
+            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rangeSlider.HandleMin.GetComponent<RectTransform>().rect.height / 2;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + eventData.delta.y, _currentRange);
-            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + eventData.delta.y, _currentRange);
+            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(Input.mousePosition.y - offset - _currentRange / 2, _currentRange);
+            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(Input.mousePosition.y - offset + _currentRange / 2, _currentRange);
 
             _rangeSlider.InvokeValueChanged();
         }
