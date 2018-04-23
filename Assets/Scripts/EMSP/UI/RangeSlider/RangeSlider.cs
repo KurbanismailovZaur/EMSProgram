@@ -1,5 +1,4 @@
-﻿using Coffee.UIExtensions;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +60,7 @@ namespace EMSP.UI
         [SerializeField]
         private float _scrollSensivity = 1;
 
-        private UIGradient _bgGradient = null;
+        private Material _bgGradient = null;
 
         private float _valuesCount;
 
@@ -95,12 +94,12 @@ namespace EMSP.UI
         public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMinYPosition * _valuesPerPixel) : _minRangeValue + HandleMinYPosition * _valuesPerPixel; } }
         public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMaxYPosition * _valuesPerPixel) : _minRangeValue + HandleMaxYPosition * _valuesPerPixel; } }
 
-        private UIGradient BgGradient
+        private Material BgGradient
         {
             get
             {
                 if (_bgGradient == null)
-                    _bgGradient = GetComponentInChildren<UIGradient>();
+                    _bgGradient = transform.GetChild(0).GetComponent<Image>().material;
 
                 return _bgGradient;
             }
@@ -112,7 +111,7 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
-        private void Awake()
+        private void Start()
         {
             RecalculateAll();
             UpdateValues();
@@ -210,13 +209,17 @@ namespace EMSP.UI
             _handleMax.SetValue(max);
         }
 
-        public void SetGradientColors(Color color1, Color color2)
+        public void SetGradientColors(Color color0, Color color1, Color color2, Color color3, Color color4, Color color5, Color color6, Color color7)
         {
-            BgGradient.color2 = color1;
-            BgGradient.color1 = color2;
+            BgGradient.SetColor("_Color0",color0);
+            BgGradient.SetColor("_Color1", color1);
+            BgGradient.SetColor("_Color2", color2);
+            BgGradient.SetColor("_Color3", color3);
+            BgGradient.SetColor("_Color4", color4);
+            BgGradient.SetColor("_Color5", color5);
+            BgGradient.SetColor("_Color6", color6);
+            BgGradient.SetColor("_Color7", color7);
 
-            _handleMin.Image.color = color2;
-            _handleMax.Image.color = color2;
         }
         #endregion
 
