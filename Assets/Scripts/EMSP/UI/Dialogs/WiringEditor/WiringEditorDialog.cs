@@ -19,6 +19,11 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #endregion
 
         #region Structures
+        public class WireProperties
+        {
+            public float Amplitude;
+            public float Frequency;
+        }
         #endregion
 
         #region Classes
@@ -65,8 +70,15 @@ namespace EMSP.UI.Dialogs.WiringEditor
         [SerializeField]
         private RectTransform _pointsContainer;
 
+        [SerializeField]
+        private InputField _amplitudeInput;
+
+        [SerializeField]
+        private InputField _frequencyInput;
+
         public Dictionary<int, List<Vector3>> Wiring = new Dictionary<int, List<Vector3>>();
         public Dictionary<int, string> WiresNames = new Dictionary<int, string>();
+        public Dictionary<int, WireProperties> WiresProperties = new Dictionary<int, WireProperties>();
 
         private CanvasGroup _canvasGroup;
         private GameObject _tabNavigationObject;
@@ -106,6 +118,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 {
                     Wiring.Add(wireCount, new List<Vector3>());
                     WiresNames.Add(wireCount, wire.GetName());
+                    WiresProperties.Add(wireCount, new WireProperties() { Amplitude = wire.Amplitude, Frequency = wire.Frequency });
 
                     foreach (Vector3 point in wire)
                     {
@@ -130,6 +143,56 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         }
 
                         int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
+
+
+                        _amplitudeInput.onValueChanged.RemoveAllListeners();
+                        _amplitudeInput.onEndEdit.RemoveAllListeners();
+                        _frequencyInput.onValueChanged.RemoveAllListeners();
+                        _frequencyInput.onEndEdit.RemoveAllListeners();
+
+                        _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
+                        _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
+
+
+
+                        _amplitudeInput.onValueChanged.AddListener((str) =>
+                        {
+                            float newAmplitude;
+                            if (float.TryParse(str, out newAmplitude))
+                            {
+                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = newAmplitude;
+                            }
+                        });
+
+                        _amplitudeInput.onEndEdit.AddListener((str) =>
+                        {
+                            if (string.IsNullOrEmpty(str) || str == "-")
+                            {
+                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = 0;
+                                _amplitudeInput.text = 0.ToString();
+                            }
+                        });
+
+                        _frequencyInput.onValueChanged.AddListener((str) =>
+                        {
+                            float newFrequency;
+                            if (float.TryParse(str, out newFrequency))
+                            {
+                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = newFrequency;
+                            }
+                        });
+
+
+                        _frequencyInput.onEndEdit.AddListener((str) =>
+                        {
+                            if (string.IsNullOrEmpty(str) || str == "-")
+                            {
+                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = 0;
+                                _frequencyInput.text = 0.ToString();
+                            }
+                        });
+
+
                         int pointCount = 0;
                         foreach (var point in Wiring[wireNumber])
                         {
@@ -187,6 +250,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         {
                             Wiring.Remove(wireNumber);
                             WiresNames.Remove(wireNumber);
+                            WiresProperties.Remove(wireNumber);
 
                             int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
                             if(!(wbNumber == 0))
@@ -236,6 +300,54 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     }
 
                     int wireNumber = wireButton.GetComponent<WireButton>().WireNumber;
+
+                    _amplitudeInput.onValueChanged.RemoveAllListeners();
+                    _amplitudeInput.onEndEdit.RemoveAllListeners();
+                    _frequencyInput.onValueChanged.RemoveAllListeners();
+                    _frequencyInput.onEndEdit.RemoveAllListeners();
+
+                    _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
+                    _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
+
+
+                    _amplitudeInput.onValueChanged.AddListener((str) =>
+                    {
+                        float newAmplitude;
+                        if (float.TryParse(str, out newAmplitude))
+                        {
+                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = newAmplitude;
+                        }
+                    });
+
+                    _amplitudeInput.onEndEdit.AddListener((str) =>
+                    {
+                        if (string.IsNullOrEmpty(str) || str == "-")
+                        {
+                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = 0;
+                            _amplitudeInput.text = 0.ToString();
+                        }
+                    });
+
+                    _frequencyInput.onValueChanged.AddListener((str) =>
+                    {
+                        float newFrequency;
+                        if (float.TryParse(str, out newFrequency))
+                        {
+                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = newFrequency;
+                        }
+                    });
+
+                    _frequencyInput.onEndEdit.AddListener((str) =>
+                    {
+                        if (string.IsNullOrEmpty(str) || str == "-")
+                        {
+                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = 0;
+                            _frequencyInput.text = 0.ToString();
+                        }
+                    });
+
+
+
                     int pointCount = 0;
                     foreach (var point in Wiring[wireNumber])
                     {
@@ -295,6 +407,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     {
                         Wiring.Remove(wireNumber);
                         WiresNames.Remove(wireNumber);
+                        WiresProperties.Remove(wireNumber);
 
                         int wbNumber = wireButton.GetComponent<RectTransform>().GetSiblingIndex();
                         if (!(wbNumber == 0))
@@ -324,6 +437,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
                 WiresNames.Add(numberOfNewWire, string.Format("Wire{0}", numberOfNewWire));
+                WiresProperties.Add(numberOfNewWire, new WireProperties() { Amplitude = 0, Frequency = 0 });
+
 
                 wireButtonComponent.WireNumber = numberOfNewWire;
                 wireButtonComponent.WireName = WiresNames[numberOfNewWire];
@@ -451,6 +566,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             Wiring.Clear();
             WiresNames.Clear();
+            WiresProperties.Clear();
         }
 
         private Wiring DictionaryToWiring()
@@ -460,7 +576,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             foreach (var kvp in Wiring)
             {
                 // TODO: change it
-                Wire wire = wiring.CreateWire(WiresNames[kvp.Key], 2f, 20f);
+                Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency);
                 wire.AddRange(kvp.Value);
             }
 
