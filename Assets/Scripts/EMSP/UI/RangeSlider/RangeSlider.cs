@@ -90,6 +90,12 @@ namespace EMSP.UI
         public float HandleMinYPosition { get { return _handleMin.RectTransform.anchoredPosition3D.y; } }
         public float HandleMaxYPosition { get { return _handleMax.RectTransform.anchoredPosition3D.y; } }
 
+
+        public float MinRangeValue { get { return _minRangeValue; } }
+        public float MaxRangeValue { get { return _maxRangeValue; } }
+
+
+
         public float CurrentRangeDistance { get { return HandleMaxYPosition - HandleMinYPosition; } }
         public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMinYPosition * _valuesPerPixel) : _minRangeValue + HandleMinYPosition * _valuesPerPixel; } }
         public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMaxYPosition * _valuesPerPixel) : _minRangeValue + HandleMaxYPosition * _valuesPerPixel; } }

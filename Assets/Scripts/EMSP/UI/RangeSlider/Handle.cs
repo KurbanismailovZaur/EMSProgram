@@ -100,17 +100,18 @@ namespace EMSP.UI
         public void RecalculateInternalValues()
         {
             _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
-            ValidateAndSetNewYPosition(_lastValue / _rangeSlider.ValuesPerPixel);
+            SetValue(_lastValue);
         }
 
         public void SetValue(float value)
         {
-            ValidateAndSetNewYPosition(value / _rangeSlider.ValuesPerPixel);
+            ValidateAndSetNewYPosition((value - _rangeSlider.MinRangeValue) / _rangeSlider.ValuesPerPixel);
         }
 
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
         {
             float distance = (handleDistance == -1) ? _rangeSlider.MinHandlesDistance : handleDistance;
+
             if (IsMin)
             {
                 if (yPosition < 0)
