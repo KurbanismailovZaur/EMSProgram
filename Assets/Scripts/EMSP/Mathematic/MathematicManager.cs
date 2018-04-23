@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.Mathematic
 {
@@ -23,6 +24,8 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Classes
+        [Serializable]
+        public class RangeLengthChangedEvent : UnityEvent<MathematicManager, int> { }
         #endregion
 
         #region Interfaces
@@ -43,11 +46,26 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Events
+        public RangeLengthChangedEvent RangeLengthChanged = new RangeLengthChangedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public int RangeLength { get { return _rangeLength; } }
+        public int RangeLength
+        {
+            get { return _rangeLength; }
+            set
+            {
+                if (_rangeLength == value)
+                {
+                    return;
+                }
+
+                _rangeLength = value;
+
+                RangeLengthChanged.Invoke(this, _rangeLength);
+            }
+        }
 
         public MagneticTensionInSpace MagneticTensionInSpace { get { return _magneticTensionInSpace; } }
         #endregion

@@ -15,6 +15,7 @@ using EMSP.UI.Dialogs.WiringEditor;
 using EMSP.Data;
 using EMSP.Mathematic.MagneticTension;
 using EMSP.Timing;
+using EMSP.UI.Dialogs.CalculationSettings;
 
 namespace EMSP.App
 {
@@ -55,8 +56,8 @@ namespace EMSP.App
         [SerializeField]
         private TimeLine _timeLine;
 
-        //[SerializeField]
-        //private RangeSlider _magneticTensionFilter
+        [SerializeField]
+        private GeneralPanel _generalPanel;
         #endregion
 
         #region Events
@@ -346,6 +347,16 @@ namespace EMSP.App
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
             MathematicManager.Instance.MagneticTensionInSpace.SetPointsToTime(index);
+        }
+
+        public void GeneralPanel_RangeLengthCalculated(GeneralPanel generalPanel, int rangeLength)
+        {
+            MathematicManager.Instance.RangeLength = rangeLength;
+        }
+
+        public void MathematicManager_RangeLengthChanged(MathematicManager mathematicManager, int rangeLength)
+        {
+            _generalPanel.InputFilter.SetRangeLengthText(rangeLength);
         }
         #endregion
         #endregion

@@ -39,6 +39,8 @@ namespace EMSP.App
         private float _orbitCOntrollerDefaultDistance = 8f;
 
         private string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
+
+        private int _calculationMinRange = 22;
         #endregion
 
         #region Events
@@ -59,6 +61,8 @@ namespace EMSP.App
         public float OrbitControllerDefaultDistance { get { return _orbitCOntrollerDefaultDistance; } }
 
         public string MagneticTensionInSpaceDefaultName { get { return _magneticTensionInSpaceDefaultName; } }
+
+        public int CalculationMinRange { get { return _calculationMinRange; } }
         #endregion
 
         #region Constructors
