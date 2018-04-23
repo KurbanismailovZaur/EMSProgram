@@ -50,6 +50,8 @@ namespace EMSP.UI
         [SerializeField]
         private GameObject _stopButton;
 
+        [SerializeField]
+        private int _handleVerticalOffset = 5;
 
         private bool _isPlaying = false;
         private float _startTime;
@@ -128,7 +130,7 @@ namespace EMSP.UI
             _stepCount = stepCount - 1;
             m_TimeStepSignCount = _stepCount + 1;
             m_InternalTime = 0;
-            _handleRect.anchoredPosition3D = Vector3.zero;
+            _handleRect.anchoredPosition3D = new Vector3(0, _handleVerticalOffset, 0);
             _textField.text = _startTime.ToString();
             _startTimeTextField.text = _startTime.ToString();
             _endTimeTextField.text = _endTime.ToString();
@@ -146,7 +148,7 @@ namespace EMSP.UI
             _stepCount = timeManager.StepsCount - 1;
             m_TimeStepSignCount = timeManager.Steps.Count;
             m_InternalTime = 0;
-            _handleRect.anchoredPosition3D = Vector3.zero;
+            _handleRect.anchoredPosition3D = new Vector3(0, _handleVerticalOffset, 0);
             _textField.text = _startTime.ToString();
             _startTimeTextField.text = _startTime.ToString();
             _endTimeTextField.text = _endTime.ToString();
@@ -176,18 +178,13 @@ namespace EMSP.UI
 
             m_InternalTime = internalTimeCandidate;
 
-            _handleRect.anchoredPosition3D = new Vector3(internalTimeCandidate / m_TimePerPixel, 0, 0);
+            _handleRect.anchoredPosition3D = new Vector3(internalTimeCandidate / m_TimePerPixel, _handleVerticalOffset, 0);
 
             if (hasChanged)
             {
                 float resultTime = m_InternalTime + _startTime;
 
                 string outputTimeString = resultTime.ToString("0.00000");
-
-                //if (outputTimeString.Substring(outputTimeString.IndexOf('.')).Length >= 7)
-                //{
-                //    outputTimeString = resultTime.ToString("0.00000");
-                //}
 
                 _textField.text = string.Format("{0} sec", outputTimeString);
 
