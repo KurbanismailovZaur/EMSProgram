@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMSP.UI.Dialogs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,7 @@ using UnityEngine.Events;
 
 namespace EMSP.UI.Dialogs.SaveProject
 {
-    [RequireComponent(typeof(CanvasGroup))]
-	public class SaveProjectDialog : MonoBehaviour 
+	public class SaveProjectDialog : ModalDialog 
 	{
         #region Entities
         #region Enums
@@ -35,7 +35,6 @@ namespace EMSP.UI.Dialogs.SaveProject
         #endregion
 
         #region Fields
-        private CanvasGroup _canvasGroup;
         #endregion
 
         #region Events
@@ -50,25 +49,6 @@ namespace EMSP.UI.Dialogs.SaveProject
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            _canvasGroup = GetComponent<CanvasGroup>();
-        }
-
-        public void ShowModal()
-        {
-            _canvasGroup.alpha = 1f;
-            _canvasGroup.interactable = true;
-            _canvasGroup.blocksRaycasts = true;
-        }
-
-        public void Hide()
-        {
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.interactable = false;
-            _canvasGroup.blocksRaycasts = false;
-        }
-
         public void ChoseSave()
         {
             Hide();

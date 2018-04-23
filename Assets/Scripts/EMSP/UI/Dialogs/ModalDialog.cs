@@ -1,12 +1,11 @@
-﻿using EMSP.Mathematic;
-using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI.Dialogs
 {
-	public class CalculationSettingsDialog : ModalDialog 
+    [RequireComponent(typeof(CanvasGroup))]
+    public abstract class ModalDialog : MonoBehaviour 
 	{
         #region Entities
         #region Enums
@@ -26,8 +25,7 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Fields
-        [SerializeField]
-        private InputField _inputField;
+        private CanvasGroup _canvasGroup;
         #endregion
 
         #region Events
@@ -41,6 +39,24 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Methods
+        protected virtual void Awake()
+        {
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        public virtual void ShowModal()
+        {
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
+        }
+
+        public virtual void Hide()
+        {
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+        }
         #endregion
 
         #region Indexers

@@ -160,7 +160,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             float newAmplitude;
                             if (float.TryParse(str, out newAmplitude))
                             {
-                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = newAmplitude;
+                                WiresProperties[wireNumber].Amplitude = newAmplitude;
                             }
                         });
 
@@ -168,7 +168,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         {
                             if (string.IsNullOrEmpty(str) || str == "-")
                             {
-                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = 0;
+                                WiresProperties[wireNumber].Amplitude = 0;
                                 _amplitudeInput.text = 0.ToString();
                             }
                         });
@@ -178,7 +178,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             float newFrequency;
                             if (float.TryParse(str, out newFrequency))
                             {
-                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = newFrequency;
+                                WiresProperties[wireNumber].Frequency = newFrequency;
                             }
                         });
 
