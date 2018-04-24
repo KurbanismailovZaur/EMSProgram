@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.WiringEditor
 {
-    public class WiringEditorDialog : MonoBehaviour
+    public class WiringEditorDialog : ModalDialog
     {
         #region Entities
         #region Enums
@@ -98,17 +98,12 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            _canvasGroup = GetComponent<CanvasGroup>();
-        }
-
         public void StartWiringEditing(Wiring wiring, Action<Wiring> onWiringEdited)
         {
             _saveButton.onClick.RemoveAllListeners();
             _cancelButton.onClick.RemoveAllListeners();
             _closeButton.onClick.RemoveAllListeners();
-            Show();
+            ShowModal();
 
             // Wire buttons
             int wireCount = 0;
@@ -513,22 +508,18 @@ namespace EMSP.UI.Dialogs.WiringEditor
             }
         }
 
-        private void Show()
+        public override void ShowModal()
         {
-            _canvasGroup.alpha = 1f;
-            _canvasGroup.interactable = true;
-            _canvasGroup.blocksRaycasts = true;
+            base.ShowModal();
 
             ActivateTabNavigation();
 
             OnDialogActivated();
         }
 
-        private void Hide()
+        public override void Hide()
         {
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.interactable = false;
-            _canvasGroup.blocksRaycasts = false;
+            base.Hide();
 
             DeactivateTabNavigation();
         }
