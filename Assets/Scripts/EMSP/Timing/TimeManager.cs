@@ -34,12 +34,7 @@ namespace EMSP.Timing
 
         #region Fields
         [SerializeField]
-        [Range(0f, 32f)]
-        private float _startTime;
-
-        [SerializeField]
-        [Range(0f, 32f)]
-        private float _endTime = 0.1f;
+        private Range _timeRange = new Range(0f, 0.1f);
 
         [SerializeField]
         [Range(3, 256)]
@@ -60,39 +55,15 @@ namespace EMSP.Timing
 
         #region Behaviour
         #region Properties
-        public float StartTime
+        public Range TimeRange
         {
-            get { return _startTime; }
+            get { return _timeRange; }
             set
             {
-                float startTime = Mathf.Max(value, 0f);
-
-                if (_startTime == startTime)
+                if (SetTimeRange(value))
                 {
-                    return;
+                    CalculateSteps();
                 }
-
-                _startTime = startTime;
-
-                CalculateSteps();
-            }
-        }
-
-        public float EndTime
-        {
-            get { return _endTime; }
-            set
-            {
-                float endTime = Mathf.Max(value, 0f);
-
-                if (_endTime == endTime)
-                {
-                    return;
-                }
-
-                _endTime = endTime;
-
-                CalculateSteps();
             }
         }
 
@@ -101,16 +72,10 @@ namespace EMSP.Timing
             get { return _stepsCount; }
             set
             {
-                int stepsCount = Mathf.Max(value, 3);
-
-                if (_stepsCount == stepsCount)
+                if (SetStepsCount(value))
                 {
-                    return;
+                    CalculateSteps();
                 }
-
-                _stepsCount = stepsCount;
-
-                CalculateSteps();
             }
         }
 
@@ -146,20 +111,67 @@ namespace EMSP.Timing
             CalculateSteps();
         }
 
+        private bool SetTimeRange(Range timeRange)
+        {
+            timeRange = new Range(Mathf.Max(timeRange.Start, 0f), Mathf.Max(timeRange.End, 0f));
+
+            if (timeRange == _timeRange)
+            {
+                return false;
+            }
+
+            _timeRange = timeRange;
+
+            return true;
+        }
+
+        private bool SetStepsCount(int stepsCount)
+        {
+            stepsCount = Mathf.Max(stepsCount, 3);
+
+            if (_stepsCount == stepsCount)
+            {
+                return false;
+            }
+
+            _stepsCount = stepsCount;
+
+            return true;
+        }
+
+        public void SetTimeParameters(Range timeRange, int stepsCount)
+        {
+            int result = 0;
+
+            result |= SetTimeRange(timeRange) ? 1 : 0;
+            result |= SetStepsCount(stepsCount) ? 1 : 0;
+
+            if (result == 1)
+            {
+                CalculateSteps();
+            }
+        }
+
+        public void SetTimeParameters(float startTime, float endTime, int stepsCount)
+        {
+            SetTimeParameters(new Range(startTime, endTime), stepsCount);
+        }
+
+
         private void CalculateSteps()
         {
-            float distance = _endTime - _startTime;
+            float distance = _timeRange.End - _timeRange.Start;
             _delta = distance / (_stepsCount - 1);
 
             _steps.Clear();
-            _steps.Add(_startTime);
+            _steps.Add(_timeRange.Start);
 
             for (int i = 1; i < _stepsCount - 1; i++)
             {
-                _steps.Add(_startTime + (_delta * i));
+                _steps.Add(_timeRange.Start + (_delta * i));
             }
 
-            _steps.Add(_endTime);
+            _steps.Add(_timeRange.End);
 
             TimeParametersChanged.Invoke(this);
 

@@ -46,6 +46,9 @@ namespace EMSP.App
         private SaveProjectDialog _saveProjectDialog;
 
         [SerializeField]
+        private CalculationSettingsDialog _calculationSettingsDialog;
+
+        [SerializeField]
         private OrbitController _orbitController;
 
         [SerializeField]
@@ -178,6 +181,11 @@ namespace EMSP.App
             MathematicManager.Instance.Calculate(CalculationType.MagneticTensionInSpace);
             MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
         }
+
+        private void OpenParameters()
+        {
+            _calculationSettingsDialog.ShowModal();
+        }
         #endregion
 
         private void CreateNewProject()
@@ -277,10 +285,12 @@ namespace EMSP.App
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
                     CalculateMagneticTensionsInSpace();
+                    TimeManager.Instance.TimeIndex = 0;
+                    break;
+                case CalculationsContextMethods.ActionType.Parameters:
+                    OpenParameters();
                     break;
             }
-
-            TimeManager.Instance.TimeIndex = 0;
 
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
@@ -349,14 +359,12 @@ namespace EMSP.App
             MathematicManager.Instance.MagneticTensionInSpace.SetPointsToTime(index);
         }
 
-        public void GeneralPanel_RangeLengthCalculated(GeneralPanel generalPanel, int rangeLength)
+        public void CalculationSettingsDialog_Applyed(CalculationSettingsDialog calculationSettingsDialog, CalculationSettingsDialog.Settings settings)
         {
-            MathematicManager.Instance.RangeLength = rangeLength;
-        }
+            MathematicManager.Instance.RangeLength = settings.RangeLength;
+            TimeManager.Instance.SetTimeParameters(settings.TimeRange, settings.TimeStepsCount);
 
-        public void MathematicManager_RangeLengthChanged(MathematicManager mathematicManager, int rangeLength)
-        {
-            _generalPanel.InputFilter.SetRangeLengthText(rangeLength);
+            MathematicManager.Instance.DestroyCalculations();
         }
         #endregion
         #endregion

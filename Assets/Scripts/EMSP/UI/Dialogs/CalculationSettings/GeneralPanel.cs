@@ -22,8 +22,6 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Classes
-        [Serializable]
-        public class RangeLengthCalculatedEvent : UnityEvent<GeneralPanel, int> { }
         #endregion
 
         #region Interfaces
@@ -32,25 +30,40 @@ namespace EMSP.UI.Dialogs.CalculationSettings
 
         #region Fields
         [SerializeField]
-        private InputFilter _inputFilter;
+        private RangeLengthInputFilter _rangeLengthInputFilter;
+
+        [SerializeField]
+        private TimeRangeInputFilter _startTimeRangeInputFilter;
+
+        [SerializeField]
+        private TimeRangeInputFilter _endTimeRangeInputFilter;
+
+        [SerializeField]
+        private TimeStepsCountInputFilter _timeStepsCountInputFilter;
         #endregion
 
         #region Events
-        public RangeLengthCalculatedEvent RangeLengthCalculated = new RangeLengthCalculatedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
-        public InputFilter InputFilter { get { return _inputFilter; } }
+        public int RangeLength { get { return _rangeLengthInputFilter.RangeLength; } }
+
+        public Range TimeRange { get { return new Range(_startTimeRangeInputFilter.Time, _endTimeRangeInputFilter.Time); } }
+
+        public int TimeStepsCount { get { return _timeStepsCountInputFilter.StepsCount; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-        private void Start()
+        public void UpdateValues(int rangeLength, Range timeRange, int stepsCount)
         {
-            _inputFilter.SetRangeLengthText(MathematicManager.Instance.RangeLength);
+            _rangeLengthInputFilter.SetRangeLengthText(rangeLength);
+            _startTimeRangeInputFilter.SetTimeText(timeRange.Start);
+            _endTimeRangeInputFilter.SetTimeText(timeRange.End);
+            _timeStepsCountInputFilter.SetTimeStepsCountText(stepsCount);
         }
         #endregion
 
@@ -58,10 +71,6 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Events handlers
-        public void InputFilter_RangeLengthCalculated(InputFilter inputFilter, int rangeLength)
-        {
-            RangeLengthCalculated.Invoke(this, rangeLength);
-        }
         #endregion
         #endregion
     }

@@ -72,6 +72,15 @@ namespace EMSP
         #endregion
 
         #region Methods
+        public static bool operator ==(Range obj1, Range obj2)
+        {
+            return obj1.Start == obj2.Start && obj1.End == obj2.End;
+        }
+
+        public static bool operator !=(Range obj1, Range obj2)
+        {
+            return !(obj1 == obj2);
+        }
         #endregion
 
         #region Indexers

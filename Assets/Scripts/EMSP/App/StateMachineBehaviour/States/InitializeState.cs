@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace EMSP.UI.Menu.Contexts
+namespace EMSP.App.StateMachineBehaviour.States
 {
-    public class CalculationsContextMethods : ContextMethodsBase 
+	public class InitializeState : State 
 	{
         #region Entities
         #region Enums
-        public enum ActionType
-        {
-            MagneticTensionInSpace,
-            Parameters
-        }
         #endregion
 
         #region Delegates
@@ -24,8 +19,6 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Classes
-        [Serializable]
-        public class SelectedEvent : UnityEvent<CalculationsContextMethods, ActionType> { }
         #endregion
 
         #region Interfaces
@@ -36,7 +29,6 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Events
-        public SelectedEvent Selected = new SelectedEvent();
         #endregion
 
         #region Behaviour
@@ -47,14 +39,20 @@ namespace EMSP.UI.Menu.Contexts
         #endregion
 
         #region Methods
-        public void CalculateMagneticTensionInSpace()
+        public override void OnEnter()
         {
-            Selected.Invoke(this, ActionType.MagneticTensionInSpace);
+            SetupGlobalization();
+            
+            _stateMachine.MoveToState("OnlyMenu");
         }
 
-        public void OpenParametersDialog()
+        private void SetupGlobalization()
         {
-            Selected.Invoke(this, ActionType.Parameters);
+            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = GameSettings.Instance.NumberDecimalSeparator;
+
+            Thread.CurrentThread.CurrentCulture = customCulture;
+
         }
         #endregion
 

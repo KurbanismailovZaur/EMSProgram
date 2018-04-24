@@ -41,6 +41,8 @@ namespace EMSP.App
         private string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
 
         private int _calculationMinRange = 22;
+
+        private string _numberDecimalSeparator = ".";
         #endregion
 
         #region Events
@@ -63,6 +65,8 @@ namespace EMSP.App
         public string MagneticTensionInSpaceDefaultName { get { return _magneticTensionInSpaceDefaultName; } }
 
         public int CalculationMinRange { get { return _calculationMinRange; } }
+
+        public string NumberDecimalSeparator { get { return _numberDecimalSeparator; } }
         #endregion
 
         #region Constructors

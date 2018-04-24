@@ -93,7 +93,7 @@ namespace EMSP.UI
             m_ScreenWidth = Screen.width;
             m_ScreenHeight = Screen.height;
 
-            SetTimeParameters(TimeManager.Instance.StartTime, TimeManager.Instance.EndTime, TimeManager.Instance.StepsCount);
+            SetTimeParameters(TimeManager.Instance.TimeRange.Start, TimeManager.Instance.TimeRange.End, TimeManager.Instance.StepsCount);
         }
 
         private void Update()
@@ -143,8 +143,8 @@ namespace EMSP.UI
         {
             if (_isPlaying) Stop();
 
-            _startTime = timeManager.StartTime;
-            _endTime = timeManager.EndTime;
+            _startTime = timeManager.TimeRange.Start;
+            _endTime = timeManager.TimeRange.End;
             _stepCount = timeManager.StepsCount - 1;
             m_TimeStepSignCount = timeManager.Steps.Count;
             m_InternalTime = 0;

@@ -80,7 +80,6 @@ namespace EMSP.UI.Dialogs.WiringEditor
         public Dictionary<int, string> WiresNames = new Dictionary<int, string>();
         public Dictionary<int, WireProperties> WiresProperties = new Dictionary<int, WireProperties>();
 
-        private CanvasGroup _canvasGroup;
         private GameObject _tabNavigationObject;
         #endregion
 

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.CalculationSettings
 {
-    public class InputFilter : MonoBehaviour
+    public class RangeLengthInputFilter : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -22,8 +22,6 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Classes
-        [Serializable]
-        public class RangeLengthCalculatedEvent : UnityEvent<InputFilter, int> { }
         #endregion
 
         #region Interfaces
@@ -36,11 +34,11 @@ namespace EMSP.UI.Dialogs.CalculationSettings
         #endregion
 
         #region Events
-        public RangeLengthCalculatedEvent RangeLengthCalculated = new RangeLengthCalculatedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
+        public int RangeLength { get { return (int)Mathf.Pow(int.Parse(_inputField.text), 1f / 3f); } }
         #endregion
 
         #region Constructors

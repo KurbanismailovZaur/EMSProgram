@@ -74,6 +74,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         [SerializeField]
         private Button _calculationsComputationMagneticTensionInSpaceButton;
+
+        [SerializeField]
+        private Button _calculationsSettingButton;
         #endregion
 
         #region Events
@@ -95,6 +98,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileImportWiringButton.interactable = true;
             _editWiringButton.interactable = true;
             _viewGridVisibilityButton.interactable = true;
+            _calculationsSettingButton.interactable = true;
 
             GameFacade.Instance.InitializeActivateProjectEnvironment();
 
