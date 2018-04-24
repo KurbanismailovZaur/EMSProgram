@@ -74,14 +74,14 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Methods
 
-        public void Initialize(int wireNumber, int pointNumber)
+        public void Initialize(int wireNumber, int pointNumber, WiringEditorDialog wiringManager)
         {
             X.contentType = InputField.ContentType.DecimalNumber;
             Y.contentType = InputField.ContentType.DecimalNumber;
             Z.contentType = InputField.ContentType.DecimalNumber;
             _currentPointNumber = pointNumber;
 
-            Vector3 point = WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber];
+            Vector3 point = wiringManager.Wiring[wireNumber][_currentPointNumber];
             _currentValue = point;
 
             StartCoroutine(UpdatePointNumberAndSelectable());
@@ -96,7 +96,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (float.TryParse(str, out newX))
                 {
                     _currentValue.x = newX;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                 }
             });
 
@@ -105,7 +105,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.x = 0;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                     X.text = 0.ToString();
                 }
             });
@@ -116,7 +116,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (float.TryParse(str, out newY))
                 {
                     _currentValue.y = newY;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                 }
             });
 
@@ -125,7 +125,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.y = 0;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                     Y.text = 0.ToString();
                 }
             });
@@ -136,7 +136,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (float.TryParse(str, out newZ))
                 {
                     _currentValue.z = newZ;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                 }
             });
 
@@ -146,7 +146,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 if (string.IsNullOrEmpty(str) || str == "-")
                 {
                     _currentValue.z = 0;
-                    WiringEditorDialog.Instance.Wiring[wireNumber][_currentPointNumber] = _currentValue;
+                    wiringManager.Wiring[wireNumber][_currentPointNumber] = _currentValue;
                     Z.text = 0.ToString();
                 }
             });

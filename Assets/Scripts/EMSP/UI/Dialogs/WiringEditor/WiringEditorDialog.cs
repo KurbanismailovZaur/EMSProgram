@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Dialogs.WiringEditor
 {
-    public class WiringEditorDialog : MonoSingleton<WiringEditorDialog>
+    public class WiringEditorDialog : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -127,8 +127,10 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                     Button wireButton = Instantiate(_wireButtonPrefab);
                     wireButton.transform.SetParent(_wireButtonContainer, false);
-                    wireButton.GetComponent<WireButton>().WireNumber = wireCount;
-                    wireButton.GetComponent<WireButton>().WireName = WiresNames[wireCount];
+                    var wireButtonComponent = wireButton.GetComponent<WireButton>();
+                    wireButtonComponent.WireNumber = wireCount;
+                    wireButtonComponent.WireName = WiresNames[wireCount];
+                    wireButtonComponent.WiringManager = this;
 
                     wireButton.onClick.AddListener(() =>
                     {
@@ -187,7 +189,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         {
                             if (string.IsNullOrEmpty(str) || str == "-")
                             {
-                                WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = 0;
+                                WiresProperties[wireNumber].Frequency = 0;
                                 _frequencyInput.text = 0.ToString();
                             }
                         });
@@ -199,7 +201,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             PointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                             editPanel.transform.SetParent(_pointsContainer, false);
 
-                            editPanel.Initialize(wireNumber, pointCount);
+                            editPanel.Initialize(wireNumber, pointCount, this);
                             editPanel.DeletePointButton.onClick.AddListener(() =>
                             {
                                 int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
@@ -222,7 +224,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             PointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                             editPanel.transform.SetParent(_pointsContainer, false);
 
-                            editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
+                            editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1, this);
                             editPanel.DeletePointButton.onClick.AddListener(() =>
                             {
                                 int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
@@ -315,7 +317,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         float newAmplitude;
                         if (float.TryParse(str, out newAmplitude))
                         {
-                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = newAmplitude;
+                            WiresProperties[wireNumber].Amplitude = newAmplitude;
                         }
                     });
 
@@ -323,7 +325,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     {
                         if (string.IsNullOrEmpty(str) || str == "-")
                         {
-                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Amplitude = 0;
+                            WiresProperties[wireNumber].Amplitude = 0;
                             _amplitudeInput.text = 0.ToString();
                         }
                     });
@@ -333,7 +335,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         float newFrequency;
                         if (float.TryParse(str, out newFrequency))
                         {
-                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = newFrequency;
+                            WiresProperties[wireNumber].Frequency = newFrequency;
                         }
                     });
 
@@ -341,7 +343,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     {
                         if (string.IsNullOrEmpty(str) || str == "-")
                         {
-                            WiringEditorDialog.Instance.WiresProperties[wireNumber].Frequency = 0;
+                            WiresProperties[wireNumber].Frequency = 0;
                             _frequencyInput.text = 0.ToString();
                         }
                     });
@@ -354,7 +356,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         PointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                         editPanel.transform.SetParent(_pointsContainer, false);
 
-                        editPanel.Initialize(wireNumber, pointCount);
+                        editPanel.Initialize(wireNumber, pointCount, this);
                         editPanel.DeletePointButton.onClick.AddListener(() =>
                         {
                             int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
@@ -377,7 +379,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         PointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                         editPanel.transform.SetParent(_pointsContainer, false);
 
-                        editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1);
+                        editPanel.Initialize(_wireNumber, Wiring[_wireNumber].Count - 1, this);
                         editPanel.DeletePointButton.onClick.AddListener(() =>
                         {
                             int wireNum = WireButton.CurrentActiveWireButton.WireNumber;
@@ -442,6 +444,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 wireButtonComponent.WireNumber = numberOfNewWire;
                 wireButtonComponent.WireName = WiresNames[numberOfNewWire];
+                wireButtonComponent.WiringManager = this;
 
                 addWireButton.transform.SetAsLastSibling();
 
@@ -546,8 +549,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             if (needClearChangedWiring)
             {
-                Wiring.Clear();
-                WiresNames.Clear();
+                Clear();
             }
 
             WireButton.OnEditorClosing();
@@ -564,9 +566,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             if (onWiringEdited != null)
                 onWiringEdited(DictionaryToWiring());
 
-            Wiring.Clear();
-            WiresNames.Clear();
-            WiresProperties.Clear();
+            Clear();
         }
 
         private Wiring DictionaryToWiring()
@@ -575,7 +575,6 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             foreach (var kvp in Wiring)
             {
-                // TODO: change it
                 Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency);
                 wire.AddRange(kvp.Value);
             }
@@ -592,6 +591,13 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private void DeactivateTabNavigation()
         {
             Destroy(_tabNavigationObject);
+        }
+
+        private void Clear()
+        {
+            Wiring.Clear();
+            WiresNames.Clear();
+            WiresProperties.Clear();
         }
 
         #endregion

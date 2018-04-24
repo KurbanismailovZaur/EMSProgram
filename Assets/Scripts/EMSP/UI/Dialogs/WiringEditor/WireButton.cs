@@ -44,6 +44,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private RectTransform _rectTransform = null;
         private string _preEditName;
         private float _preEditWidth = -1;
+        private WiringEditorDialog _wiringManager;
 
         #endregion
 
@@ -61,6 +62,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 _preEditName = value;
             }
         }
+
+        public WiringEditorDialog WiringManager { get { return _wiringManager; } set { _wiringManager = value; } }
 
         public static WireButton CurrentActiveWireButton { get { return _currentActiveButton; } }
 
@@ -142,7 +145,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                     }
 
-                    WiringEditorDialog.Instance.WiresNames[WireNumber] = str;
+                    WiringManager.WiresNames[WireNumber] = str;
                     WireName = str;
                     _preEditWidth = RectTransformComponent.rect.size.x;
                 }
@@ -164,7 +167,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         private bool IsUniqName(string name)
         {
-            foreach(string _name in WiringEditorDialog.Instance.WiresNames.Values.ToList())
+            foreach(string _name in WiringManager.WiresNames.Values.ToList())
             {
                 if (_name == name)
                     return false;
