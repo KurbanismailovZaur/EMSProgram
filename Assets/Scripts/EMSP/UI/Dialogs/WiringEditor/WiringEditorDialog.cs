@@ -438,7 +438,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 int numberOfNewWire = (wiresNumbers.Count == 0)? 0: wiresNumbers.Max() + 1;
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
-                WiresNames.Add(numberOfNewWire, string.Format("Wire{0}", numberOfNewWire));
+                WiresNames.Add(numberOfNewWire, string.Format("{0}", numberOfNewWire));
                 WiresProperties.Add(numberOfNewWire, new WireProperties() { Amplitude = 0, Frequency = 0 });
 
 
