@@ -40,6 +40,9 @@ namespace EMSP.UI
         private Handle _handleMax;
 
         [SerializeField]
+        private Fill _fill;
+
+        [SerializeField]
         private bool _wholeNumbers;
 
         [SerializeField]
@@ -72,8 +75,6 @@ namespace EMSP.UI
 
         private int _previousScreenWidth;
 
-        [SerializeField]
-        private Fill _fill;
         #endregion
 
         #region Events
@@ -154,10 +155,12 @@ namespace EMSP.UI
 
         private void RecalculateFillTransformation()
         {
-            float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y - _handleMax.RectTransform.rect.height;
+            float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y;// - _handleMax.RectTransform.rect.height;
 
             _fillRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height);
-            _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
+            //_fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
+            _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _height / 2, _fillRect.anchoredPosition3D.z);
+
         }
 
         private void CalculateInternalValues()

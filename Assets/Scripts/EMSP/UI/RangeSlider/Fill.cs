@@ -55,7 +55,7 @@ namespace EMSP.UI
         public void OnBeginDrag(PointerEventData eventData)
         {
             _currentRange = _rangeSlider.CurrentRangeDistance;
-            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rangeSlider.HandleMin.GetComponent<RectTransform>().rect.height / 2;
+            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rangeSlider.HandleMin.GetComponent<RectTransform>().rect.height;
         }
 
         public void OnDrag(PointerEventData eventData)

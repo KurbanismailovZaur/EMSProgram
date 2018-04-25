@@ -139,7 +139,7 @@ namespace EMSP.UI
         private float offset;
         public void OnBeginDrag(PointerEventData eventData)
         {
-            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rectTransform.rect.height / 2;
+            offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rectTransform.rect.height;
             _isDragByUser = true;
         }
 
