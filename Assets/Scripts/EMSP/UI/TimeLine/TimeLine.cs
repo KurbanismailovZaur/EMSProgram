@@ -120,7 +120,7 @@ namespace EMSP.UI
 
         public void SetTimeParameters(float start, float end, int stepCount)
         {
-            if (start < 0 || end <= 0 || start == end || stepCount < 1)
+            if (start == end || stepCount < 2)
                 throw new ArgumentOutOfRangeException("Incorrect time parameters");
 
             if (_isPlaying) Stop();
@@ -162,10 +162,13 @@ namespace EMSP.UI
         {
             bool hasChanged = true;
 
-            if (time < _startTime)
-                time = _startTime;
-            else if (time > _endTime)
-                time = _endTime;
+            var min = Math.Min(_startTime, _endTime);
+            var max = Math.Max(_startTime, _endTime);
+
+            if (time < min)
+                time = min;
+            else if (time > max)
+                time = max;
 
             int stepCountsInTime = Convert.ToInt32(time / m_TimePerStep) - Convert.ToInt32(_startTime / m_TimePerStep);
             float internalTimeCandidate = stepCountsInTime * m_TimePerStep;
