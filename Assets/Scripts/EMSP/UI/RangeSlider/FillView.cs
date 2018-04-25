@@ -45,7 +45,7 @@ public class FillView : MonoBehaviour
 
     private void Update()
     {
-        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _fillRect.rect.height);
+        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _fillRect.rect.height + 20f);
         _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, _fillRect.anchoredPosition3D.y, _rectTransform.anchoredPosition3D.z);
     }
 
