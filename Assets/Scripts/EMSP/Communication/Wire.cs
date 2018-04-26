@@ -25,12 +25,13 @@ namespace EMSP.Communication
         #region Classes
         public class Factory
         {
-            public Wire Create(float amplitude, float frequency)
+            public Wire Create(string name, float amplitude, float frequency, float amperage)
             {
                 Wire wire = new GameObject("Wire").AddComponent<Wire>();
-                wire._name = "Sheet1";
+                wire._name = name;
                 wire._amplitude = amplitude;
                 wire._frequency = frequency;
+                wire._amperage = amperage;
 
                 wire._lineRenderer = wire.GetComponent<LineRenderer>();
                 wire._lineRenderer.widthMultiplier = 0.02f;
@@ -57,6 +58,8 @@ namespace EMSP.Communication
 
         private float _frequency;
 
+        private float _amperage;
+
         private LineRenderer _lineRenderer;
 
         List<Vector3> _localPoints = new List<Vector3>();
@@ -68,6 +71,8 @@ namespace EMSP.Communication
 
         #region Behaviour
         #region Properties
+        public string Name { get { return _name; } }
+
         public ReadOnlyCollection<Vector3> LocalPoints { get { return _localPoints.AsReadOnly(); } }
 
         public ReadOnlyCollection<Vector3> WorldPoints
@@ -91,6 +96,8 @@ namespace EMSP.Communication
 
         public float Frequency { get { return _frequency; } }
 
+        public float Amperage { get { return _amperage; } }
+
         public Material LineMaterial
         {
             get { return _lineRenderer.sharedMaterial; }
@@ -103,23 +110,6 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
-        public string GetName()
-        {
-            return _name;
-        }
-
-        public bool SetName(string name)
-        {
-            if (!IsCorrectName(name))
-            {
-                return false;
-            }
-
-            _name = name;
-
-            return true;
-        }
-
         public static bool IsCorrectName(string name)
         {
             return name.All(char.IsLetterOrDigit);

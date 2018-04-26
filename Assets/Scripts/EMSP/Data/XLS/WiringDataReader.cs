@@ -59,13 +59,13 @@ namespace EMSP.Data.XLS
             {
                 ISheet sheet = workbook.GetSheetAt(i);
 
-                IRow amperageRow = sheet.GetRow(0);
-                if (!IsNumericCell(amperageRow, 1))
+                IRow amplitudeRow = sheet.GetRow(0);
+                if (!IsNumericCell(amplitudeRow, 1))
                 {
                     return false;
                 }
 
-                float amperage = (float)amperageRow.GetCell(1).NumericCellValue;
+                float amplitude = (float)amplitudeRow.GetCell(1).NumericCellValue;
 
                 IRow frequencyRow = sheet.GetRow(1);
                 if (!IsNumericCell(frequencyRow, 1))
@@ -75,7 +75,15 @@ namespace EMSP.Data.XLS
 
                 float frequency = (float)frequencyRow.GetCell(1).NumericCellValue;
 
-                Wire wire = wiring.CreateWire(sheet.SheetName, amperage, frequency);
+                IRow amperageRow = sheet.GetRow(2);
+                if (!IsNumericCell(frequencyRow, 1))
+                {
+                    return false;
+                }
+
+                float amperage = (float)amperageRow.GetCell(1).NumericCellValue;
+
+                Wire wire = wiring.CreateWire(sheet.SheetName, amplitude, frequency, amperage);
 
                 for (int j = 4; j <= sheet.LastRowNum; j++)
                 {

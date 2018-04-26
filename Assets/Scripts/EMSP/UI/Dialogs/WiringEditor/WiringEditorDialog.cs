@@ -111,7 +111,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 foreach (Wire wire in wiring)
                 {
                     Wiring.Add(wireCount, new List<Vector3>());
-                    WiresNames.Add(wireCount, wire.GetName());
+                    WiresNames.Add(wireCount, wire.Name);
                     WiresProperties.Add(wireCount, new WireProperties() { Amplitude = wire.Amplitude, Frequency = wire.Frequency });
 
                     foreach (Vector3 point in wire)
@@ -565,8 +565,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             foreach (var kvp in Wiring)
             {
-                Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency);
-                wire.AddRange(kvp.Value);
+                // TODO: fix it
+                //Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency);
+                //wire.AddRange(kvp.Value);
             }
 
             return wiring;
@@ -604,7 +605,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             foreach(Wire wire in wiring)
             {
                 Debug.Log("==========");
-                Debug.Log(wire.GetName());
+                Debug.Log(wire.Name);
                 foreach(var point in wire)
                 {
                     Debug.Log(string.Format("x: {0}; y: {1}; z:{2}", point.x, point.y, point.z));
