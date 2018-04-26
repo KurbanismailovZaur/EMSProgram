@@ -85,7 +85,7 @@ namespace EMSP.Data.XLS
 
                 Wire wire = wiring.CreateWire(sheet.SheetName, amplitude, frequency, amperage);
 
-                for (int j = 4; j <= sheet.LastRowNum; j++)
+                for (int j = 5; j <= sheet.LastRowNum; j++)
                 {
                     IRow row = sheet.GetRow(j);
 
