@@ -23,6 +23,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         {
             public float Amplitude;
             public float Frequency;
+            public float Amperage;
         }
         #endregion
 
@@ -76,6 +77,9 @@ namespace EMSP.UI.Dialogs.WiringEditor
         [SerializeField]
         private InputField _frequencyInput;
 
+        [SerializeField]
+        private InputField _amperageInput;
+
         public Dictionary<int, List<Vector3>> Wiring = new Dictionary<int, List<Vector3>>();
         public Dictionary<int, string> WiresNames = new Dictionary<int, string>();
         public Dictionary<int, WireProperties> WiresProperties = new Dictionary<int, WireProperties>();
@@ -112,7 +116,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
                 {
                     Wiring.Add(wireCount, new List<Vector3>());
                     WiresNames.Add(wireCount, wire.Name);
-                    WiresProperties.Add(wireCount, new WireProperties() { Amplitude = wire.Amplitude, Frequency = wire.Frequency });
+                    WiresProperties.Add(wireCount, new WireProperties() { Amplitude = wire.Amplitude, Frequency = wire.Frequency, Amperage = wire.Amperage });
 
                     foreach (Vector3 point in wire)
                     {
@@ -148,7 +152,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                         _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
                         _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
-
+                        _amperageInput.text = WiresProperties[wireNumber].Amperage.ToString();
 
 
                         _amplitudeInput.onValueChanged.AddListener((str) =>
@@ -185,6 +189,25 @@ namespace EMSP.UI.Dialogs.WiringEditor
                             {
                                 WiresProperties[wireNumber].Frequency = 0;
                                 _frequencyInput.text = 0.ToString();
+                            }
+                        });
+
+                        _amperageInput.onValueChanged.AddListener((str) =>
+                        {
+                            float newAmperage;
+                            if (float.TryParse(str, out newAmperage))
+                            {
+                                WiresProperties[wireNumber].Amperage = newAmperage;
+                            }
+                        });
+
+
+                        _amperageInput.onEndEdit.AddListener((str) =>
+                        {
+                            if (string.IsNullOrEmpty(str) || str == "-")
+                            {
+                                WiresProperties[wireNumber].Amperage = 0;
+                                _amperageInput.text = 0.ToString();
                             }
                         });
 
@@ -304,6 +327,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                     _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
                     _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
+                    _amperageInput.text = WiresProperties[wireNumber].Amperage.ToString();
 
 
                     _amplitudeInput.onValueChanged.AddListener((str) =>
@@ -339,6 +363,25 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         {
                             WiresProperties[wireNumber].Frequency = 0;
                             _frequencyInput.text = 0.ToString();
+                        }
+                    });
+
+                    _amperageInput.onValueChanged.AddListener((str) =>
+                    {
+                        float newAmperage;
+                        if (float.TryParse(str, out newAmperage))
+                        {
+                            WiresProperties[wireNumber].Amperage = newAmperage;
+                        }
+                    });
+
+
+                    _amperageInput.onEndEdit.AddListener((str) =>
+                    {
+                        if (string.IsNullOrEmpty(str) || str == "-")
+                        {
+                            WiresProperties[wireNumber].Amperage = 0;
+                            _amperageInput.text = 0.ToString();
                         }
                     });
 
@@ -433,7 +476,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
                 Wiring.Add(numberOfNewWire, new List<Vector3>());
                 WiresNames.Add(numberOfNewWire, string.Format("{0}", numberOfNewWire));
-                WiresProperties.Add(numberOfNewWire, new WireProperties() { Amplitude = 0, Frequency = 0 });
+                WiresProperties.Add(numberOfNewWire, new WireProperties() { Amplitude = 0, Frequency = 0, Amperage = 0 });
 
 
                 wireButtonComponent.WireNumber = numberOfNewWire;
@@ -565,9 +608,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
             foreach (var kvp in Wiring)
             {
-                // TODO: fix it
-                //Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency);
-                //wire.AddRange(kvp.Value);
+                Wire wire = wiring.CreateWire(WiresNames[kvp.Key], WiresProperties[kvp.Key].Amplitude, WiresProperties[kvp.Key].Frequency, WiresProperties[kvp.Key].Amperage);
+                wire.AddRange(kvp.Value);
             }
 
             return wiring;
