@@ -81,11 +81,99 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a63e211688899948846003d106607e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _magneticTensionPointMaterial: {fileID: 2100000, guid: 066bcd2e3f2ea304ea67e155ba11db02,
+  _magneticTensionPointMaterial: {fileID: 2100000, guid: 00086a8fae2af7042899ad6526ffa646,
     type: 2}
   _stretchPercent: 1
   _pointSizeStretchPercent: 0
   _meshType: 3
+  _tensionsGradient:
+    serializedVersion: 2
+    key0: {r: 0.33333334, g: 0.33333334, b: 0.70980394, a: 0}
+    key1: {r: 0.26666668, g: 0.3647059, b: 0.99215686, a: 1}
+    key2: {r: 0.1764706, g: 0.98039216, b: 0.972549, a: 0}
+    key3: {r: 0.6784314, g: 0.99607843, b: 0.47058824, a: 0}
+    key4: {r: 0.972549, g: 0.9372549, b: 0.26666668, a: 0}
+    key5: {r: 0.96862745, g: 0.64705884, b: 0.15294118, a: 0}
+    key6: {r: 1, g: 0.21176471, b: 0.14509805, a: 0}
+    key7: {r: 0.5647059, g: 0.13333334, b: 0.1254902, a: 0}
+    ctime0: 0
+    ctime1: 9306
+    ctime2: 18612
+    ctime3: 27918
+    ctime4: 37224
+    ctime5: 46530
+    ctime6: 55836
+    ctime7: 65535
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 8
+    m_NumAlphaKeys: 2
+  Calculated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: MagneticTensionInSpace_Calculated
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MagneticTension.MagneticTensionInSpace+CalculatedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  Destroyed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: MagneticTensionInSpace_Destroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MagneticTension.MagneticTensionInSpace+DestroyedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  VisibilityChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: MagneticTensionInSpace_VisibilityChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: MagneticTensionInSpace_VisibilityChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MagneticTension.MagneticTensionInSpace+VisibilityChangedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114674595718332276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -98,5 +186,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rangeLength: 22
-  _amperage: 2
   _magneticTensionInSpace: {fileID: 114591187936990582}
+  RangeLengthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicManager+RangeLengthChangedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

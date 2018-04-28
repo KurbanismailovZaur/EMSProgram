@@ -60,6 +60,9 @@ namespace EMSP.App
         private TimeLine _timeLine;
 
         [SerializeField]
+        private RangeSlider _tensionFilterSlider;
+
+        [SerializeField]
         private GeneralPanel _generalPanel;
         #endregion
 
@@ -286,6 +289,9 @@ namespace EMSP.App
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
                     CalculateMagneticTensionsInSpace();
                     TimeManager.Instance.TimeIndex = 0;
+                    _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTensionInTime);
+                    _tensionFilterSlider.SetMin(0f);
+                    _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTensionInTime);
                     break;
                 case CalculationsContextMethods.ActionType.Parameters:
                     OpenParameters();
@@ -348,10 +354,12 @@ namespace EMSP.App
             if (state)
             {
                 _timeLine.Show();
+                _tensionFilterSlider.Show();
                 return;
             }
 
             _timeLine.Hide();
+            _tensionFilterSlider.Hide();
         }
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
@@ -365,6 +373,11 @@ namespace EMSP.App
             TimeManager.Instance.SetTimeParameters(settings.TimeRange, settings.TimeStepsCount);
 
             MathematicManager.Instance.DestroyCalculations();
+        }
+
+        public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
+        {
+            MathematicManager.Instance.MagneticTensionInSpace.FilterPointsByTension(range);
         }
         #endregion
         #endregion

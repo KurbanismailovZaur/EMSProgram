@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 224674228302614012}
   - component: {fileID: 222091922852443458}
   - component: {fileID: 114833578813135580}
+  - component: {fileID: 225256242573045630}
   - component: {fileID: 114005347885294774}
   m_Layer: 5
   m_Name: RangeSlider
@@ -198,15 +199,26 @@ MonoBehaviour:
   _handleMax: {fileID: 114584506850025506}
   _fill: {fileID: 114575481389858754}
   _wholeNumbers: 0
-  _minRangeValue: 10
-  _maxRangeValue: 75
+  _minRangeValue: 0
+  _maxRangeValue: 1
   _minRangeLenght: 0
-  _minValue: 15
-  _maxValue: 30
+  _minValue: 0
+  _maxValue: 1
   _scrollSensivity: 10
   OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: FilterRangeSlider_OnValueChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: EMSP.UI.RangeSlider+RangeSliderEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114089698041086342
@@ -329,7 +341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.1882353}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -397,13 +409,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
-    m_Alignment: 4
-    m_AlignByGeometry: 0
+    m_Alignment: 5
+    m_AlignByGeometry: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!114 &114747925760124452
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -430,13 +444,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
-    m_Alignment: 4
-    m_AlignByGeometry: 0
+    m_Alignment: 5
+    m_AlignByGeometry: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!114 &114751388725483336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -555,7 +571,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 74.75}
-  m_SizeDelta: {x: -0.0000047684, y: 51.31}
+  m_SizeDelta: {x: 0, y: 51.31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224182613549609748
 RectTransform:
@@ -590,11 +606,11 @@ RectTransform:
   m_Father: {fileID: 224952720453318352}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -29.21, y: 0.000005722046}
-  m_SizeDelta: {x: 78.93, y: 40}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -24, y: 0}
+  m_SizeDelta: {x: 196, y: 40}
+  m_Pivot: {x: 1, y: 1}
 --- !u!224 &224478496486405138
 RectTransform:
   m_ObjectHideFlags: 1
@@ -608,11 +624,11 @@ RectTransform:
   m_Father: {fileID: 224624931550098862}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -35.4, y: 0}
-  m_SizeDelta: {x: 98.72, y: 40}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -24, y: 0}
+  m_SizeDelta: {x: 196, y: 40}
+  m_Pivot: {x: 1, y: 1}
 --- !u!224 &224624931550098862
 RectTransform:
   m_ObjectHideFlags: 1
@@ -707,7 +723,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 74.75}
-  m_SizeDelta: {x: -9, y: 51.31}
+  m_SizeDelta: {x: 0, y: 51.31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224952720453318352
 RectTransform:
@@ -728,3 +744,14 @@ RectTransform:
   m_AnchoredPosition: {x: -0.0000038146973, y: 58.6}
   m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0.49999997, y: 1}
+--- !u!225 &225256242573045630
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1524890816319822}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

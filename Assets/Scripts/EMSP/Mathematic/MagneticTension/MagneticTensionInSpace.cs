@@ -68,8 +68,14 @@ namespace EMSP.Mathematic.MagneticTension
 
         private float _maxMagneticTensionInTime;
 
+        private int _currentTimeIndex;
+
         [SerializeField]
         private Gradient _tensionsGradient;
+
+        private Range _tensionFilterRange;
+
+        private Range _currentTensionFilterRange;
         #endregion
 
         #region Events
@@ -164,30 +170,50 @@ namespace EMSP.Mathematic.MagneticTension
 
             Calculated.Invoke(this);
 
-            //FilterPointsByAlpha(0.01f);
+            _tensionFilterRange = new Range(0f, _maxMagneticTensionInTime);
+            _currentTensionFilterRange = _tensionFilterRange;
         }
 
-        public void FilterPointsByAlpha(float alphaThresold)
+        public void FilterPointsByTension(float min, float max)
         {
+            FilterPointsByTension(new Range(min, max));
+        }
+
+        public void FilterPointsByTension(Range range)
+        {
+            _currentTensionFilterRange = range.Clamp(_tensionFilterRange);
+
             foreach (MagneticTensionPoint point in _mtPoints)
             {
-                if (point.Alpha < alphaThresold)
-                {
-                    point.gameObject.SetActive(false);
-                }
-                else
+                if (point.CurrentMagneticTension.InRange(_currentTensionFilterRange))
                 {
                     point.gameObject.SetActive(true);
                 }
+                else
+                {
+                    point.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        public void ShowAllPoints()
+        {
+            foreach (MagneticTensionPoint point in _mtPoints)
+            {
+                point.gameObject.SetActive(true);
             }
         }
 
         public void SetPointsToTime(int timeIndex)
         {
+            _currentTimeIndex = timeIndex;
+
             foreach (MagneticTensionPoint mtPoint in _mtPoints)
             {
-                mtPoint.SetToTime(timeIndex);
+                mtPoint.SetToTime(_currentTimeIndex);
             }
+
+            FilterPointsByTension(_currentTensionFilterRange);
         }
 
         public Color GetTensionColorFromGradient(float time)

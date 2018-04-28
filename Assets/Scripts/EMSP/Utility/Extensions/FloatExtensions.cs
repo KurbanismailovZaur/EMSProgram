@@ -41,6 +41,16 @@ namespace EMSP.Utility.Extensions
         {
             return oMin + (value - iMin) * (oMax - oMin) / (iMax - iMin);
         }
+
+        public static bool InRange(this float value, float min, float max)
+        {
+            return value.InRange(new Range(min, max));
+        }
+
+        public static bool InRange(this float value, Range range)
+        {
+            return value >= range.Min && value <= range.Max;
+        }
         #endregion
 
         #region Indexers

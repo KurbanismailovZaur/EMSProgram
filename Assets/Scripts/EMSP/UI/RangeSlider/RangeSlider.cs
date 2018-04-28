@@ -148,6 +148,16 @@ namespace EMSP.UI
             RecalculateFillTransformation();
         }
 
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         private bool IsScreenSizeChanged()
         {
             return Screen.height != _previousScreenHeight || Screen.width != _previousScreenWidth;

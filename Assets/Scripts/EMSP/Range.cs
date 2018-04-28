@@ -72,6 +72,21 @@ namespace EMSP
         #endregion
 
         #region Methods
+        public Range Clamp(Range range)
+        {
+            Range clampedRange = new Range(_start, _end);
+
+            clampedRange._start = Mathf.Clamp(_start, range.Min, range.Max);
+            clampedRange._end = Mathf.Clamp(_end, range.Min, range.Max);
+
+            return clampedRange;
+        }
+
+        public Range Clamp(float min, float max)
+        {
+            return Clamp(new Range(min, max));
+        }
+
         public static bool operator ==(Range obj1, Range obj2)
         {
             return obj1.Start == obj2.Start && obj1.End == obj2.End;
