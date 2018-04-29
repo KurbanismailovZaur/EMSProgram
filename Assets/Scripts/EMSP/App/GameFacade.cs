@@ -288,10 +288,12 @@ namespace EMSP.App
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
                     CalculateMagneticTensionsInSpace();
+
                     TimeManager.Instance.TimeIndex = 0;
-                    _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTensionInTime);
+
+                    _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
                     _tensionFilterSlider.SetMin(0f);
-                    _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTensionInTime);
+                    _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
                     break;
                 case CalculationsContextMethods.ActionType.Parameters:
                     OpenParameters();
