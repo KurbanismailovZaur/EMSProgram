@@ -1,5 +1,6 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic.MagneticTension;
+using EMSP.Timing;
 using EMSP.Utility.Extensions;
 using Numba;
 using System;
@@ -26,6 +27,9 @@ namespace EMSP.Mathematic
         #region Classes
         [Serializable]
         public class RangeLengthChangedEvent : UnityEvent<MathematicManager, int> { }
+
+        [Serializable]
+        public class AmperageModeChangedEvent : UnityEvent<MathematicManager, AmperageMode> { }
         #endregion
 
         #region Interfaces
@@ -38,15 +42,20 @@ namespace EMSP.Mathematic
         [Range(8, 128)]
         private int _rangeLength = 16;
 
+        [SerializeField]
+        private AmperageMode _amperageMode;
+
         [Header("Mathematics")]
         [SerializeField]
         private MagneticTensionInSpace _magneticTensionInSpace;
         #endregion
-
         #endregion
 
         #region Events
+        [Space(4)]
         public RangeLengthChangedEvent RangeLengthChanged = new RangeLengthChangedEvent();
+
+        public AmperageModeChangedEvent AmperageModeChanged = new AmperageModeChangedEvent();
         #endregion
 
         #region Behaviour
@@ -67,6 +76,22 @@ namespace EMSP.Mathematic
             }
         }
 
+        public AmperageMode AmperageMode
+        {
+            get { return _amperageMode; }
+            set
+            {
+                if (_amperageMode == value)
+                {
+                    return;
+                }
+
+                _amperageMode = value;
+
+                AmperageModeChanged.Invoke(this, _amperageMode);
+            }
+        }
+
         public MagneticTensionInSpace MagneticTensionInSpace { get { return _magneticTensionInSpace; } }
         #endregion
 
@@ -79,7 +104,7 @@ namespace EMSP.Mathematic
             switch (calculationType)
             {
                 case CalculationType.MagneticTensionInSpace:
-                    _magneticTensionInSpace.Calculate();
+                    _magneticTensionInSpace.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
             }
         }

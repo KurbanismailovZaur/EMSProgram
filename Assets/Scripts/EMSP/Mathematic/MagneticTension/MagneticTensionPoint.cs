@@ -69,7 +69,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         public float Alpha { get { return _material.color.a; } }
 
-        public float CurrentMagneticTension { get { return _magneticTensionsInTime[_currentTimeIndex].MagneticTension; } }
+        public MagneticTensionResult CurrentMagneticTension { get { return _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult; } }
         #endregion
 
         #region Constructors
@@ -79,7 +79,22 @@ namespace EMSP.Mathematic.MagneticTension
         public void SetToTime(int timeIndex)
         {
             _currentTimeIndex = timeIndex;
-            _material.color = _magneticTensionInSpace.GetTensionColorFromGradient(_magneticTensionsInTime[_currentTimeIndex].MagneticTension.Remap(0f, _magneticTensionInSpace.MaxMagneticTensionInTime, 0f, 1f));
+
+            float magneticTension = 0f;
+            float concreteMaxMagneticTension = 0f;
+
+            if (_magneticTensionInSpace.AmperageMode == AmperageMode.Computational)
+            {
+                magneticTension = _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult.CalculatedAmperageResult;
+                concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Calculated;
+            }
+            else
+            {
+                magneticTension = _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult.PrecomputedAmperageResult;
+                concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Precomputed;
+            }
+
+            _material.color = _magneticTensionInSpace.GetTensionColorFromGradient(magneticTension.Remap(0f, concreteMaxMagneticTension, 0f, 1f));
         }
         #endregion
 

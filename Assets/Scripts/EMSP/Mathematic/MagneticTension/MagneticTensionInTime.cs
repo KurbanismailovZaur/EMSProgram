@@ -10,16 +10,16 @@ namespace EMSP.Mathematic.MagneticTension
     {
         private float _time;
 
-        private float _magneticTension;
+        private MagneticTensionResult _magneticTensionResult;
 
         public float Time { get { return _time; } }
 
-        public float MagneticTension { get { return _magneticTension; } }
+        public MagneticTensionResult MagneticTensionResult { get { return _magneticTensionResult; } }
 
-        public MagneticTensionInTime(float time, float magneticTension)
+        public MagneticTensionInTime(float time, MagneticTensionResult magneticTensionResult)
         {
             _time = time;
-            _magneticTension = magneticTension;
+            _magneticTensionResult = magneticTensionResult;
         }
     }
 }
