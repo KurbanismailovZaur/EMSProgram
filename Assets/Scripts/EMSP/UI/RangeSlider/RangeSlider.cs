@@ -79,10 +79,16 @@ namespace EMSP.UI
 
         #region Events
         public RangeSliderEvent OnValueChanged = new RangeSliderEvent();
+        public RangeSliderEvent OnTryValueChanging = new RangeSliderEvent();
         #endregion
 
         #region Behaviour
         #region Properties
+
+        public float Min { get { return _minValue; } set { SetMin(value); } }
+        public float Max { get { return _maxValue; } set { SetMax(value); } }
+
+
         public Handle HandleMin { get { return _handleMin; } }
         public Handle HandleMax { get { return _handleMax; } }
 
@@ -168,6 +174,7 @@ namespace EMSP.UI
             float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y;// - _handleMax.RectTransform.rect.height;
 
             _fillRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height);
+            _fillRect.ForceUpdateRectTransforms();
             //_fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
             _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _height / 2, _fillRect.anchoredPosition3D.z);
 
@@ -188,6 +195,7 @@ namespace EMSP.UI
             SetMax(_maxValue);
         }
 
+        /*
         public void InvokeValueChanged()
         {
             _minValue = _minRangeValue + HandleMinYPosition * _valuesPerPixel;
@@ -200,6 +208,22 @@ namespace EMSP.UI
             else
             {
                 OnValueChanged.Invoke(this, new Range(_minValue, _maxValue));
+            }
+        }
+        */
+
+        public void TryChangeValue(float minYpos, float maxYpos)
+        {
+            float newMinValue = _minRangeValue + minYpos * _valuesPerPixel;
+            float newMaxValue = _minRangeValue + maxYpos * _valuesPerPixel;
+
+            if (_wholeNumbers)
+            {
+                OnTryValueChanging.Invoke(this, new Range(Convert.ToInt32(newMinValue), Convert.ToInt32(newMaxValue)));
+            }
+            else
+            {
+                OnTryValueChanging.Invoke(this, new Range(newMinValue, newMaxValue));
             }
         }
 
@@ -220,12 +244,20 @@ namespace EMSP.UI
 
         public void SetMin(float min)
         {
+            if (_wholeNumbers)
+                min = Convert.ToInt32(min);
+
             _handleMin.SetValue(min);
+            _minValue = min;
         }
 
         public void SetMax(float max)
         {
+            if (_wholeNumbers)
+                max = Convert.ToInt32(max);
+
             _handleMax.SetValue(max);
+            _maxValue = max;
         }
 
         public void SetGradientColors(Color color0, Color color1, Color color2, Color color3, Color color4, Color color5, Color color6, Color color7)

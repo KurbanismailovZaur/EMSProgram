@@ -127,6 +127,7 @@ namespace EMSP.UI
                     yPosition = distance;
             }
 
+            _rectTransform.ForceUpdateRectTransforms();
             _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
         }
         #endregion
@@ -145,8 +146,13 @@ namespace EMSP.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            ValidateAndSetNewYPosition(Input.mousePosition.y - offset);
-            _rangeSlider.InvokeValueChanged();
+            //    ValidateAndSetNewYPosition(Input.mousePosition.y - offset);
+            //    _rangeSlider.InvokeValueChanged();
+
+            if (IsMin)
+                _rangeSlider.TryChangeValue(Input.mousePosition.y - offset, _rangeSlider.HandleMaxYPosition);
+            else
+                _rangeSlider.TryChangeValue(_rangeSlider.HandleMinYPosition, Input.mousePosition.y - offset);
         }
 
         public void OnEndDrag(PointerEventData eventData)

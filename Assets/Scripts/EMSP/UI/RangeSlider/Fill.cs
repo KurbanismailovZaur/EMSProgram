@@ -60,10 +60,12 @@ namespace EMSP.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(Input.mousePosition.y - offset - _currentRange / 2, _currentRange);
-            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(Input.mousePosition.y - offset + _currentRange / 2, _currentRange);
+            //_rangeSlider.HandleMin.ValidateAndSetNewYPosition(Input.mousePosition.y - offset - _currentRange / 2, _currentRange);
+            //_rangeSlider.HandleMax.ValidateAndSetNewYPosition(Input.mousePosition.y - offset + _currentRange / 2, _currentRange);
 
-            _rangeSlider.InvokeValueChanged();
+            //_rangeSlider.InvokeValueChanged();
+
+            _rangeSlider.TryChangeValue(Input.mousePosition.y - offset - _currentRange / 2, Input.mousePosition.y - offset + _currentRange / 2);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -74,10 +76,12 @@ namespace EMSP.UI
         {
             _currentRange = _rangeSlider.CurrentRangeDistance;
 
-            _rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
-            _rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
+            //_rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
+            //_rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
 
-            _rangeSlider.InvokeValueChanged();
+            //_rangeSlider.InvokeValueChanged();
+
+            _rangeSlider.TryChangeValue(_rangeSlider.HandleMinYPosition + deltaY, _rangeSlider.HandleMaxYPosition + deltaY);
         }
         #endregion
         #endregion
