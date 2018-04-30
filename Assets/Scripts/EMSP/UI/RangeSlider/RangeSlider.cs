@@ -106,6 +106,7 @@ namespace EMSP.UI
         public float CurrentRangeDistance { get { return HandleMaxYPosition - HandleMinYPosition; } }
         public float CurrentMinValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMinYPosition * _valuesPerPixel) : _minRangeValue + HandleMinYPosition * _valuesPerPixel; } }
         public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMaxYPosition * _valuesPerPixel) : _minRangeValue + HandleMaxYPosition * _valuesPerPixel; } }
+        public float CurrentRangeLenght { get { return Max - Min; } }
 
         private Material BgGradient
         {
@@ -174,7 +175,6 @@ namespace EMSP.UI
             float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y;// - _handleMax.RectTransform.rect.height;
 
             _fillRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height);
-            _fillRect.ForceUpdateRectTransforms();
             //_fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
             _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _height / 2, _fillRect.anchoredPosition3D.z);
 
@@ -212,10 +212,18 @@ namespace EMSP.UI
         }
         */
 
-        public void TryChangeValue(float minYpos, float maxYpos)
+        public void TryChangeValue(float minYpos, float maxYpos, bool byFillDragging = false)
         {
             float newMinValue = _minRangeValue + minYpos * _valuesPerPixel;
             float newMaxValue = _minRangeValue + maxYpos * _valuesPerPixel;
+
+            if(byFillDragging)
+            {
+                if(Min == MinRangeValue && newMaxValue <= Max)
+                    return;
+                if (Max == MaxRangeValue && newMinValue >= Min)
+                    return;
+            }
 
             if (_wholeNumbers)
             {

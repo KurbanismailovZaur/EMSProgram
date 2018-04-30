@@ -112,6 +112,8 @@ namespace EMSP.UI
 
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
         {
+            if (float.IsNaN(yPosition)) return;
+
             float distance = (handleDistance == -1) ? _rangeSlider.MinHandlesDistance : handleDistance;
 
             if (IsMin)
@@ -129,7 +131,6 @@ namespace EMSP.UI
                     yPosition = distance;
             }
 
-            _rectTransform.ForceUpdateRectTransforms();
             _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
         }
         #endregion
