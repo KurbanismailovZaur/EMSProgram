@@ -101,6 +101,9 @@ namespace EMSP.Mathematic.MagneticTension
                 }
 
                 _amperageMode = value;
+
+                FilterPointsByTension();
+                UpdatePointsMaterial();
             }
         }
 
@@ -208,6 +211,11 @@ namespace EMSP.Mathematic.MagneticTension
         {
             _currentTensionFilterRange = range.Clamp(_tensionFilterRange);
 
+            FilterPointsByTension();
+        }
+
+        public void FilterPointsByTension()
+        {
             Func<MagneticTensionPoint, float> amperageResultSelector;
             if (_amperageMode == AmperageMode.Computational)
             {
@@ -236,6 +244,14 @@ namespace EMSP.Mathematic.MagneticTension
             foreach (MagneticTensionPoint point in _mtPoints)
             {
                 point.gameObject.SetActive(true);
+            }
+        }
+
+        public void UpdatePointsMaterial()
+        {
+            foreach (MagneticTensionPoint point in _mtPoints)
+            {
+                point.UpdatePoint();
             }
         }
 

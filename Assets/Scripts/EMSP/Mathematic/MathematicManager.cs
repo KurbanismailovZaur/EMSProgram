@@ -87,6 +87,7 @@ namespace EMSP.Mathematic
                 }
 
                 _amperageMode = value;
+                _magneticTensionInSpace.AmperageMode = _amperageMode;
 
                 AmperageModeChanged.Invoke(this, _amperageMode);
             }

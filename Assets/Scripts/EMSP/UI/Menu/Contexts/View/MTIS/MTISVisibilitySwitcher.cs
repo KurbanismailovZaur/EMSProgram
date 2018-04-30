@@ -60,7 +60,6 @@ namespace EMSP.UI.Menu.Contexts.View.MTIS
 
         public void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
         {
-            MathematicManager.Instance.MagneticTensionInSpace.VisibilityChanged.AddListener(MagneticTensionInSpace_VisibilityChanged);
             _stateImage.enabled = true;
         }
 

@@ -80,6 +80,11 @@ namespace EMSP.Mathematic.MagneticTension
         {
             _currentTimeIndex = timeIndex;
 
+            UpdatePoint();
+        }
+
+        public void UpdatePoint()
+        {
             float magneticTension = 0f;
             float concreteMaxMagneticTension = 0f;
 
