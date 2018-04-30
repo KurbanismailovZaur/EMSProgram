@@ -31,7 +31,10 @@ namespace EMSP.UI
 
         [SerializeField]
         private Text _textField;
+
+        [SerializeField]
         private RectTransform _rectTransform;
+
         private float _maxValue;
 
         [SerializeField]
@@ -61,7 +64,6 @@ namespace EMSP.UI
         #region Methods
         private void Awake()
         {
-            _rectTransform = GetComponent<RectTransform>();
             _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
         }
 

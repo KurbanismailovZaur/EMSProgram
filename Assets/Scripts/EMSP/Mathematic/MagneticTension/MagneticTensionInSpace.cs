@@ -37,6 +37,9 @@ namespace EMSP.Mathematic.MagneticTension
 
         [Serializable]
         public class VisibilityChangedEvent : UnityEvent<MagneticTensionInSpace, bool> { }
+
+        [Serializable]
+        public class CurrentTensionFilterRangeChangedEvent : UnityEvent<MagneticTensionInSpace, Range> { }
         #endregion
 
         #region Interfaces
@@ -86,6 +89,8 @@ namespace EMSP.Mathematic.MagneticTension
         public DestroyedEvent Destroyed = new DestroyedEvent();
 
         public VisibilityChangedEvent VisibilityChanged = new VisibilityChangedEvent();
+
+        public CurrentTensionFilterRangeChangedEvent CurrentTensionFilterRangeChanged = new CurrentTensionFilterRangeChangedEvent();
         #endregion
 
         #region Behaviour
@@ -128,6 +133,22 @@ namespace EMSP.Mathematic.MagneticTension
                 VisibilityChanged.Invoke(this, gameObject.activeSelf);
             }
         }
+
+        public Range CurrentTensionFilterRange
+        {
+            get { return _currentTensionFilterRange; }
+            set
+            {
+                if (_currentTensionFilterRange == value)
+                {
+                    return;
+                }
+
+                _currentTensionFilterRange = value;
+
+                CurrentTensionFilterRangeChanged.Invoke(this, _currentTensionFilterRange);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -162,7 +183,10 @@ namespace EMSP.Mathematic.MagneticTension
 
                         for (int w = 0; w < timeSteps.Count(); w++)
                         {
-                            magneticTensionsInTime[w] = new MagneticTensionInTime(timeSteps.ElementAt(w), _mtCalculator.Calculate(wiring, point, timeSteps.ElementAt(w)));
+                            float time = timeSteps.ElementAt(w);
+                            MagneticTensionResult result = _mtCalculator.Calculate(wiring, point, time);
+
+                            magneticTensionsInTime[w] = new MagneticTensionInTime(time, result);
                         }
 
                         magneticTensionsInfo[index++] = new MagneticTensionInfo(point, magneticTensionsInTime);
@@ -170,11 +194,13 @@ namespace EMSP.Mathematic.MagneticTension
                 }
             }
 
-            _maxMagneticTensions = new MaxMagneticTensions
-            {
-                Calculated = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime.Max(y => y.MagneticTensionResult.CalculatedAmperageResult)),
-                Precomputed = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime.Max(y => y.MagneticTensionResult.PrecomputedAmperageResult))
-            };
+            //_maxMagneticTensions = new MaxMagneticTensions
+            //{
+            //    Calculated = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime.Max(y => y.MagneticTensionResult.CalculatedAmperageResult)),
+            //    Precomputed = magneticTensionsInfo.Max(x => x.MagneticTensionsInTime.Max(y => y.MagneticTensionResult.PrecomputedAmperageResult))
+            //};
+
+            _maxMagneticTensions = GetMaxMagneticTensions(magneticTensionsInfo);
 
             float _maxMagneticTensionInTime = _amperageMode == AmperageMode.Computational ? _maxMagneticTensions.Calculated : _maxMagneticTensions.Precomputed;
 
@@ -199,7 +225,23 @@ namespace EMSP.Mathematic.MagneticTension
             Calculated.Invoke(this);
 
             _tensionFilterRange = new Range(0f, _maxMagneticTensionInTime);
-            _currentTensionFilterRange = _tensionFilterRange;
+            CurrentTensionFilterRange = _tensionFilterRange;
+        }
+
+        private MaxMagneticTensions GetMaxMagneticTensions(MagneticTensionInfo[] magneticTensionsInfo)
+        {
+            MaxMagneticTensions maxMagneticTensions = new MaxMagneticTensions(0f, 0f);
+
+            for (int i = 0; i < magneticTensionsInfo.Length; i++)
+            {
+                for (int j = 0; j < magneticTensionsInfo[i].MagneticTensionsInTime.Length; j++)
+                {
+                    maxMagneticTensions.Calculated = Math.Max(maxMagneticTensions.Calculated, magneticTensionsInfo[i].MagneticTensionsInTime[j].MagneticTensionResult.CalculatedAmperageResult);
+                    maxMagneticTensions.Precomputed = Math.Max(maxMagneticTensions.Precomputed, magneticTensionsInfo[i].MagneticTensionsInTime[j].MagneticTensionResult.PrecomputedAmperageResult);
+                }
+            }
+
+            return maxMagneticTensions;
         }
 
         public void FilterPointsByTension(float min, float max)
@@ -209,7 +251,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         public void FilterPointsByTension(Range range)
         {
-            _currentTensionFilterRange = range.Clamp(_tensionFilterRange);
+            CurrentTensionFilterRange = range.Clamp(_tensionFilterRange);
 
             FilterPointsByTension();
         }

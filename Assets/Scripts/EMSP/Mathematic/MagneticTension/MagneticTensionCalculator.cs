@@ -47,8 +47,24 @@ namespace EMSP.Mathematic.MagneticTension
             float acLength = Vector3.Distance(pointA, pointC);
             float bcLength = Vector3.Distance(pointB, pointC);
 
+            //#region Calculate CAB angle
+            //float cax = pointC.x - pointA.x;
+            //float bax = pointB.x - pointA.x;
+            //float cay = pointC.y - pointA.y;
+            //float bay = pointB.y - pointA.y;
+            //float caz = pointC.z - pointA.z;
+            //float baz = pointB.z - pointA.z;
+
+            //float numerator = cax * bax + cay * bay + caz * baz;
+
+            //float expression = numerator / (abLength * acLength);
+            //float acos = Mathf.Acos(expression);
+
+            //float alpha1Angle = Mathf.Rad2Deg * acos;
+            //#endregion
+
             // Calculate CAB angle.
-            float alpha1Angle = Mathf.Rad2Deg * Mathf.Acos((((pointC.x - pointA.x) * (pointB.x - pointA.x) + (pointC.y - pointA.y) * (pointB.y - pointA.y) + (pointC.z - pointA.z) * (pointB.z - pointA.z)) / (abLength * acLength)));
+            float alpha1Angle = Mathf.Rad2Deg * Mathf.Acos(Mathf.Clamp((((pointC.x - pointA.x) * (pointB.x - pointA.x) + (pointC.y - pointA.y) * (pointB.y - pointA.y) + (pointC.z - pointA.z) * (pointB.z - pointA.z)) / (abLength * acLength)), -1f, 1f));
 
             // Calculate ABC (inversed) angle.
             float alpha2Angle = Vector3.Angle(pointC - pointB, pointB - pointA);

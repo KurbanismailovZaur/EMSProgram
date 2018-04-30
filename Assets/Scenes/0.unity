@@ -1100,7 +1100,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000019073486
+      value: 0.0000076293945
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}
@@ -8185,11 +8185,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4988780478096948, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0.00000023841858
@@ -8222,6 +8217,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1206502679}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1553749587}
     - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: Calculated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -8242,56 +8247,11 @@ Prefab:
       propertyPath: VisibilityChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1553749587}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1206502679}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: MathematicManager_AmperageModeChanged
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      propertyPath: CurrentTensionFilterRangeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1553749587}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: MathematicManager_AmperageModeChanged
-      objectReference: {fileID: 0}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
   m_IsPrefabParent: 0
@@ -8572,19 +8532,15 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 114005347885294774, guid: 4db28d3b4158c914e88920b03f133d8a,
-        type: 2}
-      propertyPath: OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1553749587}
     - target: {fileID: 1524890816319822, guid: 4db28d3b4158c914e88920b03f133d8a, type: 2}
       propertyPath: m_Name
       value: FilterRangeSlider
       objectReference: {fileID: 0}
-    - target: {fileID: 1524890816319822, guid: 4db28d3b4158c914e88920b03f133d8a, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 114005347885294774, guid: 4db28d3b4158c914e88920b03f133d8a,
+        type: 2}
+      propertyPath: OnTryValueChanging.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1553749587}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4db28d3b4158c914e88920b03f133d8a, type: 2}
   m_IsPrefabParent: 0

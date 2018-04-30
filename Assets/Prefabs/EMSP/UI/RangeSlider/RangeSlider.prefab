@@ -65,7 +65,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1690192155837308
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,6 +207,11 @@ MonoBehaviour:
   _scrollSensivity: 10
   OnValueChanged:
     m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.UI.RangeSlider+RangeSliderEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnTryValueChanging:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
         m_MethodName: FilterRangeSlider_OnValueChanged
@@ -300,6 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsMin: 1
   _textField: {fileID: 114601181646088022}
+  _rectTransform: {fileID: 224952720453318352}
   _rangeSlider: {fileID: 114005347885294774}
   _image: {fileID: 114262331085586980}
 --- !u!114 &114341286955113034
@@ -381,6 +387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsMin: 0
   _textField: {fileID: 114747925760124452}
+  _rectTransform: {fileID: 224624931550098862}
   _rangeSlider: {fileID: 114005347885294774}
   _image: {fileID: 114751388725483336}
 --- !u!114 &114601181646088022
