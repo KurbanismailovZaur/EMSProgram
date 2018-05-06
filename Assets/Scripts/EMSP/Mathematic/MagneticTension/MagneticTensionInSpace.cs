@@ -149,6 +149,8 @@ namespace EMSP.Mathematic.MagneticTension
                 CurrentTensionFilterRangeChanged.Invoke(this, _currentTensionFilterRange);
             }
         }
+
+        public bool IsCalculated { get { return _isCalculated; } }
         #endregion
 
         #region Constructors

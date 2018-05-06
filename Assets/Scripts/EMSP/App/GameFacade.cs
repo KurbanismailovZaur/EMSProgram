@@ -355,7 +355,7 @@ namespace EMSP.App
         {
             if (state)
             {
-                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational)
+                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTensionInSpace.IsCalculated)
                 {
                     _timeLine.Show();
                 }
@@ -395,10 +395,10 @@ namespace EMSP.App
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
         }
-        
+
         public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)
         {
-            if (amperageMode == AmperageMode.Computational)
+            if (amperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTensionInSpace.IsCalculated)
             {
                 _timeLine.Show();
             }
