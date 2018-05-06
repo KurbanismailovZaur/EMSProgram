@@ -1100,7 +1100,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00000034125821
+      value: 0.0000011514788
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}
@@ -8331,6 +8331,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4988780478096948, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0.00000023841858
@@ -8402,6 +8407,31 @@ Prefab:
         type: 2}
       propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: MathematicManager_AmperageModeChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1553749587}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: MathematicManager_AmperageModeChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}

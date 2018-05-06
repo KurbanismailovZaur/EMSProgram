@@ -355,13 +355,21 @@ namespace EMSP.App
         {
             if (state)
             {
-                _timeLine.Show();
+                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational)
+                {
+                    _timeLine.Show();
+                }
+
                 _tensionFilterSlider.Show();
-                return;
+            }
+            else
+            {
+                _timeLine.Stop();
+                _timeLine.Hide();
+
+                _tensionFilterSlider.Hide();
             }
 
-            _timeLine.Hide();
-            _tensionFilterSlider.Hide();
         }
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
@@ -386,6 +394,19 @@ namespace EMSP.App
         {
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
+        }
+        
+        public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)
+        {
+            if (amperageMode == AmperageMode.Computational)
+            {
+                _timeLine.Show();
+            }
+            else
+            {
+                _timeLine.Stop();
+                _timeLine.Hide();
+            }
         }
         #endregion
         #endregion
