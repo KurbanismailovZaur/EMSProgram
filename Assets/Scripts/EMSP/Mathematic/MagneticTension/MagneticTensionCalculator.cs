@@ -81,32 +81,52 @@ namespace EMSP.Mathematic.MagneticTension
             return ppInductionDirection;
         }
 
-        public MagneticTensionDirectionResult Calculate(Wire wire, Vector3 targetPoint, float time)
+        private Vector3 CalculateWithAmperage(Wire wire, Vector3 targetPoint, float amperage)
+        {
+            ReadOnlyCollection<Vector3> points = wire.WorldPoints;
+
+            Vector3 directionResult = new Vector3();
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                directionResult += Calculate(points[i], points[i + 1], targetPoint, amperage);
+            }
+
+            return directionResult;
+        }
+
+        public Vector3 CalculateWithComputationalAmperage(Wire wire, Vector3 targetPoint, float time)
         {
             float calculatedAmperage = wire.Amplitude * Mathf.Sin(2 * Mathf.PI * wire.Frequency * time);
 
-            ReadOnlyCollection<Vector3> points = wire.WorldPoints;
-
-            MagneticTensionDirectionResult magneticTensionDirectionResult = new MagneticTensionDirectionResult();
-            for (int i = 0; i < points.Count - 1; i++)
-            {
-                magneticTensionDirectionResult.CalculatedAmperageResult += Calculate(points[i], points[i + 1], targetPoint, calculatedAmperage);
-                magneticTensionDirectionResult.PrecomputedAmperageResult += Calculate(points[i], points[i + 1], targetPoint, wire.Amperage);
-            }
-
-            return magneticTensionDirectionResult;
+            return CalculateWithAmperage(wire, targetPoint, calculatedAmperage);
         }
 
-        public MagneticTensionResult Calculate(Wiring wires, Vector3 point, float time)
+        public Vector3 CalculateWithPrecomputedAmperage(Wire wire, Vector3 targetPoint)
         {
-            MagneticTensionDirectionResult magneticTensionDirectionResult = new MagneticTensionDirectionResult();
+            return CalculateWithAmperage(wire, targetPoint, wire.Amperage);
+        }
+
+        private float CalculateWholeWiring(Wiring wires, Vector3 point, Func<Wire, Vector3, Vector3> calculationMethodSelector)
+        {
+            Vector3 directionResult = new Vector3();
 
             foreach (Wire wire in wires)
             {
-                magneticTensionDirectionResult += Calculate(wire, point, time);
+                directionResult += calculationMethodSelector.Invoke(wire, point);
             }
 
-            return new MagneticTensionResult(magneticTensionDirectionResult.CalculatedAmperageResult.magnitude, magneticTensionDirectionResult.PrecomputedAmperageResult.magnitude);
+            return directionResult.magnitude;
+        }
+
+        public float CalculateWithComputationalAmperage(Wiring wires, Vector3 point, float time)
+        {
+            return CalculateWholeWiring(wires, point, (w, p) => { return CalculateWithComputationalAmperage(w, p, time); });
+        }
+
+        public float CalculateWithPrecomputedAmperage(Wiring wires, Vector3 point)
+        {
+            return CalculateWholeWiring(wires, point, (w, p) => { return CalculateWithPrecomputedAmperage(w, p); });
         }
         #endregion
 

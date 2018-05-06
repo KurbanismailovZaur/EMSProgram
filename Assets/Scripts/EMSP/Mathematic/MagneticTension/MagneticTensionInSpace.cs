@@ -179,12 +179,14 @@ namespace EMSP.Mathematic.MagneticTension
                     {
                         Vector3 point = wiringBounds.center - (new Vector3(stretchedMaxSide, stretchedMaxSide, stretchedMaxSide) / 2f) + (new Vector3(i, j, k) * step);
 
+                        float precomputedMagneticTension = _mtCalculator.CalculateWithPrecomputedAmperage(wiring, point);
+
                         MagneticTensionInTime[] magneticTensionsInTime = new MagneticTensionInTime[timeSteps.Count()];
 
                         for (int w = 0; w < timeSteps.Count(); w++)
                         {
                             float time = timeSteps.ElementAt(w);
-                            MagneticTensionResult result = _mtCalculator.Calculate(wiring, point, time);
+                            MagneticTensionResult result = new MagneticTensionResult(_mtCalculator.CalculateWithComputationalAmperage(wiring, point, time), precomputedMagneticTension);
 
                             magneticTensionsInTime[w] = new MagneticTensionInTime(time, result);
                         }
