@@ -54,85 +54,38 @@ namespace EMSP.Data.Serialization.EMSP.Versions
         {
             using (BinaryWriter writer = new BinaryWriter(new FileStream(_temporaryFileName, FileMode.Create)))
             {
-                // <-- 0
                 WritePreambleAndVersion(writer, _version);
-                // --> 0
+                WriteSettings(writer, MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
 
-                // <-- 1
-                writer.Write(MathematicManager.Instance.RangeLength);
-                writer.Write(TimeManager.Instance.TimeRange.Start);
-                writer.Write(TimeManager.Instance.TimeRange.End);
-                writer.Write(TimeManager.Instance.StepsCount);
-                // --> 1
-
-                // <-- 2
+                #region Write model
                 bool hasModel = (ModelManager.Instance.Model == null) ? false : true;
-
                 writer.Write(hasModel);
+
                 if (hasModel)
                 {
-                    GameObject target = ModelManager.Instance.Model.gameObject;
-
-                    List<Material> materials = new List<Material>();
-                    List<Texture2D> textures = new List<Texture2D>();
-                    List<Shader> shaders = new List<Shader>();
-                    List<Mesh> meshes = new List<Mesh>();
-
-                    ExcludeData(target, materials, textures, shaders, meshes);
-
-                    WriteMeshes(writer, meshes);
-                    WriteTextures(writer, textures);
-                    WriteShaders(writer, shaders);
-                    WriteMaterials(writer, materials, shaders, textures);
-                    WriteHierarchy(writer, target, meshes, materials);
+                    WriteModel(writer, ModelManager.Instance.Model.gameObject);
                 }
-                // --> 2
+                #endregion
 
-                // <-- 3
+                #region Write wiring
                 bool hasWiring = (WiringManager.Instance.Wiring == null) ? false : true;
-
                 writer.Write(hasWiring);
+
                 if (hasWiring)
                 {
-                    writer.Write(WiringManager.Instance.Wiring.Count);
-
-                    foreach (var wire in WiringManager.Instance.Wiring)
-                    {
-                        WriteStringAsUnicode(writer, wire.Name);
-                        writer.Write(wire.Amplitude);
-                        writer.Write(wire.Frequency);
-                        writer.Write(wire.Amperage);
-
-                        writer.Write(wire.Count);
-                        foreach(var point in wire)
-                        {
-                            WriteVector3(writer, point);
-                        }
-                    }
+                    WriteWiring(writer, WiringManager.Instance.Wiring);
                 }
-                // --> 3
+                #endregion
 
-                // <-- 4
+                #region Write magnetic tension in space
                 bool hasMagneticTensionInSpace = MathematicManager.Instance.MagneticTensionInSpace.IsCalculated;
-
                 writer.Write(hasMagneticTensionInSpace);
+
                 if (hasMagneticTensionInSpace)
                 {
-                    writer.Write(MathematicManager.Instance.MagneticTensionInSpace.PointsSize);
-
-                    foreach(MagneticTensionPoint point in MathematicManager.Instance.MagneticTensionInSpace.MTPoints)
-                    {
-                        WriteVector3(writer, point.transform.position);
-
-                        writer.Write(point.PrecomputedMagneticTension);
-
-                        for(int i = 0; i < point.CalculatedMagneticTensionsInTime.Length; ++i)
-                        {
-                            writer.Write(point.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
-                        }
-                    }
+                    WriteMagneticTensionInSpace(writer, MathematicManager.Instance.MagneticTensionInSpace);
                 }
-                // --> 4
+                #endregion
             }
 
             byte[] emspData = File.ReadAllBytes(_temporaryFileName);

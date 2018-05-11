@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EMSP.Communication;
+using EMSP.Mathematic.MagneticTension;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -390,6 +392,66 @@ namespace EMSP.Data.Serialization
             foreach (Transform child in parent.transform)
             {
                 WriteHierarchy(writer, child.gameObject, meshes, materials);
+            }
+        }
+
+        protected void WriteModel(BinaryWriter writer, GameObject target)
+        {
+            List<Material> materials = new List<Material>();
+            List<Texture2D> textures = new List<Texture2D>();
+            List<Shader> shaders = new List<Shader>();
+            List<Mesh> meshes = new List<Mesh>();
+
+            ExcludeData(target, materials, textures, shaders, meshes);
+
+            WriteMeshes(writer, meshes);
+            WriteTextures(writer, textures);
+            WriteShaders(writer, shaders);
+            WriteMaterials(writer, materials, shaders, textures);
+            WriteHierarchy(writer, target, meshes, materials);
+        }
+
+        protected void WriteSettings(BinaryWriter writer, int rangeLength, Range timeRange, int timeStepsCount)
+        {
+            writer.Write(rangeLength);
+            writer.Write(timeRange.Start);
+            writer.Write(timeRange.End);
+            writer.Write(timeStepsCount);
+        }
+
+        protected void WriteWiring(BinaryWriter writer, Wiring wiring)
+        {
+            writer.Write(wiring.Count);
+
+            foreach (Wire wire in wiring)
+            {
+                WriteStringAsUnicode(writer, wire.Name);
+                writer.Write(wire.Amplitude);
+                writer.Write(wire.Frequency);
+                writer.Write(wire.Amperage);
+
+                writer.Write(wire.Count);
+                foreach (Vector3 point in wire)
+                {
+                    WriteVector3(writer, point);
+                }
+            }
+        }
+
+        protected void WriteMagneticTensionInSpace(BinaryWriter writer, MagneticTensionInSpace magneticTensionInSpace)
+        {
+            writer.Write(magneticTensionInSpace.PointsSize);
+
+            foreach (MagneticTensionPoint point in magneticTensionInSpace.MTPoints)
+            {
+                WriteVector3(writer, point.transform.position);
+
+                writer.Write(point.PrecomputedMagneticTension);
+
+                for (int i = 0; i < point.CalculatedMagneticTensionsInTime.Length; ++i)
+                {
+                    writer.Write(point.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
+                }
             }
         }
 

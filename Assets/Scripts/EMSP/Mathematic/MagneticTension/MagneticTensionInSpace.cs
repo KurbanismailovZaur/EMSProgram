@@ -26,6 +26,14 @@ namespace EMSP.Mathematic.MagneticTension
         #endregion
 
         #region Structures
+        public struct PointInfo
+        {
+            private Vector3 _position;
+
+            private float _precomputedMagneticTension;
+
+            private CalculatedMagneticTensionInTime[] _calculatedMagneticTensionsInTime;
+        }
         #endregion
 
         #region Classes
@@ -40,6 +48,13 @@ namespace EMSP.Mathematic.MagneticTension
 
         [Serializable]
         public class CurrentTensionFilterRangeChangedEvent : UnityEvent<MagneticTensionInSpace, Range> { }
+
+        public class PointsInfo
+        {
+            private PointInfo[] _pointsInfo;
+
+            private float _pointsSize;
+        }
         #endregion
 
         #region Interfaces
@@ -229,6 +244,11 @@ namespace EMSP.Mathematic.MagneticTension
 
             _tensionFilterRange = new Range(0f, _maxMagneticTensionInTime);
             CurrentTensionFilterRange = _tensionFilterRange;
+        }
+
+        public void Restore(PointsInfo pointsInfo)
+        {
+            // Restore points here.
         }
 
         private MaxMagneticTensions GetMaxMagneticTensions(MagneticTensionInfo[] magneticTensionsInfo)

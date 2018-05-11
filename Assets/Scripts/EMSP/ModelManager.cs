@@ -56,12 +56,18 @@ namespace EMSP
         #region Methods
         public void CreateNewModel(string pathToOBJ)
         {
+            Material[] materials;
+            GameObject modelGameObject = _importer.Import(pathToOBJ, out materials);
+
+            CreateNewModel(modelGameObject);
+        }
+
+        public void CreateNewModel(GameObject gameObject)
+        {
             DestroyModel();
 
             Model.Factory modelFactory = new Model.Factory();
-
-            Material[] materials;
-            _model = modelFactory.MakeFactory(_importer.Import(pathToOBJ, out materials));
+            _model = modelFactory.MakeFactory(gameObject);
 
             _model.transform.position = Vector3.zero;
             _model.transform.SetParent(transform);
