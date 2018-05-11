@@ -9,6 +9,8 @@ using EMSP.Data.Serialization.EMSP.Exceptions;
 using EMSP.Mathematic;
 using EMSP.Timing;
 using EMSP.Communication;
+using System.Collections.ObjectModel;
+using EMSP.Mathematic.MagneticTension;
 
 namespace EMSP.Data.Serialization.EMSP.Versions
 {
@@ -111,22 +113,22 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 // --> 3
 
                 // <-- 4
-                bool hasMagneticTensionInSpace = (MathematicManager.Instance.MagneticTensionInSpace == null) ? false : true;
+                bool hasMagneticTensionInSpace = MathematicManager.Instance.MagneticTensionInSpace.IsCalculated;
 
                 writer.Write(hasMagneticTensionInSpace);
                 if (hasMagneticTensionInSpace)
                 {
-                    writer.Write(MathematicManager.Instance.RangeLength);
+                    writer.Write(MathematicManager.Instance.MagneticTensionInSpace.PointsSize);
 
-                    foreach(Mathematic.MagneticTension.MagneticTensionPoint point in MathematicManager.Instance.MagneticTensionInSpace.MTPoints)
+                    foreach(MagneticTensionPoint point in MathematicManager.Instance.MagneticTensionInSpace.MTPoints)
                     {
                         WriteVector3(writer, point.transform.position);
 
-                        writer.Write(point.CurrentMagneticTension.PrecomputedAmperageResult);
+                        writer.Write(point.PrecomputedMagneticTension);
 
-                        for(int i = 0; i < point.MagneticTensionsInTime.Length; ++i)
+                        for(int i = 0; i < point.CalculatedMagneticTensionsInTime.Length; ++i)
                         {
-                            writer.Write(point.MagneticTensionsInTime[i].MagneticTensionResult.CalculatedAmperageResult);
+                            writer.Write(point.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
                         }
                     }
                 }
@@ -134,7 +136,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             }
 
             byte[] emspData = File.ReadAllBytes(_temporaryFileName);
-            //File.Delete(_temporaryFileName);
+            File.Delete(_temporaryFileName);
 
             return emspData;
         }
@@ -145,6 +147,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             Deserialize(File.OpenRead(_temporaryFileName));
             File.Delete(_temporaryFileName);
         }
+
         public override GameObject Deserialize(Stream stream)
         {
             GameObject model = null;

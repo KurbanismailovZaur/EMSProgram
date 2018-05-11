@@ -39,7 +39,8 @@ namespace EMSP.Mathematic.MagneticTension
 
                 magneticTensionRenderer.material = magneticTensionPoint._material;
 
-                magneticTensionPoint._magneticTensionsInTime = mtInfo.MagneticTensionsInTime;
+                magneticTensionPoint._precomputedMagneticTension = mtInfo.PrecomputedMagneticTension;
+                magneticTensionPoint._calculatedMagneticTensionsInTime = mtInfo.CalculatedMagneticTensionsInTime;
 
                 return magneticTensionPoint;
             }
@@ -55,7 +56,9 @@ namespace EMSP.Mathematic.MagneticTension
 
         private Material _material;
 
-        private MagneticTensionInTime[] _magneticTensionsInTime;
+        private float _precomputedMagneticTension;
+
+        private CalculatedMagneticTensionInTime[] _calculatedMagneticTensionsInTime;
 
         private int _currentTimeIndex;
         #endregion
@@ -65,11 +68,11 @@ namespace EMSP.Mathematic.MagneticTension
 
         #region Behaviour
         #region Properties
-        public MagneticTensionInTime[] MagneticTensionsInTime { get { return _magneticTensionsInTime; } }
+        public float PrecomputedMagneticTension { get { return _precomputedMagneticTension; } }
 
-        public float Alpha { get { return _material.color.a; } }
+        public CalculatedMagneticTensionInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
 
-        public MagneticTensionResult CurrentMagneticTension { get { return _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult; } }
+        public float CurrentCalculatedMagneticTension { get { return _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension; } }
         #endregion
 
         #region Constructors
@@ -90,12 +93,12 @@ namespace EMSP.Mathematic.MagneticTension
 
             if (_magneticTensionInSpace.AmperageMode == AmperageMode.Computational)
             {
-                magneticTension = _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult.CalculatedAmperageResult;
+                magneticTension = _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension;
                 concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Calculated;
             }
             else
             {
-                magneticTension = _magneticTensionsInTime[_currentTimeIndex].MagneticTensionResult.PrecomputedAmperageResult;
+                magneticTension = _precomputedMagneticTension;
                 concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Precomputed;
             }
 

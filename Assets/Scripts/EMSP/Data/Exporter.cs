@@ -93,8 +93,8 @@ namespace EMSP.Data
                     cell0.SetCellValue(mtPoints[i].transform.position.x);
                     cell1.SetCellValue(mtPoints[i].transform.position.y);
                     cell2.SetCellValue(mtPoints[i].transform.position.z);
-                    cell3.SetCellValue(mtPoints[i].MagneticTensionsInTime[0].MagneticTensionResult.CalculatedAmperageResult);
-                    cell4.SetCellValue(mtPoints[i].MagneticTensionsInTime[0].MagneticTensionResult.PrecomputedAmperageResult);
+                    cell3.SetCellValue(mtPoints[i].CalculatedMagneticTensionsInTime[0].CalculatedMagneticTension);
+                    cell4.SetCellValue(mtPoints[i].PrecomputedMagneticTension);
                 }
 
                 workbook.Write(stream);

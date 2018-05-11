@@ -10,16 +10,21 @@ namespace EMSP.Mathematic.MagneticTension
     {
         private Vector3 _point;
 
-        private MagneticTensionInTime[] _magneticTensionsInTime;
+        private float _precomputedMagneticTension;
+
+        private CalculatedMagneticTensionInTime[] _calculatedMagneticTensionsInTime;
 
         public Vector3 Point { get { return _point; } }
 
-        public MagneticTensionInTime[] MagneticTensionsInTime { get { return _magneticTensionsInTime; } }
+        public float PrecomputedMagneticTension { get { return _precomputedMagneticTension; } }
 
-        public MagneticTensionInfo(Vector3 point, MagneticTensionInTime[] magneticTensionsInTime)
+        public CalculatedMagneticTensionInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
+
+        public MagneticTensionInfo(Vector3 point, float precomputedMagneticTension, CalculatedMagneticTensionInTime[] magneticTensionsInTime)
         {
             _point = point;
-            _magneticTensionsInTime = magneticTensionsInTime;
+            _precomputedMagneticTension = precomputedMagneticTension;
+            _calculatedMagneticTensionsInTime = magneticTensionsInTime;
         }
     }
 }

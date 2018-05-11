@@ -30,10 +30,10 @@ namespace EMSP.Data.Serialization
         #endregion
 
         #region Fields
-        protected readonly string _temporaryFileName = string.Format("{0}/serializedata.mrb", UnityApplication.temporaryCachePath);
+        protected readonly string _temporaryFileName = string.Format("{0}/serializedata.emsp", UnityApplication.temporaryCachePath);
 
         // 64 bytes preamble for file
-        private readonly string _preamble = @"EqJFavNk3Z#ETSgaxA$UYopwMxCAmvc$ZhUnKw#g7@ke90fEG6fOh85$VuTyjQXJ";
+        private readonly string _preamble = @"H6FIPXTYXqDxCT92Y@$gsOfQ$301nGQT0BRtcqO80e6x3dnNh9TFiS3lsxCOfp$x";
         #endregion
 
         #region Events
