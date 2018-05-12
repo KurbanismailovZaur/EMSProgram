@@ -44,7 +44,6 @@ namespace EMSP.Data.Serialization.EMSP.Versions
         #region Events
         #endregion
 
-        #region Behaviour
         #region Properties
         public Version Version { get { return _version; } }
         #endregion
@@ -89,21 +88,30 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             }
 
             byte[] emspData = File.ReadAllBytes(_temporaryFileName);
-            File.Delete(_temporaryFileName);
+            //File.Delete(_temporaryFileName); // commented for test
 
             return emspData;
         }
 
-        // needDelete
-        public void DeserializeTest()
+        public SerializibleProjectBatch DeserializeTest()
         {
-            Deserialize(File.OpenRead(_temporaryFileName));
+            var result = Deserialize(File.OpenRead(_temporaryFileName));
             File.Delete(_temporaryFileName);
+
+            return result;
         }
 
-        public override GameObject Deserialize(Stream stream)
+        public SerializibleProjectBatch Deserialize(string path)
         {
+            return Deserialize(File.OpenRead(path));
+        }
+
+        public override SerializibleProjectBatch Deserialize(Stream stream)
+        {
+            SerializibleProjectSettings settings;
             GameObject model = null;
+            Wiring wiring = null;
+            MagneticTensionInSpace.PointsInfo pointsInfo = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -118,9 +126,12 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 // --> 0
 
                 // <-- 1
-                MathematicManager.Instance.RangeLength = reader.ReadInt32();
-                TimeManager.Instance.TimeRange = new Range(reader.ReadSingle(), reader.ReadSingle());
-                TimeManager.Instance.StepsCount = reader.ReadInt32();
+                settings = new SerializibleProjectSettings()
+                {
+                    CountPointsPerCubeEdge = reader.ReadInt32(),
+                    TimeRange = new Range(reader.ReadSingle(), reader.ReadSingle()),
+                    TimeStepsCount = reader.ReadInt32()
+                };
                 // --> 1
 
                 // <-- 2
@@ -140,21 +151,19 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasWiring)
                 {
-                    Wiring resultWiring = new Wiring.Factory().Create();
+                    wiring = new Wiring.Factory().Create();
                     int wireCount = reader.ReadInt32();
 
                     for (int i = 0; i < wireCount; ++i)
                     {
-                        Wire newWire = resultWiring.CreateWire(ReadStringAsUnicode(reader), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Wire newWire = wiring.CreateWire(ReadStringAsUnicode(reader), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
                         int pointCount = reader.ReadInt32();
-                        for(int j = 0; j < pointCount; ++j)
+                        for (int j = 0; j < pointCount; ++j)
                         {
                             newWire.Add(ReadVector3(reader));
                         }
                     }
-
-                    WiringManager.Instance.CreateNewWiring(resultWiring);
                 }
                 // --> 3
 
@@ -163,28 +172,35 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasMagneticTensionInSpace)
                 {
-                    MathematicManager.Instance.RangeLength = reader.ReadInt32();
-                    int pointsCount = reader.ReadInt32();
+                    float pointSize = reader.ReadSingle();
 
-                    //foreach (Mathematic.MagneticTension.MagneticTensionPoint point in MathematicManager.Instance.MagneticTensionInSpace.MTPoints)
-                    //{
-                    //    WriteVector3(writer, point.transform.position);
+                    int pointsCount = (int)Mathf.Pow(settings.CountPointsPerCubeEdge, 3);
+                    List<MagneticTensionInSpace.PointInfo> ptsInfo = new List<MagneticTensionInSpace.PointInfo>();
 
-                    //    writer.Write(point.CurrentMagneticTension.PrecomputedAmperageResult);
-                    //    writer.Write(point.MagneticTensionsInTime.Length);
+                    for(int i = 0; i < pointsCount; ++i)
+                    {
+                        var position = ReadVector3(reader);
+                        var precomputed = reader.ReadSingle();
+                        List<CalculatedMagneticTensionInTime> calculatedMagneticTensionInTime = new List<CalculatedMagneticTensionInTime>();
 
-                    //    for (int i = 0; i < point.MagneticTensionsInTime.Length; ++i)
-                    //    {
-                    //        writer.Write(point.MagneticTensionsInTime[i].MagneticTensionResult.CalculatedAmperageResult);
-                    //    }
-                    //}
+
+                        float[] timeSteps = TimeManager.Instance.CalculateSteps(settings.TimeRange.Start, settings.TimeRange.End, settings.TimeStepsCount);
+                        for (int j = 0; j < settings.TimeStepsCount; ++j)
+                        {
+                            calculatedMagneticTensionInTime.Add(new CalculatedMagneticTensionInTime(timeSteps[j], reader.ReadSingle()));
+                        }
+
+                        ptsInfo.Add(new MagneticTensionInSpace.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
+                    }
+
+                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointsCount, ptsInfo.ToArray());
                 }
                 // --> 4
-            }
 
-            return model;
+                return new SerializibleProjectBatch(settings, model, wiring, pointsInfo);
+            }
         }
-        #endregion
+
         #endregion
     }
 }

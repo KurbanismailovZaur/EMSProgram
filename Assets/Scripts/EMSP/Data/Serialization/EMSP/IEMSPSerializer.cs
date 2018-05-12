@@ -10,7 +10,7 @@ namespace EMSP.Data.Serialization.EMSP
     {
         byte[] Serialize();
 
-        GameObject Deserialize(Stream stream);
+        EMSPSerializerVersion.SerializibleProjectBatch Deserialize(Stream stream);
 
         Version Version { get; }
     }

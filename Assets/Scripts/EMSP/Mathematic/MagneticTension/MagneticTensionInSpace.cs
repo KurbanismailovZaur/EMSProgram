@@ -28,11 +28,18 @@ namespace EMSP.Mathematic.MagneticTension
         #region Structures
         public struct PointInfo
         {
-            private Vector3 _position;
+            public PointInfo(Vector3 pos, float precomputedMagneticTension, CalculatedMagneticTensionInTime[] calculatedMagneticTensionsInTime)
+            {
+                Position = pos;
+                PrecomputedMagneticTension = precomputedMagneticTension;
+                CalculatedMagneticTensionsInTime = calculatedMagneticTensionsInTime;
+            }
 
-            private float _precomputedMagneticTension;
+            public readonly Vector3 Position;
 
-            private CalculatedMagneticTensionInTime[] _calculatedMagneticTensionsInTime;
+            public readonly float PrecomputedMagneticTension;
+
+            public readonly CalculatedMagneticTensionInTime[] CalculatedMagneticTensionsInTime;
         }
         #endregion
 
@@ -51,9 +58,15 @@ namespace EMSP.Mathematic.MagneticTension
 
         public class PointsInfo
         {
-            private PointInfo[] _pointsInfo;
+            public PointsInfo(float pointSize, PointInfo[] pointsInfo)
+            {
+                PointsSize = pointSize;
+                Info = pointsInfo;
+            }
 
-            private float _pointsSize;
+            public readonly PointInfo[] Info;
+
+            public readonly float PointsSize;
         }
         #endregion
 
@@ -246,9 +259,47 @@ namespace EMSP.Mathematic.MagneticTension
             CurrentTensionFilterRange = _tensionFilterRange;
         }
 
-        public void Restore(PointsInfo pointsInfo)
+        public void Restore(Data.Serialization.EMSPSerializerVersion.SerializibleProjectBatch batch)
         {
-            // Restore points here.
+            if (_isCalculated)
+            {
+                DestroyMagneticTensions();
+            }
+
+            int pointsCount = (int)Mathf.Pow(batch.ProjectSettings.CountPointsPerCubeEdge, 3);
+            MagneticTensionInfo[] magneticTensionsInfo = new MagneticTensionInfo[pointsCount];
+
+            for (int i = 0; i < pointsCount; ++i)
+            {
+                magneticTensionsInfo[i] = new MagneticTensionInfo(
+                    batch.PointsInfo.Info[i].Position,
+                    batch.PointsInfo.Info[i].PrecomputedMagneticTension,
+                    batch.PointsInfo.Info[i].CalculatedMagneticTensionsInTime);
+            }
+
+            _maxMagneticTensions = GetMaxMagneticTensions(magneticTensionsInfo);
+
+            float _maxMagneticTensionInTime = _amperageMode == AmperageMode.Computational ? _maxMagneticTensions.Calculated : _maxMagneticTensions.Precomputed;
+
+            _pointsSize = batch.PointsInfo.PointsSize;
+
+            foreach (MagneticTensionInfo mtInfo in magneticTensionsInfo)
+            {
+                float gradientValue = 0;
+
+                if (_maxMagneticTensionInTime != 0f)
+                {
+                    float magneticTension = _amperageMode == AmperageMode.Computational ? mtInfo.CalculatedMagneticTensionsInTime[0].CalculatedMagneticTension : mtInfo.PrecomputedMagneticTension;
+
+                    gradientValue = magneticTension.Remap(0f, _maxMagneticTensionInTime, 0f, 1f);
+                }
+
+                MagneticTensionPoint magneticTensionPoint = _magneticTensionPointFactory.Create(this, (PrimitiveType)(int)_meshType, transform, _magneticTensionPointMaterial, _pointsSize, gradientValue, mtInfo);
+                _mtPoints.Add(magneticTensionPoint);
+            }
+
+            _tensionFilterRange = new Range(0f, _maxMagneticTensionInTime);
+            CurrentTensionFilterRange = _tensionFilterRange;
         }
 
         private MaxMagneticTensions GetMaxMagneticTensions(MagneticTensionInfo[] magneticTensionsInfo)

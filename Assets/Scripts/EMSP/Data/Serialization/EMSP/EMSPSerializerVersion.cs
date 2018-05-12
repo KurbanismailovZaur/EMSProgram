@@ -22,9 +22,30 @@ namespace EMSP.Data.Serialization
         #endregion
 
         #region Structures
+        public struct SerializibleProjectSettings
+        {
+            public int CountPointsPerCubeEdge;
+            public int TimeStepsCount;
+            public Range TimeRange;
+        }
         #endregion
 
         #region Classes
+        public class SerializibleProjectBatch
+        {
+            public SerializibleProjectBatch(SerializibleProjectSettings settings, GameObject model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
+            {
+                ProjectSettings = settings;
+                Model = model;
+                Wiring = wiring;
+                PointsInfo = pointsInfo;
+            }
+
+            public readonly SerializibleProjectSettings ProjectSettings;
+            public readonly GameObject Model;
+            public readonly Wiring Wiring;
+            public readonly MagneticTensionInSpace.PointsInfo PointsInfo;
+        }
         #endregion
 
         #region Interfaces
@@ -48,7 +69,7 @@ namespace EMSP.Data.Serialization
         #region Methods
         public abstract byte[] Serialize();
 
-        public abstract GameObject Deserialize(Stream stream);
+        public abstract SerializibleProjectBatch Deserialize(Stream stream);
 
         #region Binary operation methods
         protected void WritePreamble(BinaryWriter writer)

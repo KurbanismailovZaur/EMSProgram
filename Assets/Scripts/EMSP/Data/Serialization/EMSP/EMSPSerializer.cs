@@ -73,12 +73,12 @@ namespace EMSP.Data.Serialization.EMSP
         #endregion
 
         #region Deserialize
-        public GameObject Deserialize(Stream stream)
+        public EMSPSerializerVersion.SerializibleProjectBatch Deserialize(Stream stream)
         {
             return _serializer.Deserialize(stream);
         }
 
-        public GameObject Deserialize(string path)
+        public EMSPSerializerVersion.SerializibleProjectBatch Deserialize(string path)
         {
             return Deserialize(new FileStream(path, FileMode.Open));
         }

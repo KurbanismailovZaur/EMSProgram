@@ -177,6 +177,25 @@ namespace EMSP.Timing
 
             TimeIndex = 0;
         }
+
+        public float[] CalculateSteps(float start, float end, int stepsCount)
+        {
+            List<float> steps = new List<float>();
+
+            float distance = end - start;
+            _delta = distance / (stepsCount - 1);
+
+            steps.Add(start);
+
+            for (int i = 1; i < stepsCount - 1; i++)
+            {
+                steps.Add(start + (_delta * i));
+            }
+
+            steps.Add(end);
+
+            return steps.ToArray();
+        }
         #endregion
 
         #region Indexers

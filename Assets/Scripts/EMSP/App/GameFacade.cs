@@ -215,6 +215,31 @@ namespace EMSP.App
             Grid.Instance.Visibility = false;
             _viewBlocker.BlockView();
         }
+
+        [ContextMenu("Save")]
+        private void TestSaveProject()
+        {
+            var serializer = new EMSP.Data.Serialization.EMSP.Versions.EMSPSerializerV1000();
+            serializer.Serialize();
+        }
+
+        [ContextMenu("Load")]
+        private void TestLoadProject()
+        {
+            var serializer = new EMSP.Data.Serialization.EMSP.Versions.EMSPSerializerV1000();
+            var projectBatch = serializer.DeserializeTest();
+
+            TimeManager.Instance.TimeRange = projectBatch.ProjectSettings.TimeRange;
+            TimeManager.Instance.StepsCount = projectBatch.ProjectSettings.TimeStepsCount;
+            MathematicManager.Instance.RangeLength = projectBatch.ProjectSettings.CountPointsPerCubeEdge;
+
+            if(projectBatch.Model != null)
+                ModelManager.Instance.CreateNewModel(projectBatch.Model);
+
+            WiringManager.Instance.CreateNewWiring(projectBatch.Wiring);
+
+            MathematicManager.Instance.MagneticTensionInSpace.Restore(projectBatch);
+        }
         #endregion
 
         #region Indexers
