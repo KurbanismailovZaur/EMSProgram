@@ -1,10 +1,4 @@
-﻿/* Enhanced Hierarchy for Unity
- * Version 2.2.3, last change 26/08/2017
- * Samuel Schultze
- * samuelschultze@gmail.com
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +14,10 @@ namespace EnhancedHierarchy {
     internal static partial class EnhancedHierarchy {
 
         static EnhancedHierarchy() {
-            Utility.EnableFPSCounter();
-            Utility.ForceUpdateHierarchyEveryFrame();
+            if(Preferences.DebugEnabled || Preferences.ProfilingEnabled) {
+                Utility.EnableFPSCounter();
+                Utility.ForceUpdateHierarchyEveryFrame();
+            }
 
             EditorApplication.hierarchyWindowItemOnGUI += SetItemInformation;
             EditorApplication.hierarchyWindowItemOnGUI += OnItemGUI;
@@ -35,61 +31,64 @@ namespace EnhancedHierarchy {
             using(ProfilerSample.Get("Enhanced Hierarchy"))
                 try {
                     if(IsGameObject) {
-                        foreach(var icon in Preferences.RightIcons.Value)
-                            icon.Init();
+                        for(var i = 0; i < Preferences.RightIcons.Value.Count; i++)
+                            Preferences.RightIcons.Value[i].SafeInit();
 
-                        foreach(var icon in Preferences.LeftIcons.Value)
-                            icon.Init();
+                        for(var i = 0; i < Preferences.LeftIcons.Value.Count; i++)
+                            Preferences.LeftIcons.Value[i].SafeInit();
 
-                        Preferences.LeftSideButton.Value.Init();
+                        Preferences.LeftSideButton.SafeInit();
                     }
 
-                    SetTitle("EH 2.0");
+                    if(IsFirstVisible)
+                        try {
+                            ReflectionHelper.HierarchyArea.IndentWidth = Preferences.Indent;
+                            ReflectionHelper.HierarchyArea.BaseIndent = Preferences.LeftMargin;
+                        }
+                        catch(Exception e) {
+                            if(Preferences.DebugEnabled) {
+                                Debug.LogError("Failed to set");
+                                Debug.LogException(e);
+                            }
+                        }
+
+                    //SetTitle("EH 2.0");
                     CalculateIconsWidth();
                     DoSelection(RawRect);
                     IgnoreLockedSelection();
-                    var trailingWidth = DoTrailing(RawRect);
-                    ColorSort(RawRect);
                     DrawTree(RawRect);
-                    DrawLeftSideIcons(RawRect);
                     ChildToggle();
+                    var trailingWidth = DoTrailing(RawRect);
+                    DrawHover();
+                    ColorSort(RawRect);
+                    DrawLeftSideIcons(RawRect);
                     DrawTooltip(RawRect, trailingWidth);
 
                     if(IsGameObject) {
-                        rect.xMax -= Preferences.Offset;
+                        rect.xMax -= Preferences.RightMargin;
                         rect.xMin = rect.xMax;
                         rect.y++;
 
-                        foreach(var icon in Preferences.RightIcons.Value)
-                            try {
-                                using(new GUIBackgroundColor(Styles.backgroundColorEnabled)) {
-                                    rect.xMin -= icon.Width;
-                                    icon.DoGUI(rect);
-                                    rect.xMax -= icon.Width;
-                                }
-                            }
-                            catch(Exception e) {
-                                Debug.LogException(e);
-                                Preferences.ForceDisableButton(icon);
+
+                        for(var i = 0; i < Preferences.RightIcons.Value.Count; i++)
+                            using(new GUIBackgroundColor(Styles.backgroundColorEnabled)) {
+                                var icon = Preferences.RightIcons.Value[i];
+                                rect.xMin -= icon.SafeGetWidth();
+                                icon.SafeDoGUI(rect);
+                                rect.xMax -= icon.SafeGetWidth();
                             }
 
                         var leftSideRect = RawRect;
 
-                        try {
-                            if(Preferences.LeftmostButton)
-                                leftSideRect.xMin = 0f;
-                            else
-                                leftSideRect.xMin -= 2f + CurrentGameObject.transform.childCount > 0 || Preferences.Tree ? 30f : 18f;
+                        if(Preferences.LeftmostButton)
+                            leftSideRect.xMin = 0f;
+                        else
+                            leftSideRect.xMin -= 2f + CurrentGameObject.transform.childCount > 0 || Preferences.TreeOpacity > ALPHA_THRESHOLD ? 30f : 18f;
 
-                            leftSideRect.xMax = leftSideRect.xMin + Preferences.LeftSideButton.Value.Width;
+                        leftSideRect.xMax = leftSideRect.xMin + Preferences.LeftSideButton.SafeGetWidth();
 
-                            using(new GUIBackgroundColor(Styles.backgroundColorEnabled))
-                                Preferences.LeftSideButton.Value.DoGUI(leftSideRect);
-                        }
-                        catch(Exception e) {
-                            Debug.LogException(e);
-                            Preferences.ForceDisableButton(Preferences.LeftSideButton.Value);
-                        }
+                        using(new GUIBackgroundColor(Styles.backgroundColorEnabled))
+                            Preferences.LeftSideButton.SafeDoGUI(leftSideRect);
                     }
 
                     DrawMiniLabel(ref rect);
@@ -100,22 +99,25 @@ namespace EnhancedHierarchy {
                 }
         }
 
-        private static void SetTitle(string title) {
-            try {
-                if(!IsFirstVisible || !IsRepaintEvent)
-                    return;
+        private static void DrawHover() {
+            var tint = Preferences.HoverTintColor.Value;
 
-                var titleProperty = ReflectionHelper.GetHierarchyTitleProperty();
-                var isTitleContent = titleProperty.Name == "titleContent";
+            if(IsFirstVisible)
+                ReflectionHelper.HierarchyWindowInstance.wantsMouseMove = tint.a >= ALPHA_THRESHOLD;
 
-                if(isTitleContent) {
-                    var content = (GUIContent)titleProperty.GetValue(ReflectionHelper.HierarchyWindowInstance, null);
-                    content.text = title;
-                    titleProperty.SetValue(ReflectionHelper.HierarchyWindowInstance, content, null);
-                }
-            }
-            catch(Exception e) {
-                Debug.LogWarning("Failed to set hieararchy title: " + e);
+            if(tint.a < ALPHA_THRESHOLD)
+                return;
+
+            if(!Utility.ShouldCalculateTooltipAt(FullSizeRect))
+                return;
+
+            if(IsRepaintEvent)
+                EditorGUI.DrawRect(FullSizeRect, tint);
+
+            switch(Event.current.type) {
+                case EventType.MouseMove:
+                    Event.current.Use();
+                    break;
             }
         }
 
@@ -156,10 +158,8 @@ namespace EnhancedHierarchy {
                 if(childString.Length > 2)
                     rect.xMin -= 4f;
 
-                tempChildExpandContent.text = childString;
-
                 using(new GUIBackgroundColor(Styles.childToggleColor))
-                    Styles.newToggleStyle.Draw(rect, tempChildExpandContent, false, false, expanded, false);
+                    Styles.newToggleStyle.Draw(rect, Utility.GetTempGUIContent(childString), false, false, expanded, false);
             }
         }
 
@@ -201,10 +201,15 @@ namespace EnhancedHierarchy {
                 rect.xMin = 0f;
                 rect.xMax = rect.xMax + 50f;
 
-                var color = Utility.OverlayColors(GetRowTint(), GetRowLayerTint());
+                var rowTint = GetRowTint();
+                var rowLayerTint = GetRowLayerTint();
 
-                if(color.a > ALPHA_THRESHOLD)
-                    EditorGUI.DrawRect(rect, color);
+                if(rowLayerTint.a > ALPHA_THRESHOLD)
+                    using(new GUIColor(rowLayerTint))
+                        GUI.DrawTexture(rect, Styles.fadeTexture, ScaleMode.StretchToFill);
+
+                if(rowTint.a > ALPHA_THRESHOLD)
+                    EditorGUI.DrawRect(rect, rowTint);
 
                 if(!IsFirstVisible)
                     return;
@@ -219,36 +224,47 @@ namespace EnhancedHierarchy {
 
                 for(var i = 0; i < count; i++) {
                     rect.y += RawRect.height;
-                    color = GetRowTint(rect);
+                    rowTint = GetRowTint(rect);
 
-                    if(color.a > ALPHA_THRESHOLD)
-                        EditorGUI.DrawRect(rect, color);
+                    if(rowTint.a > ALPHA_THRESHOLD)
+                        EditorGUI.DrawRect(rect, rowTint);
                 }
             }
         }
 
         private static void DrawTree(Rect rect) {
-            if(!Preferences.Tree || !IsGameObject || !IsRepaintEvent)
+            if(Preferences.TreeOpacity <= ALPHA_THRESHOLD || !IsGameObject)
+                return;
+
+            if(!IsRepaintEvent && !Preferences.SelectOnTree)
                 return;
 
             using(ProfilerSample.Get())
-            using(new GUIColor(CurrentColor)) {
+            using(new GUIColor(CurrentColor, Preferences.TreeOpacity)) {
+                var indent = ReflectionHelper.HierarchyArea.IndentWidth;
+
                 rect.xMin -= 14f;
                 rect.xMax = rect.xMin + 14f;
 
-                if(CurrentGameObject.transform.childCount == 0 && CurrentGameObject.transform.parent)
-                    if(Utility.LastInHierarchy(CurrentGameObject.transform))
-                        GUI.DrawTexture(rect, Styles.treeEndTexture);
-                    else
-                        GUI.DrawTexture(rect, Styles.treeMiddleTexture);
+                if(CurrentGameObject.transform.childCount == 0 && CurrentGameObject.transform.parent) {
+                    GUI.DrawTexture(rect, Utility.LastInHierarchy(CurrentGameObject.transform) ? Styles.treeEndTexture : Styles.treeMiddleTexture);
 
-                var parent = CurrentGameObject.transform.parent;
+                    if(Preferences.SelectOnTree && GUI.Button(rect, GUIContent.none, Styles.labelNormal))
+                        Selection.activeTransform = CurrentGameObject.transform.parent;
+                }
 
-                for(rect.x -= 14f; rect.xMin > 0f && parent && parent.parent; rect.x -= 14f) {
-                    if(!Utility.LastInHierarchy(parent))
-                        using(new GUIColor(Utility.GetHierarchyColor(parent.parent)))
+                var currentTransform = CurrentGameObject.transform.parent;
+
+                for(rect.x -= indent; rect.xMin > 0f && currentTransform && currentTransform.parent; rect.x -= indent) {
+                    if(!Utility.LastInHierarchy(currentTransform))
+                        using(new GUIColor(Utility.GetHierarchyColor(currentTransform.parent), Preferences.TreeOpacity)) {
                             GUI.DrawTexture(rect, Styles.treeLineTexture);
-                    parent = parent.parent;
+
+                            if(Preferences.SelectOnTree && GUI.Button(rect, GUIContent.none, Styles.labelNormal))
+                                Selection.activeTransform = currentTransform.parent;
+                        }
+
+                    currentTransform = currentTransform.parent;
                 }
             }
         }
@@ -261,11 +277,11 @@ namespace EnhancedHierarchy {
                 if(!IsGameObject || !IsRepaintEvent)
                     return;
 
-                foreach(var icon in Preferences.RightIcons.Value)
-                    RightIconsWidth += icon.Width;
+                for(var i = 0; i < Preferences.RightIcons.Value.Count; i++)
+                    RightIconsWidth += Preferences.RightIcons.Value[i].SafeGetWidth();
 
-                foreach(var icon in Preferences.LeftIcons.Value)
-                    LeftIconsWidth += icon.Width;
+                for(var i = 0; i < Preferences.LeftIcons.Value.Count; i++)
+                    LeftIconsWidth += Preferences.LeftIcons.Value[i].SafeGetWidth();
             }
         }
 
@@ -275,18 +291,15 @@ namespace EnhancedHierarchy {
 
             using(ProfilerSample.Get()) {
                 rect.xMin += LabelSize;
-                rect.xMin = Math.Min(rect.xMax - RightIconsWidth - LeftIconsWidth - CalcMiniLabelSize() - 5f - Preferences.Offset, rect.xMin);
+                rect.xMin = Math.Min(rect.xMax - RightIconsWidth - LeftIconsWidth - CalcMiniLabelSize() - 5f - Preferences.RightMargin, rect.xMin);
 
-                foreach(var icon in Preferences.LeftIcons.Value)
-                    try {
-                        rect.xMax = rect.xMin + icon.Width;
-                        icon.DoGUI(rect);
-                        rect.xMin = rect.xMax;
-                    }
-                    catch(Exception e) {
-                        Debug.LogException(e);
-                        Preferences.ForceDisableButton(icon);
-                    }
+                for(var i = 0; i < Preferences.LeftIcons.Value.Count; i++) {
+                    var icon = Preferences.LeftIcons.Value[i];
+
+                    rect.xMax = rect.xMin + icon.SafeGetWidth();
+                    icon.SafeDoGUI(rect);
+                    rect.xMin = rect.xMax;
+                }
             }
         }
 
@@ -295,15 +308,12 @@ namespace EnhancedHierarchy {
                 return rect.xMax;
 
             using(ProfilerSample.Get()) {
-                tempGameObjectNameContent.text = CurrentGameObject.name;
-
-                var size = CurrentStyle.CalcSize(tempGameObjectNameContent);
-                var iconsWidth = RightIconsWidth + LeftIconsWidth + CalcMiniLabelSize() + Preferences.Offset;
+                var size = CurrentStyle.CalcSize(Utility.GetTempGUIContent(GameObjectName));
+                var iconsWidth = RightIconsWidth + LeftIconsWidth + CalcMiniLabelSize() + Preferences.RightMargin;
 
                 if(size.x < rect.width - iconsWidth + 15f)
                     return rect.xMax;
 
-                rect.yMin += 2f;
                 rect.xMin = rect.xMax - iconsWidth - 18f;
 
                 if(Selection.gameObjects.Contains(CurrentGameObject))
@@ -312,7 +322,6 @@ namespace EnhancedHierarchy {
                     EditorGUI.DrawRect(rect, Styles.normalColor);
 
                 rect.x -= 16f;
-                rect.yMin -= 1f;
                 rect.yMax -= 3f;
 
                 EditorGUI.LabelField(rect, trailingContent, CurrentStyle);
@@ -326,13 +335,13 @@ namespace EnhancedHierarchy {
                 return;
 
             using(ProfilerSample.Get())
-            using(new GUIContentColor(CurrentColor * new Color(1f, 1f, 1f, CurrentGameObject.tag == UNTAGGED ? Styles.backgroundColorDisabled.a : Styles.backgroundColorEnabled.a))) {
+            using(new GUIContentColor(CurrentColor * new Color(1f, 1f, 1f, CurrentGameObject.CompareTag(UNTAGGED) ? Styles.backgroundColorDisabled.a : Styles.backgroundColorEnabled.a))) {
                 GUI.changed = false;
                 Styles.miniLabelStyle.fontSize = Preferences.SmallerMiniLabel ? 8 : 9;
 
-                rect.xMin -= Styles.miniLabelStyle.CalcSize(new GUIContent(CurrentGameObject.tag)).x;
+                rect.xMin -= Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(GameObjectTag)).x;
 
-                var tag = EditorGUI.TagField(rect, CurrentGameObject.tag, Styles.miniLabelStyle);
+                var tag = EditorGUI.TagField(rect, GameObjectTag, Styles.miniLabelStyle);
 
                 if(GUI.changed)
                     Icons.Tag.ChangeTagAndAskForChildren(GetSelectedObjectsAndCurrent(), tag);
@@ -348,7 +357,7 @@ namespace EnhancedHierarchy {
                 GUI.changed = false;
                 Styles.miniLabelStyle.fontSize = Preferences.SmallerMiniLabel ? 8 : 9;
 
-                rect.xMin -= Styles.miniLabelStyle.CalcSize(new GUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
+                rect.xMin -= Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
 
                 var layer = EditorGUI.LayerField(rect, CurrentGameObject.layer, Styles.miniLabelStyle);
 
@@ -358,13 +367,13 @@ namespace EnhancedHierarchy {
         }
 
         private static void DrawMiniLabel(ref Rect rect) {
-            if(Preferences.MiniLabelType.Value == MiniLabelType.None || !IsGameObject)
+            if(Preferences.MiniLabel.Value == MiniLabelType.None || !IsGameObject)
                 return;
 
             rect.x -= 3f;
 
             using(ProfilerSample.Get())
-                switch(Preferences.MiniLabelType.Value) {
+                switch(Preferences.MiniLabel.Value) {
                     case MiniLabelType.Tag:
                         if(HasTag)
                             TagMiniLabel(ref rect);
@@ -439,32 +448,32 @@ namespace EnhancedHierarchy {
             Styles.miniLabelStyle.fontSize = Preferences.SmallerMiniLabel ? 8 : 9;
 
             using(ProfilerSample.Get())
-                switch(Preferences.MiniLabelType.Value) {
+                switch(Preferences.MiniLabel.Value) {
                     case MiniLabelType.Tag:
                         if(HasTag)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(CurrentGameObject.tag)).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(GameObjectTag)).x;
                         else
                             return 0f;
 
                     case MiniLabelType.Layer:
                         if(HasLayer)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
                         else
                             return 0f;
 
                     case MiniLabelType.TagOrLayer:
                         if(HasTag)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(CurrentGameObject.tag)).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(GameObjectTag)).x;
                         else if(HasLayer)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
                         else
                             return 0f;
 
                     case MiniLabelType.LayerOrTag:
                         if(HasLayer)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
                         else if(HasTag)
-                            return Styles.miniLabelStyle.CalcSize(new GUIContent(CurrentGameObject.tag)).x;
+                            return Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(GameObjectTag)).x;
                         else
                             return 0f;
 
@@ -474,9 +483,9 @@ namespace EnhancedHierarchy {
                         var layerSize = 0f;
 
                         if(HasTag)
-                            tagSize = Styles.miniLabelStyle.CalcSize(new GUIContent(CurrentGameObject.tag)).x;
+                            tagSize = Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(GameObjectTag)).x;
                         if(HasLayer)
-                            layerSize = Styles.miniLabelStyle.CalcSize(new GUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
+                            layerSize = Styles.miniLabelStyle.CalcSize(Utility.GetTempGUIContent(LayerMask.LayerToName(CurrentGameObject.layer))).x;
 
                         return Mathf.Max(tagSize, layerSize);
 
@@ -494,14 +503,15 @@ namespace EnhancedHierarchy {
                     return;
 
                 rect.xMax = Mathf.Min(fullTrailingWidth, rect.xMin + LabelSize);
+                rect.xMin = 0f;
 
-                if(!rect.Contains(Event.current.mousePosition))
+                if(!Utility.ShouldCalculateTooltipAt(rect))
                     return;
 
                 var tooltip = new StringBuilder(100);
 
-                tooltip.AppendLine(CurrentGameObject.name);
-                tooltip.AppendFormat("\nTag: {0}", CurrentGameObject.tag);
+                tooltip.AppendLine(GameObjectName);
+                tooltip.AppendFormat("\nTag: {0}", GameObjectTag);
                 tooltip.AppendFormat("\nLayer: {0}", LayerMask.LayerToName(CurrentGameObject.layer));
 
                 if(GameObjectUtility.GetStaticEditorFlags(CurrentGameObject) != 0)
@@ -520,8 +530,7 @@ namespace EnhancedHierarchy {
                     else
                         tooltip.AppendLine("Missing Component");
 
-                tempTooltipContent.tooltip = tooltip.ToString().TrimEnd('\n', '\r');
-                EditorGUI.LabelField(rect, tempTooltipContent);
+                EditorGUI.LabelField(rect, Utility.GetTempGUIContent(null, tooltip.ToString().TrimEnd('\n', '\r')));
             }
         }
 
@@ -569,7 +578,7 @@ namespace EnhancedHierarchy {
                         if(DragSelection == null || !IsFirstVisible)
                             break;
 
-                        var scrollRect = new Rect();
+                        Rect scrollRect;
 
                         if(Event.current.mousePosition.y > FinalRect.y) {
                             scrollRect = FinalRect;
@@ -622,15 +631,24 @@ namespace EnhancedHierarchy {
         }
 
         public static Color GetRowLayerTint() {
-            return GetRowLayerTint(RawRect, CurrentGameObject);
+            return GetRowLayerTint(CurrentGameObject);
         }
 
-        public static Color GetRowLayerTint(Rect rect, GameObject go) {
+        public static Color GetRowLayerTint(GameObject go) {
+            if(!go)
+                return Color.clear;
+
+            var layerColors = Preferences.PerLayerRowColors.Value;
+
+            if(layerColors == null)
+                return Color.clear;
+
             using(ProfilerSample.Get())
-                if(go)
-                    return Array.Find<LayerColor>(Preferences.PerLayerRowColors, layer => { return layer == go.layer; }).color;
-                else
-                    return Color.clear;
+                for(var i = 0; i < layerColors.Count; i++)
+                    if(layerColors[i] == go.layer)
+                        return layerColors[i].color;
+
+            return Color.clear;
         }
 
         private static List<GameObject> GetSelectedObjectsAndCurrent() {

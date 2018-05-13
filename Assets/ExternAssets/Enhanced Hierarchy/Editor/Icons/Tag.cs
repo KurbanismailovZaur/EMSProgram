@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class Tag : RightSideIcon {
 
         public override void DoGUI(Rect rect) {
             GUI.changed = false;
 
             EditorGUI.LabelField(rect, Styles.tagContent);
-            var tag = EditorGUI.TagField(rect, Styles.tagContent, EnhancedHierarchy.CurrentGameObject.tag, Styles.tagStyle);
+            var tag = EditorGUI.TagField(rect, Styles.tagContent, EnhancedHierarchy.GameObjectTag, Styles.tagStyle);
 
-            if(GUI.changed && tag != EnhancedHierarchy.CurrentGameObject.tag)
+            if(GUI.changed && tag != EnhancedHierarchy.GameObjectTag)
                 ChangeTagAndAskForChildren(GetSelectedObjectsAndCurrent(), tag);
         }
 

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EnhancedHierarchy.Icons;
 using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy {
 
-    [Serializable]
     internal abstract class LeftSideIcon : IconBase {
 
         static LeftSideIcon() {
@@ -16,10 +16,8 @@ namespace EnhancedHierarchy {
                               where type != baseType && baseType.IsAssignableFrom(type)
                               select type).ToArray();
 
-            foreach(var type in iconsTypes) {
-                var instance = (LeftSideIcon)Activator.CreateInstance(type);
+            foreach(var instance in iconsTypes.Select(type => (LeftSideIcon)Activator.CreateInstance(type)))
                 icons.Add(instance, instance);
-            }
         }
 
         private static readonly Dictionary<string, LeftSideIcon> icons = new Dictionary<string, LeftSideIcon>();
@@ -28,7 +26,7 @@ namespace EnhancedHierarchy {
 
         public static implicit operator LeftSideIcon(string name) {
             try { return icons[name]; }
-            catch { return new Icons.LeftNone(); }
+            catch { return IconBase.leftNone; }
         }
 
         public static implicit operator string(LeftSideIcon icon) {
@@ -37,7 +35,6 @@ namespace EnhancedHierarchy {
 
     }
 
-    [Serializable]
     internal abstract class RightSideIcon : IconBase {
 
         static RightSideIcon() {
@@ -47,10 +44,8 @@ namespace EnhancedHierarchy {
                               where type != baseType && baseType.IsAssignableFrom(type)
                               select type).ToArray();
 
-            foreach(var type in iconsTypes) {
-                var instance = (RightSideIcon)Activator.CreateInstance(type);
+            foreach(var instance in iconsTypes.Select(type => (RightSideIcon)Activator.CreateInstance(type)))
                 icons.Add(instance, instance);
-            }
         }
 
         private static readonly Dictionary<string, RightSideIcon> icons = new Dictionary<string, RightSideIcon>();
@@ -59,7 +54,7 @@ namespace EnhancedHierarchy {
 
         public static implicit operator RightSideIcon(string name) {
             try { return icons[name]; }
-            catch { return new Icons.RightNone(); }
+            catch { return IconBase.rightNone; }
         }
 
         public static implicit operator string(RightSideIcon icon) {
@@ -68,10 +63,12 @@ namespace EnhancedHierarchy {
 
     }
 
-    [Serializable]
     internal abstract class IconBase {
 
         private const float DEFAULT_WIDTH = 16f;
+
+        public static LeftNone leftNone = new LeftNone();
+        public static RightNone rightNone = new RightNone();
 
         public virtual string Name { get { return GetType().Name; } }
         public virtual float Width { get { return DEFAULT_WIDTH; } }
@@ -129,17 +126,20 @@ namespace EnhancedHierarchy {
         }
 
         public static bool operator ==(IconBase left, IconBase right) {
-            if((object)left == null || (object)right == null)
+            if(ReferenceEquals(left, right))
+                return true;
+
+            if(ReferenceEquals(left, null))
+                return false;
+
+            if(ReferenceEquals(right, null))
                 return false;
 
             return left.Name == right.Name;
         }
 
         public static bool operator !=(IconBase left, IconBase right) {
-            if((object)left == null || (object)right == null)
-                return false;
-
-            return left.Name != right.Name;
+            return !(left == right);
         }
 
         public override string ToString() {
@@ -151,10 +151,7 @@ namespace EnhancedHierarchy {
         }
 
         public override bool Equals(object obj) {
-            if(obj == null || obj.GetType() != GetType())
-                return false;
-
-            return (IconBase)obj == this;
+            return obj as IconBase == this;
         }
     }
 

@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class PrefabApply : RightSideIcon {
 
         public override string Name { get { return "Apply Prefab"; } }

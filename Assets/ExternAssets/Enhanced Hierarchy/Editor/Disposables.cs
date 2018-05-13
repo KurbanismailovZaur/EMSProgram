@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EnhancedHierarchy {
 
-    internal class GUIBackgroundColor : IDisposable {
+    internal struct GUIBackgroundColor : IDisposable {
         private readonly Color before;
 
         public GUIBackgroundColor(Color color) {
@@ -18,7 +18,7 @@ namespace EnhancedHierarchy {
         }
     }
 
-    internal class GUIContentColor : IDisposable {
+    internal struct GUIContentColor : IDisposable {
         private readonly Color before;
 
         public GUIContentColor(Color color) {
@@ -31,11 +31,17 @@ namespace EnhancedHierarchy {
         }
     }
 
-    internal class GUIColor : IDisposable {
+    internal struct GUIColor : IDisposable {
         private readonly Color before;
 
         public GUIColor(Color color) {
             before = GUI.color;
+            GUI.color = color;
+        }
+
+        public GUIColor(Color color, float alpha) {
+            before = GUI.color;
+            color.a = alpha;
             GUI.color = color;
         }
 
@@ -44,13 +50,8 @@ namespace EnhancedHierarchy {
         }
     }
 
-    internal class GUIIndent : IDisposable {
+    internal sealed class GUIIndent : IDisposable {
         public GUIIndent() {
-            EditorGUI.indentLevel++;
-        }
-
-        public GUIIndent(IPrefItem pref) {
-            pref.DoGUI();
             EditorGUI.indentLevel++;
         }
 
@@ -65,7 +66,7 @@ namespace EnhancedHierarchy {
         }
     }
 
-    internal class GUIEnabled : IDisposable {
+    internal struct GUIEnabled : IDisposable {
         private readonly bool before;
 
         public GUIEnabled(bool enabled) {
@@ -78,7 +79,7 @@ namespace EnhancedHierarchy {
         }
     }
 
-    internal class GUIFade : IDisposable {
+    internal sealed class GUIFade : IDisposable {
         private AnimBool anim;
 
         public bool Visible { get; private set; }

@@ -1,57 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace EnhancedHierarchy {
-
-    /// <summary>
-    /// Serializable Vector to save Color, Vector2, Vector3 and Vector4.
-    /// </summary>
-    [Serializable]
-    internal struct SerializableVector {
-
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
-        public float W { get; set; }
-
-        public SerializableVector(float x) { X = x; Y = 0f; Z = 0f; W = 0f; }
-        public SerializableVector(float x, float y) { X = x; Y = y; Z = 0f; W = 0f; }
-        public SerializableVector(float x, float y, float z) { X = x; Y = y; Z = z; W = 0f; }
-        public SerializableVector(float x, float y, float z, float w) { X = x; Y = y; Z = z; W = w; }
-
-        public static SerializableVector GetVectorFromObject(object obj) {
-            if(obj is Color)
-                return (Color)obj;
-            if(obj is Vector2)
-                return (Vector2)obj;
-            if(obj is Vector3)
-                return (Vector3)obj;
-            if(obj is Vector4)
-                return (Vector4)obj;
-            throw new InvalidCastException();
-        }
-
-        public static implicit operator Color(SerializableVector v) { return new Color(v.X, v.Y, v.Z, v.W); }
-        public static implicit operator Vector2(SerializableVector v) { return new Vector2(v.X, v.Y); }
-        public static implicit operator Vector3(SerializableVector v) { return new Vector3(v.X, v.Y, v.Z); }
-        public static implicit operator Vector4(SerializableVector v) { return new Vector4(v.X, v.Y, v.Z, v.W); }
-
-        public static implicit operator SerializableVector(Color c) { return new SerializableVector(c.r, c.g, c.b, c.a); }
-        public static implicit operator SerializableVector(Vector2 v) { return new SerializableVector(v.x, v.y); }
-        public static implicit operator SerializableVector(Vector3 v) { return new SerializableVector(v.x, v.y, v.z); }
-        public static implicit operator SerializableVector(Vector4 v) { return new SerializableVector(v.x, v.y, v.z, v.w); }
-    }
 
     /// <summary>
     /// Per layer color setting.
     /// </summary>
     [Serializable]
     internal struct LayerColor {
+
+        [SerializeField, FormerlySerializedAs("layer")]
         public int layer;
-        public SerializableVector color;
+        [SerializeField, FormerlySerializedAs("color")]
+        public Color color;
 
         public LayerColor(int layer) : this(layer, Color.clear) { }
 
@@ -73,7 +39,7 @@ namespace EnhancedHierarchy {
         }
 
         public override bool Equals(object obj) {
-            if(obj == null || !(obj is LayerColor))
+            if(!(obj is LayerColor))
                 return false;
 
             return ((LayerColor)obj).layer == layer;
@@ -82,62 +48,251 @@ namespace EnhancedHierarchy {
         public override int GetHashCode() {
             return layer.GetHashCode();
         }
+
     }
 
     /// <summary>
     /// Save and load hierarchy preferences.
     /// </summary>
-    internal static class Preferences {
-        public static int currentKeyIndex;
-        public static string[] allKeys = new string[128];
+    internal static partial class Preferences {
 
-        private static Color DefaultOddSortColor { get { return EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.10f) : new Color(1f, 1f, 1f, 0.20f); } }
+        [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+        private class AutoPrefItemAttribute : Attribute {
+
+            public string Key { get; private set; }
+
+            public AutoPrefItemAttribute(string key = null) { Key = key; }
+
+        }
+
+        [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+        private class AutoPrefItemDefaultValueAttribute : Attribute {
+
+            public object DefaultValue { get; private set; }
+
+            public AutoPrefItemDefaultValueAttribute(object defaultValue) { DefaultValue = defaultValue; }
+
+        }
+
+        [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+        private class AutoPrefItemLabelAttribute : Attribute {
+
+            public GUIContent Label { get; private set; }
+
+            public AutoPrefItemLabelAttribute(string label, string tooltip = null) { Label = new GUIContent(label, tooltip); }
+
+        }
+
+        private static Color DefaultOddSortColor { get { return EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.1f) : new Color(1f, 1f, 1f, 0.2f); } }
         private static Color DefaultEvenSortColor { get { return EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0f) : new Color(1f, 1f, 1f, 0f); } }
         private static Color DefaultLineColor { get { return new Color(0f, 0f, 0f, 0.2f); } }
+        private static Color DefaultHoverTint { get { return EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.2f) : new Color(0.12f, 0.12f, 0.12f, 0.2f); } }
 
-        private static readonly GUIContent resetSettingsContent = new GUIContent("Use Defaults", "Reset all settings to default ones");
-        private static readonly GUIContent unlockAllContent = new GUIContent("Unlock All Objects", "Unlock all objects in the current scene, it's highly recommended to do this when disabling or removing the extension to prevent data loss\nThis might take a few seconds on large scenes");
+        #region PrefItems
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Enabled", "Enable or disable the entire plugin, it will be automatically disabled if any error occurs")]
+        public static PrefItem<bool> Enabled;
 
-        public static PrefItem<int> Offset { get; private set; }
-        public static PrefItem<int> LineSize { get; private set; }
-        public static PrefItem<bool> Enabled { get; private set; }
-        public static PrefItem<bool> Tree { get; private set; }
-        public static PrefItem<bool> Tooltips { get; private set; }
-        public static PrefItem<bool> RelevantTooltipsOnly { get; private set; }
-        public static PrefItem<bool> EnhancedSelection { get; private set; }
-        public static PrefItem<bool> Trailing { get; private set; }
-        public static PrefItem<bool> AllowSelectingLocked { get; private set; }
-        public static PrefItem<bool> AllowSelectingLockedSceneView { get; private set; }
-        public static PrefItem<bool> ChangeAllSelected { get; private set; }
-        public static PrefItem<bool> LeftmostButton { get; private set; }
-        public static PrefItem<bool> NumericChildExpand { get; private set; }
-        public static PrefItem<bool> SmallerMiniLabel { get; private set; }
-        public static PrefItem<bool> CentralizeMiniLabelWhenPossible { get; private set; }
-        public static PrefItem<bool> HideDefaultTag { get; private set; }
-        public static PrefItem<bool> HideDefaultLayer { get; private set; }
-        public static PrefItem<bool> HideDefaultIcon { get; private set; }
-        public static PrefItem<Color> OddRowColor { get; private set; }
-        public static PrefItem<Color> EvenRowColor { get; private set; }
-        public static PrefItem<Color> LineColor { get; private set; }
-        public static PrefItem<RightSideIcon> LeftSideButton { get; private set; }
-        public static PrefItem<MiniLabelType> MiniLabelType { get; private set; }
-        public static PrefItem<ChildrenChangeMode> LockAskMode { get; private set; }
-        public static PrefItem<ChildrenChangeMode> LayerAskMode { get; private set; }
-        public static PrefItem<ChildrenChangeMode> TagAskMode { get; private set; }
-        public static PrefItem<ChildrenChangeMode> StaticAskMode { get; private set; }
-        public static PrefItem<ChildrenChangeMode> IconAskMode { get; private set; }
-        public static PrefItem<LeftSideIcon[]> LeftIcons { get; private set; }
-        public static PrefItem<RightSideIcon[]> RightIcons { get; private set; }
-        public static PrefItem<LayerColor[]> PerLayerRowColors { get; private set; }
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(2)]
+        [AutoPrefItemLabel("Right Margin", "Margin for icons, useful if you have more extensions that also uses hierarchy")]
+        public static PrefItem<int> RightMargin;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(0)]
+        [AutoPrefItemLabel("Left Margin", "Margin for icons, useful if you have more extensions that also uses hierarchy")]
+        public static PrefItem<int> LeftMargin;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(14)]
+        [AutoPrefItemLabel("Indent", "Indent for labels, useful for thin hierarchies")]
+        public static PrefItem<int> Indent;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(0.8f)]
+        [AutoPrefItemLabel("Hierarchy Tree Opacity", "The opacity of the tree view lines connecting child transforms to their parent, useful if you have multiple children inside children")]
+        public static PrefItem<float> TreeOpacity;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Select on Tree", "Select the parent when you click on the tree lines\n\nTHIS MAY AFFECT PERFORMANCE")]
+        public static PrefItem<bool> SelectOnTree;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Tooltips", "Shows tooltips, like this one")]
+        public static PrefItem<bool> Tooltips;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Relevant Tooltips Only", "Hide tooltips that have static texts")]
+        public static PrefItem<bool> RelevantTooltipsOnly;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Enhanced selection", "Allow selecting GameObjects by dragging over them with right mouse button")]
+        public static PrefItem<bool> EnhancedSelection;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Hover tint", "Tint the item under the mouse cursor")]
+        public static PrefItem<Color> HoverTintColor;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Trailing", "Append ... when names are bigger than the view area")]
+        public static PrefItem<bool> Trailing;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Allow locked selection (Hierarchy)", "Allow selecting objects that are locked")]
+        public static PrefItem<bool> AllowSelectingLocked;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(false)]
+        [AutoPrefItemLabel("Allow locked selection (Scene View)", "Allow selecting objects that are locked on scene view\nObjects locked before you change this option will have the previous behaviour, you need to unlock and lock them again to apply this setting")]
+        public static PrefItem<bool> AllowSelectingLockedSceneView;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Change all selected", "This will make the enable, lock, layer, tag and static buttons affect all selected objects in the hierarchy")]
+        public static PrefItem<bool> ChangeAllSelected;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Left side button at leftmost", "Put the left button to the leftmost side of the hierarchy, if disabled it will be next to the game object name")]
+        public static PrefItem<bool> LeftmostButton;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(false)]
+        [AutoPrefItemLabel("Replace default child toggle", "Replace the default toggle for expanding children to a new one that shows the children count")]
+        public static PrefItem<bool> NumericChildExpand;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Smaller font", "Use a smaller font on the minilabel for narrow hierarchies")]
+        public static PrefItem<bool> SmallerMiniLabel;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Centralize when possible", "Centralize minilabel when there's only tag or only layer on it")]
+        public static PrefItem<bool> CentralizeMiniLabelWhenPossible;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Hide \"Untagged\" tag", "Hide default tag on minilabel")]
+        public static PrefItem<bool> HideDefaultTag;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(true)]
+        [AutoPrefItemLabel("Hide \"Default\" layer", "Hide default layer on minilabel")]
+        public static PrefItem<bool> HideDefaultLayer;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(false)]
+        [AutoPrefItemLabel("Hide default icon", "Hide the default game object icon")]
+        public static PrefItem<bool> HideDefaultIcon;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(1)]
+        [AutoPrefItemLabel("Line thickness", "Separator line thickness")]
+        public static PrefItem<int> LineSize;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Odd row tint", "The tint of odd rows")]
+        public static PrefItem<Color> OddRowColor;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Even row tint", "The tint of even rows")]
+        public static PrefItem<Color> EvenRowColor;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Line tint", "The tint of separators line")]
+        public static PrefItem<Color> LineColor;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Left side button", "The button that will appear in the left side of the hierarchy\nLooks better with \"Hierarchy Tree\" disabled")]
+        public static PrefItem<IconData> LeftSideButtonPref;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(MiniLabelType.TagAndLayer)]
+        [AutoPrefItemLabel("Mini label", "The little label next to the GameObject name")]
+        public static PrefItem<MiniLabelType> MiniLabel;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(ChildrenChangeMode.ObjectAndChildren)]
+        [AutoPrefItemLabel("Lock", "Which objects will be locked when you click on the lock toggle")]
+        public static PrefItem<ChildrenChangeMode> LockAskMode;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(ChildrenChangeMode.Ask)]
+        [AutoPrefItemLabel("Layer", "Which objects will have their layer changed when you click on the layer button or on the mini label")]
+        public static PrefItem<ChildrenChangeMode> LayerAskMode;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(ChildrenChangeMode.ObjectOnly)]
+        [AutoPrefItemLabel("Tag", "Which objects will have their tag changed when you click on the tag button or on the mini label")]
+        public static PrefItem<ChildrenChangeMode> TagAskMode;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(ChildrenChangeMode.Ask)]
+        [AutoPrefItemLabel("Static", "Which flags will be changed when you click on the static toggle")]
+        public static PrefItem<ChildrenChangeMode> StaticAskMode;
+
+        [AutoPrefItem]
+        [AutoPrefItemDefaultValue(ChildrenChangeMode.ObjectOnly)]
+        [AutoPrefItemLabel("Icon", "Which objects will have their icon changed when you click on the icon button")]
+        public static PrefItem<ChildrenChangeMode> IconAskMode;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Left Side Icons", "The icons that appear next to the game object name")]
+        public static PrefItem<IconList> LeftIcons;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Right Side Icons", "The icons that appear to the rightmost of the hierarchy")]
+        public static PrefItem<IconList> RightIcons;
+
+        [AutoPrefItem]
+        [AutoPrefItemLabel("Per layer row color", "Set a row color for each different layer")]
+        public static PrefItem<List<LayerColor>> PerLayerRowColors;
+        #endregion
+
+        public static IconBase LeftSideButton {
+            get { return LeftSideButtonPref.Value.Icon; }
+            set {
+                LeftSideButtonPref.Value.Icon = value;
+                LeftSideButtonPref.ForceSave();
+            }
+        }
+
+        public static bool ProfilingEnabled {
+            get {
+#if HIERARCHY_PROFILING
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
+
+        public static bool DebugEnabled {
+            get {
+#if HIERARCHY_DEBUG
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
 
         public static bool MiniLabelTagEnabled {
             get {
-                switch(MiniLabelType.Value) {
-                    case global::EnhancedHierarchy.MiniLabelType.Tag:
-                    case global::EnhancedHierarchy.MiniLabelType.TagOrLayer:
-                    case global::EnhancedHierarchy.MiniLabelType.LayerOrTag:
-                    case global::EnhancedHierarchy.MiniLabelType.LayerAndTag:
-                    case global::EnhancedHierarchy.MiniLabelType.TagAndLayer:
+                switch(MiniLabel.Value) {
+                    case MiniLabelType.Tag:
+                    case MiniLabelType.TagOrLayer:
+                    case MiniLabelType.LayerOrTag:
+                    case MiniLabelType.LayerAndTag:
+                    case MiniLabelType.TagAndLayer:
                         return true;
 
                     default:
@@ -145,14 +300,15 @@ namespace EnhancedHierarchy {
                 }
             }
         }
+
         public static bool MiniLabelLayerEnabled {
             get {
-                switch(MiniLabelType.Value) {
-                    case global::EnhancedHierarchy.MiniLabelType.Layer:
-                    case global::EnhancedHierarchy.MiniLabelType.LayerOrTag:
-                    case global::EnhancedHierarchy.MiniLabelType.TagOrLayer:
-                    case global::EnhancedHierarchy.MiniLabelType.LayerAndTag:
-                    case global::EnhancedHierarchy.MiniLabelType.TagAndLayer:
+                switch(MiniLabel.Value) {
+                    case MiniLabelType.Layer:
+                    case MiniLabelType.LayerOrTag:
+                    case MiniLabelType.TagOrLayer:
+                    case MiniLabelType.LayerAndTag:
+                    case MiniLabelType.TagAndLayer:
                         return true;
 
                     default:
@@ -161,104 +317,42 @@ namespace EnhancedHierarchy {
             }
         }
 
-        //Just to serialize the scroll on assembly reloads
-        private static PrefItem<Vector2> scroll = new PrefItem<Vector2>("scroll", Vector2.zero, string.Empty, string.Empty);
-        private static ReorderableList leftIconsList, rightIconsList, rowColorsList;
+        static Preferences() {
+            InitializePreferences();
 
-        private static GenericMenu LeftIconsMenu { get { return GetGenericMenuForList(leftIconsList, LeftSideIcon.AllIcons); } }
-        private static GenericMenu RightIconsMenu { get { return GetGenericMenuForList(rightIconsList, RightSideIcon.AllIcons); } }
+            Enabled.Label.text = string.Format("Enabled ({0}+H)", Utility.CtrlKey);
+            LeftSideButtonPref.DefaultValue = new IconData() { Icon = new Icons.GameObjectIcon() };
 
-        private static GenericMenu GetGenericMenuForList(ReorderableList list, IconBase[] icons) {
-            var menu = new GenericMenu();
+            LineColor.DefaultValue = DefaultLineColor;
+            OddRowColor.DefaultValue = DefaultOddSortColor;
+            EvenRowColor.DefaultValue = DefaultEvenSortColor;
+            HoverTintColor.DefaultValue = DefaultHoverTint;
 
-            foreach(var i in icons) {
-                var icon = i;
-                if(!list.list.Contains(icon) && icon != new Icons.LeftNone() && icon != new Icons.RightNone())
-                    menu.AddItem(new GUIContent(icon.Name), false, () => list.list.Add(icon));
-            }
+            var defaultLeftIcons = new IconList { new Icons.MonoBehaviourIcon(), new Icons.Warnings(), new Icons.SoundIcon() };
+            var defaultRightIcons = new IconList { new Icons.Active(), new Icons.Lock(), new Icons.Static(), new Icons.PrefabApply() };
+            var defaultLayerColors = new List<LayerColor> { new LayerColor(5, new Color(0f, 0f, 1f, 0.3019608f)) };
 
-            return menu;
-        }
+            LeftIcons.DefaultValue = defaultLeftIcons;
+            RightIcons.DefaultValue = defaultRightIcons;
+            PerLayerRowColors.DefaultValue = defaultLayerColors;
 
-        private static ReorderableList GenerateReordableListForIcons<T>(PrefItem<T[]> preferenceItem) {
-            var result = new ReorderableList(preferenceItem.Value.ToList(), typeof(T), true, true, true, true);
+            leftIconsList = GenerateReordableList(LeftIcons);
+            rightIconsList = GenerateReordableList(RightIcons);
 
-            result.elementHeight = 18f;
-            result.drawHeaderCallback = rect => { rect.xMin -= EditorGUI.indentLevel * 16f; EditorGUI.LabelField(rect, preferenceItem, EditorStyles.boldLabel); };
-            result.drawElementCallback = (rect, index, focused, active) => EditorGUI.LabelField(rect, result.list[index].ToString());
-            result.onAddDropdownCallback = (rect, newList) => (typeof(T) == typeof(RightSideIcon) ? RightIconsMenu : LeftIconsMenu).DropDown(rect);
+            leftIconsList.onAddDropdownCallback = (rect, newList) => LeftIconsMenu.DropDown(rect);
+            rightIconsList.onAddDropdownCallback = (rect, newList) => RightIconsMenu.DropDown(rect);
 
-            return result;
-        }
-
-        public static void ReloadPrefs() {
-            Enabled = new PrefItem<bool>("Enabled", true, string.Format("Enabled ({0}+H)", Utility.CtrlKey), "Enable or disable the entire plugin, it will be automatically disabled if any error occurs");
-            Offset = new PrefItem<int>("Offset", 2, "Offset", "Offset for icons, useful if you have more extensions that also uses hierarchy");
-            Tree = new PrefItem<bool>("Tree", true, "Hierarchy tree", "Shows lines connecting child transforms to their parent, useful if you have multiple childs inside childs");
-            Tooltips = new PrefItem<bool>("Tooltip", true, "Tooltips", "Shows tooltips, like this one");
-            RelevantTooltipsOnly = new PrefItem<bool>("RelevantTooltips", true, "Relevant Tooltips", "Show only tooltips with relevant informations");
-            EnhancedSelection = new PrefItem<bool>("Selection", true, "Enhanced selection", "Allow selecting GameObjects by dragging over them with right mouse button");
-            LeftSideButton = new PrefItem<RightSideIcon>("LeftSideButton", new Icons.GameObjectIcon(), "Left side button", "The button that will appear in the left side of the hierarchy\nLooks better with \"Hierarchy Tree\" disabled");
-            LeftmostButton = new PrefItem<bool>("LeftmostSideButton", true, "Left side button at leftmost", "Put the left button to the leftmost side of the hierachy, if disabled it will be next to the game object name");
-            MiniLabelType = new PrefItem<MiniLabelType>("MiniLabel", global::EnhancedHierarchy.MiniLabelType.TagAndLayer, "Mini label", "The little label next to the GameObject name");
-            Trailing = new PrefItem<bool>("Trailing", true, "Trailing", "Append ... when names are bigger than the view area");
-            AllowSelectingLocked = new PrefItem<bool>("SelectLocked", true, "Allow locked selection (Hierarchy)", "Allow selecting objects that are locked");
-            AllowSelectingLockedSceneView = new PrefItem<bool>("SelectLockedSV", false, "Allow locked selection (Scene View)", "Allow selecting objects that are locked on scene view\nObjects locked before you change this option will have the previous behaviour, you need to unlock and lock them again to apply this setting");
-            ChangeAllSelected = new PrefItem<bool>("ChangeAllLocked", true, "Change all selected", "This will make the enable, lock, layer, tag and static buttons affect all selected objects in the hierarchy");
-            NumericChildExpand = new PrefItem<bool>("ReplaceToggle", false, "Replace default child toggle", "Replace the default toggle for expanding children for a new one that shows the child count");
-            SmallerMiniLabel = new PrefItem<bool>("SmallerMiniLabel", true, "Smaller font", "Use a smaller font on the minilabel for narrow hierarchies");
-            CentralizeMiniLabelWhenPossible = new PrefItem<bool>("CentralizeWhenPossible", true, "Centralize when possible", "Centralize minilabel when there's only tag or only layer on it");
-            HideDefaultLayer = new PrefItem<bool>("HideDefaultLayer", true, "Hide \"Default\" layer", "Hide default layer on minilabel");
-            HideDefaultTag = new PrefItem<bool>("HideDefaultTag", true, "Hide \"Untagged\" tag", "Hide default tag on minilabel");
-            HideDefaultIcon = new PrefItem<bool>("HideDefaultIcon", false, "Hide default icon", "Hide the default game object icon");
-
-            StaticAskMode = new PrefItem<ChildrenChangeMode>("StaticMode", ChildrenChangeMode.Ask, "Static", "Which flags will be changed when you click on the static toggle");
-            IconAskMode = new PrefItem<ChildrenChangeMode>("IconAskMode", ChildrenChangeMode.ObjectOnly, "Icon", "Which objects will have their icon changed when you click on the icon button");
-            LockAskMode = new PrefItem<ChildrenChangeMode>("LockMode", ChildrenChangeMode.ObjectAndChildren, "Lock", "Which objects will be locked when you click on the lock toggle");
-            LayerAskMode = new PrefItem<ChildrenChangeMode>("LayerMode", ChildrenChangeMode.Ask, "Layer", "Which objects will have their layer changed when you click on the layer button or on the mini label");
-            TagAskMode = new PrefItem<ChildrenChangeMode>("TagMode", ChildrenChangeMode.ObjectOnly, "Tag", "Which objects will have their tag changed when you click on the tag button or on the mini label");
-
-            LineSize = new PrefItem<int>("LineSize", 1, "Line thickness", "Separator line thickness");
-            LineColor = new PrefItem<Color>("LineColor", DefaultLineColor, "Line color", "The color used on separators line");
-            OddRowColor = new PrefItem<Color>("OddRow", DefaultOddSortColor, "Odd row color", "The color used on odd rows");
-            EvenRowColor = new PrefItem<Color>("EvenRow", DefaultEvenSortColor, "Even row color", "The color used on even rows");
-
-            var defaultLeftIcons = new LeftSideIcon[] { new Icons.MonoBehaviourIcon(), new Icons.Warnings(), new Icons.SoundIcon() };
-            var defaultRightIcons = new RightSideIcon[] { new Icons.Active(), new Icons.Lock(), new Icons.Static(), new Icons.PrefabApply() };
-            var defaultLayerColors = new LayerColor[] { new LayerColor(5, new Color(0.8f, 0f, 1f, EditorGUIUtility.isProSkin ? 0.1f : 0.145f)) };
-
-            LeftIcons = new PrefItem<LeftSideIcon[]>("LeftIcons", defaultLeftIcons, "Left Side Icons", "The icons that appear next to the game object name");
-            RightIcons = new PrefItem<RightSideIcon[]>("RightIcons", defaultRightIcons, "Right Side Icons", "The icons that appear to the rightmost of the hierarchy");
-            PerLayerRowColors = new PrefItem<LayerColor[]>("PerLayerRowColors", defaultLayerColors, "Per layer row color", "Set a row color for each different layer");
-
-            leftIconsList = GenerateReordableListForIcons(LeftIcons);
-            rightIconsList = GenerateReordableListForIcons(RightIcons);
-
-            rowColorsList = GenerateReordableListForIcons(PerLayerRowColors);
-            rowColorsList.draggable = false;
-            rowColorsList.onAddDropdownCallback = null;
+            rowColorsList = GenerateReordableList(PerLayerRowColors);
+            rowColorsList.onAddDropdownCallback = (rect, newList) => RowColorsMenu.DropDown(rect);
 
             rowColorsList.drawElementCallback = (rect, index, focused, active) => {
+                GUI.changed = false;
+
                 rect.xMin -= EditorGUI.indentLevel * 16f;
+                PerLayerRowColors.Value[index] = LayerColorField(rect, PerLayerRowColors.Value[index]);
 
-                var value = (LayerColor)rowColorsList.list[index];
-                var rect1 = rect;
-                var rect2 = rect;
-                var rect3 = rect;
-
-                rect1.xMax = rect1.xMin + 175f;
-                rect2.xMin = rect1.xMax;
-                rect2.xMax = rect2.xMin + 80f;
-                rect3.xMin = rect2.xMax;
-
-                value.layer = EditorGUI.LayerField(rect1, value.layer);
-                value.layer = EditorGUI.IntField(rect2, value.layer);
-                value.color = EditorGUI.ColorField(rect3, value.color);
-
-                if(value.layer > 31 || value.layer < 0)
-                    value.layer = 0;
-
-                rowColorsList.list[index] = value;
+                if(GUI.changed)
+                    PerLayerRowColors.ForceSave();
             };
         }
 
@@ -266,7 +360,7 @@ namespace EnhancedHierarchy {
             if(button == null)
                 return false;
 
-            if(LeftSideButton.Value == button)
+            if(LeftSideButton == button)
                 return true;
 
             if(button is RightSideIcon)
@@ -276,143 +370,93 @@ namespace EnhancedHierarchy {
         }
 
         public static void ForceDisableButton(IconBase button) {
-            Debug.LogWarning("Disabling \"" + button.Name + "\", most likely because it threw an exception");
-
-            if(LeftSideButton.Value == button)
-                LeftSideButton.Value = new Icons.RightNone();
-            else if(button is RightSideIcon)
-                RightIcons.Value = (from icon in RightIcons.Value
-                                    where icon != button
-                                    select icon).ToArray();
+            if(button == null)
+                Debug.LogError("Removing null button");
             else
-                LeftIcons.Value = (from icon in LeftIcons.Value
-                                   where icon != button
-                                   select icon).ToArray();
+                Debug.LogWarning("Disabling \"" + button.Name + "\", most likely because it threw an exception");
+
+            if(LeftSideButton == button)
+                LeftSideButton = IconBase.rightNone;
+
+            RightIcons.Value.Remove(button);
+            LeftIcons.Value.Remove(button);
+
+            RightIcons.ForceSave();
+            LeftIcons.ForceSave();
         }
 
-        public static void DeleteSavedValues() {
-            foreach(var key in allKeys)
-                EditorPrefs.DeleteKey(key);
-            currentKeyIndex = 0;
-            ReloadPrefs();
+        private static void InitializePreferences() {
+            var type = typeof(Preferences);
+            var members = type.GetMembers(ReflectionHelper.FULL_BINDING);
+
+            foreach(var member in members)
+                try {
+                    if(member == null)
+                        continue;
+
+                    var prefItemType = (Type)null;
+                    var prop = member as PropertyInfo;
+                    var field = member as FieldInfo;
+
+                    switch(member.MemberType) {
+                        case MemberTypes.Field:
+                            if(typeof(IPrefItem).IsAssignableFrom(field.FieldType))
+                                prefItemType = field.FieldType;
+                            else
+                                continue;
+                            break;
+
+                        case MemberTypes.Property:
+                            if(typeof(IPrefItem).IsAssignableFrom(prop.PropertyType))
+                                prefItemType = prop.PropertyType;
+                            else
+                                continue;
+                            break;
+
+                        default:
+                            continue;
+                    }
+
+                    var keyAttribute = (AutoPrefItemAttribute)member.GetCustomAttributes(typeof(AutoPrefItemAttribute), true).FirstOrDefault();
+                    var labelAttribute = (AutoPrefItemLabelAttribute)member.GetCustomAttributes(typeof(AutoPrefItemLabelAttribute), true).FirstOrDefault();
+                    var defaultValueAttribute = (AutoPrefItemDefaultValueAttribute)member.GetCustomAttributes(typeof(AutoPrefItemDefaultValueAttribute), true).FirstOrDefault();
+
+                    var key = member.Name;
+                    var defaultValue = (object)null;
+                    var label = new GUIContent(key);
+
+                    //var savedValueType = prefItemType.GetGenericArguments()[0];
+
+                    if(keyAttribute == null)
+                        continue;
+
+                    if(!string.IsNullOrEmpty(keyAttribute.Key))
+                        key = keyAttribute.Key;
+
+                    if(labelAttribute != null)
+                        label = labelAttribute.Label;
+
+                    if(defaultValueAttribute != null)
+                        defaultValue = defaultValueAttribute.DefaultValue;
+                    //else if(savedValueType.IsValueType)
+                    //    defaultValue = Activator.CreateInstance(savedValueType);
+
+                    var prefItem = Activator.CreateInstance(prefItemType, key, defaultValue, label.text, label.tooltip);
+
+                    switch(member.MemberType) {
+                        case MemberTypes.Field:
+                            field.SetValue(null, prefItem);
+                            break;
+
+                        case MemberTypes.Property:
+                            prop.SetValue(null, prefItem, null);
+                            break;
+                    }
+
+                }
+                catch(Exception e) {
+                    Debug.LogException(e);
+                }
         }
-
-        [PreferenceItem("Hierarchy")]
-        private static void OnPreferencesGUI() {
-            scroll.Value = EditorGUILayout.BeginScrollView(scroll, false, false);
-
-            EditorGUILayout.Separator();
-
-            Enabled.DoGUI();
-            EditorGUILayout.Separator();
-
-            using(Enabled.GetEnabledScope()) {
-                using(new GUIIndent("Misc settings")) {
-                    Offset.DoGUI();
-                    Tree.DoGUI();
-                    Tooltips.DoGUI();
-                    using(RelevantTooltipsOnly.GetFadeScope(Tooltips))
-                        RelevantTooltipsOnly.DoGUI();
-                    EnhancedSelection.DoGUI();
-                    Trailing.DoGUI();
-                    ChangeAllSelected.DoGUI();
-                    NumericChildExpand.DoGUI();
-
-                    using(HideDefaultIcon.GetFadeScope(IsButtonEnabled(new Icons.GameObjectIcon())))
-                        HideDefaultIcon.DoGUI();
-
-                    GUI.changed = false;
-
-                    using(AllowSelectingLocked.GetFadeScope(IsButtonEnabled(new Icons.Lock())))
-                        AllowSelectingLocked.DoGUI();
-
-                    using(AllowSelectingLockedSceneView.GetFadeScope(IsButtonEnabled(new Icons.Lock()) && AllowSelectingLocked))
-                        AllowSelectingLockedSceneView.DoGUI();
-
-                    if(GUI.changed && EditorUtility.DisplayDialog("Relock all objects",
-                        "Would you like to relock all objects?\n" +
-                        "This is recommended when changing this setting and might take a few seconds on large scenes" +
-                        "\nIt's also recommended to do this on all scenes", "Yes", "No"))
-                        Utility.RelockAllObjects();
-                }
-
-                using(new GUIIndent("Row separators")) {
-                    LineSize.DoSlider(0, 6);
-
-                    using(LineColor.GetFadeScope(LineSize > 0))
-                        LineColor.DoGUI();
-
-                    OddRowColor.DoGUI();
-                    EvenRowColor.DoGUI();
-
-                    GUI.changed = false;
-                    var rect = EditorGUILayout.GetControlRect(false, rowColorsList.GetHeight());
-                    rect.xMin += EditorGUI.indentLevel * 16f;
-                    rowColorsList.DoList(rect);
-
-                    if(GUI.changed)
-                        PerLayerRowColors.Value = rowColorsList.list.Cast<LayerColor>().ToArray();
-                }
-
-                using(new GUIIndent(MiniLabelType)) {
-                    using(SmallerMiniLabel.GetFadeScope(MiniLabelType.Value != global::EnhancedHierarchy.MiniLabelType.None))
-                        SmallerMiniLabel.DoGUI();
-                    using(HideDefaultTag.GetFadeScope(MiniLabelTagEnabled))
-                        HideDefaultTag.DoGUI();
-                    using(HideDefaultLayer.GetFadeScope(MiniLabelLayerEnabled))
-                        HideDefaultLayer.DoGUI();
-                    using(CentralizeMiniLabelWhenPossible.GetFadeScope((HideDefaultLayer || HideDefaultTag) && (MiniLabelType.Value == global::EnhancedHierarchy.MiniLabelType.TagAndLayer || MiniLabelType.Value == global::EnhancedHierarchy.MiniLabelType.LayerAndTag)))
-                        CentralizeMiniLabelWhenPossible.DoGUI();
-                }
-
-                using(new GUIIndent(LeftSideButton))
-                using(LeftmostButton.GetFadeScope(LeftSideButton.Value != new Icons.RightNone()))
-                    LeftmostButton.DoGUI();
-
-                using(new GUIIndent("Children behaviour on change")) {
-                    using(LockAskMode.GetFadeScope(IsButtonEnabled(new Icons.Lock())))
-                        LockAskMode.DoGUI();
-                    using(LayerAskMode.GetFadeScope(IsButtonEnabled(new Icons.Layer()) || MiniLabelLayerEnabled))
-                        LayerAskMode.DoGUI();
-                    using(TagAskMode.GetFadeScope(IsButtonEnabled(new Icons.Tag()) || MiniLabelTagEnabled))
-                        TagAskMode.DoGUI();
-                    using(StaticAskMode.GetFadeScope(IsButtonEnabled(new Icons.Static())))
-                        StaticAskMode.DoGUI();
-                    using(IconAskMode.GetFadeScope(IsButtonEnabled(new Icons.GameObjectIcon())))
-                        IconAskMode.DoGUI();
-
-                    EditorGUILayout.HelpBox(string.Format("Tip: Pressing down {0} while clicking on a button will make it temporary have the opposite children change mode", Utility.CtrlKey), MessageType.Info);
-                }
-
-                leftIconsList.displayAdd = LeftIconsMenu.GetItemCount() > 0;
-                leftIconsList.DoLayoutList();
-                LeftIcons.Value = leftIconsList.list.Cast<LeftSideIcon>().ToArray();
-
-                rightIconsList.displayAdd = RightIconsMenu.GetItemCount() > 0;
-                rightIconsList.DoLayoutList();
-                RightIcons.Value = rightIconsList.list.Cast<RightSideIcon>().ToArray();
-
-                if(IsButtonEnabled(new Icons.Lock()))
-                    EditorGUILayout.HelpBox("Remember to always unlock your game objects when removing or disabling this extension, as you won't be able to unlock without it and may lose scene data", MessageType.Warning);
-
-                GUI.enabled = true;
-                EditorGUILayout.EndScrollView();
-                EditorGUILayout.BeginHorizontal();
-
-                if(GUILayout.Button(resetSettingsContent, GUILayout.Width(120f)))
-                    DeleteSavedValues();
-                if(GUILayout.Button(unlockAllContent, GUILayout.Width(120f)))
-                    Utility.UnlockAllObjects();
-
-                GUILayout.FlexibleSpace();
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.Separator();
-
-                Styles.ReloadTooltips();
-                EditorApplication.RepaintHierarchyWindow();
-            }
-
-        }
-
     }
 }

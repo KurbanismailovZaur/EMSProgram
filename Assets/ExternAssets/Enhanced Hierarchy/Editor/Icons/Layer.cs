@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class Layer : RightSideIcon {
 
         public override void DoGUI(Rect rect) {

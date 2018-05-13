@@ -1,49 +1,68 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class MonoBehaviourIcon : LeftSideIcon {
 
-        [NonSerialized]
-        private static StringBuilder goComponents = new StringBuilder(500);
-        [NonSerialized]
-        private static GUIContent tempTooltipContent = new GUIContent();
+        private static readonly Dictionary<Type, string> monoBehaviourNames = new Dictionary<Type, string>();
+        private static readonly StringBuilder goComponents = new StringBuilder(500);
+        private static readonly GUIContent tempTooltipContent = new GUIContent();
+        private static bool hasMonoBehaviour;
 
         public override string Name { get { return "MonoBehaviour Icon"; } }
-        public override float Width { get { return goComponents.Length > 0 ? 15f : 0f; } }
+        public override float Width { get { return hasMonoBehaviour ? 15f : 0f; } }
 
         public override void Init() {
+            hasMonoBehaviour = false;
+
             if(!EnhancedHierarchy.IsRepaintEvent || !EnhancedHierarchy.IsGameObject)
                 return;
 
-            goComponents.Length = 0;
-            var components = EnhancedHierarchy.MonoBehaviours;
+            var components = EnhancedHierarchy.Components;
 
-            for(var i = 0; i < components.Length; i++)
-                if(components[i])
-                    goComponents.AppendLine(components[i].GetType().ToString());
+            for(var i = 0; i < components.Count; i++)
+                if(components[i] is MonoBehaviour) {
+                    hasMonoBehaviour = true;
+                    break;
+                }
         }
 
         public override void DoGUI(Rect rect) {
-            if(!EnhancedHierarchy.IsRepaintEvent || !EnhancedHierarchy.IsGameObject)
+            if(!EnhancedHierarchy.IsRepaintEvent || !EnhancedHierarchy.IsGameObject || !hasMonoBehaviour)
                 return;
 
-            if(goComponents.Length > 0) {
-                if(rect.Contains(Event.current.mousePosition) && Preferences.Tooltips)
-                    tempTooltipContent.tooltip = goComponents.ToString().TrimEnd('\n', '\r');
-                else
-                    tempTooltipContent.tooltip = string.Empty;
+            if(Utility.ShouldCalculateTooltipAt(rect) && Preferences.Tooltips) {
+                goComponents.Length = 0;
+                var components = EnhancedHierarchy.Components;
 
-                rect.yMin += 1f;
-                rect.yMax -= 1f;
-                rect.xMin += 1f;
+                for(var i = 0; i < components.Count; i++)
+                    if(components[i] is MonoBehaviour)
+                        goComponents.AppendLine(GetComponentName(components[i]));
 
-                GUI.DrawTexture(rect, Styles.monobehaviourIconTexture, ScaleMode.ScaleToFit);
-                EditorGUI.LabelField(rect, tempTooltipContent);
+                tempTooltipContent.tooltip = goComponents.ToString().TrimEnd('\n', '\r');
             }
+            else
+                tempTooltipContent.tooltip = string.Empty;
+
+            rect.yMin += 1f;
+            rect.yMax -= 1f;
+            rect.xMin += 1f;
+
+            GUI.DrawTexture(rect, Styles.monobehaviourIconTexture, ScaleMode.ScaleToFit);
+            EditorGUI.LabelField(rect, tempTooltipContent);
+        }
+
+        private static string GetComponentName(Component component) {
+            string result;
+            var type = component.GetType();
+
+            if(monoBehaviourNames.TryGetValue(type, out result))
+                return result;
+            else
+                return monoBehaviourNames[type] = type.ToString();
         }
     }
 }

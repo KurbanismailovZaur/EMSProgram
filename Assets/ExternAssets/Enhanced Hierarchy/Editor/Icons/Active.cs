@@ -1,9 +1,7 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class Active : RightSideIcon {
 
         public override void DoGUI(Rect rect) {
@@ -17,7 +15,7 @@ namespace EnhancedHierarchy.Icons {
                 var objs = GetSelectedObjectsAndCurrent();
                 var active = !EnhancedHierarchy.CurrentGameObject.activeSelf;
 
-                Undo.RecordObjects(objs.ToArray(), EnhancedHierarchy.CurrentGameObject.activeSelf ? "Disabled GameObject" : "Enabled Gameobject");
+                Undo.RecordObjects(objs.ToArray(), EnhancedHierarchy.CurrentGameObject.activeSelf ? "Disabled GameObject" : "Enabled GameObject");
 
                 foreach(var obj in objs)
                     obj.SetActive(active);

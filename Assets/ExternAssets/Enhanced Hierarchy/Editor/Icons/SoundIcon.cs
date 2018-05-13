@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class SoundIcon : LeftSideIcon {
 
-        [NonSerialized]
         private static bool isPlaying;
-        [NonSerialized]
         private static AudioSource audioSource;
-        [NonSerialized]
         private static AnimBool currentAnim;
-        [NonSerialized]
-        private static Dictionary<AudioSource, AnimBool> sourcesAnim = new Dictionary<AudioSource, AnimBool>();
-        [NonSerialized]
+        private static readonly Dictionary<AudioSource, AnimBool> sourcesAnim = new Dictionary<AudioSource, AnimBool>();
         private static Texture icon;
 
         public override string Name { get { return "Audio Source Icon"; } }
-        public override float Width { get { return currentAnim.faded * (base.Width - 2f); } }
+        public override float Width {
+            get {
+                if(audioSource == null || currentAnim == null)
+                    return 0f;
+
+                return currentAnim.faded * (base.Width - 2f);
+            }
+        }
 
         static SoundIcon() {
             EditorApplication.update += () => {
@@ -37,11 +37,20 @@ namespace EnhancedHierarchy.Icons {
             if(!EnhancedHierarchy.IsRepaintEvent || !EnhancedHierarchy.IsGameObject)
                 return;
 
-            audioSource = EnhancedHierarchy.CurrentGameObject.GetComponent<AudioSource>();
-            isPlaying = audioSource && audioSource.isPlaying;
+            var comps = EnhancedHierarchy.Components;
+            audioSource = null;
+
+            for(var i = 0; i < comps.Count; i++)
+                if(comps[i] is AudioSource) {
+                    audioSource = comps[i] as AudioSource;
+                    break;
+                }
+
+            if(!audioSource)
+                return;
 
             if(!sourcesAnim.TryGetValue(audioSource, out currentAnim)) {
-                sourcesAnim[audioSource] = currentAnim = new AnimBool(isPlaying);
+                sourcesAnim[audioSource] = currentAnim = new AnimBool(audioSource.isPlaying);
                 currentAnim.valueChanged.AddListener(EditorApplication.RepaintHierarchyWindow);
             }
         }

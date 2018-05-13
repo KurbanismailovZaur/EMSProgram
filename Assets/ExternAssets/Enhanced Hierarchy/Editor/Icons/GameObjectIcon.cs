@@ -1,12 +1,9 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace EnhancedHierarchy.Icons {
-    [Serializable]
     internal sealed class GameObjectIcon : RightSideIcon {
 
-        [NonSerialized]
         private GUIContent lastContent;
 
         public override string Name { get { return "Icon"; } }
@@ -17,12 +14,16 @@ namespace EnhancedHierarchy.Icons {
             if(lastContent == null)
                 lastContent = new GUIContent();
 
-            lastContent.image = EditorGUIUtility.ObjectContent(EnhancedHierarchy.CurrentGameObject, typeof(GameObject)).image;
-            lastContent.tooltip = (Preferences.Tooltips && !Preferences.RelevantTooltipsOnly) ? "Change Icon" : string.Empty;
+            lastContent.text = string.Empty;
+            lastContent.image = AssetPreview.GetMiniThumbnail(EnhancedHierarchy.CurrentGameObject);
+            lastContent.tooltip = Preferences.Tooltips && !Preferences.RelevantTooltipsOnly ? "Change Icon" : string.Empty;
 
-            if(Preferences.HideDefaultIcon)
-                if(lastContent.image && (lastContent.image.name == "GameObject Icon" || lastContent.image.name == "PrefabNormal Icon" || lastContent.image.name == "PrefabModel Icon"))
+            if(Preferences.HideDefaultIcon && lastContent.image) {
+                var imageName = lastContent.image.name;
+
+                if(imageName == "GameObject Icon" || imageName == "PrefabNormal Icon" || imageName == "PrefabModel Icon")
                     lastContent.image = null;
+            }
         }
 
         public override void DoGUI(Rect rect) {

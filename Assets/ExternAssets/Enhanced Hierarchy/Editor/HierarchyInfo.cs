@@ -11,11 +11,10 @@ namespace EnhancedHierarchy {
         private const string UNTAGGED = "Untagged";
         private const float ALPHA_THRESHOLD = 0.01f;
 
-        private static GUIContent trailingContent = new GUIContent("...");
-        private static GUIContent tempGameObjectNameContent = new GUIContent();
-        private static GUIContent tempChildExpandContent = new GUIContent();
-        private static GUIContent tempTooltipContent = new GUIContent();
+        private static readonly GUIContent trailingContent = new GUIContent("...");
 
+        public static string GameObjectName { get; private set; }
+        public static string GameObjectTag { get; private set; }
         public static bool IsFirstVisible { get; private set; }
         public static bool IsRepaintEvent { get; private set; }
         public static bool IsGameObject { get; private set; }
@@ -25,6 +24,7 @@ namespace EnhancedHierarchy {
         public static float RightIconsWidth { get; private set; }
         public static float LabelSize { get; private set; }
         public static Rect RawRect { get; private set; }
+        public static Rect FullSizeRect { get; private set; }
         public static Rect FinalRect { get; private set; }
         public static Rect SelectionRect { get; private set; }
         public static Color CurrentColor { get; private set; }
@@ -32,7 +32,7 @@ namespace EnhancedHierarchy {
         public static GUIStyle CurrentStyle { get; private set; }
         public static GameObject CurrentGameObject { get; private set; }
         public static List<Object> DragSelection { get; private set; }
-        public static MonoBehaviour[] MonoBehaviours { get; private set; }
+        public static readonly List<Component> Components = new List<Component>(100);
         public static EventType LastEventType { get; private set; }
 
         public static void SetItemInformation(int id, Rect rect) {
@@ -50,18 +50,22 @@ namespace EnhancedHierarchy {
                     LastEventType = Event.current.type;
 
                     if(IsGameObject) {
-                        LabelSize = EditorStyles.label.CalcSize(new GUIContent(CurrentGameObject.name)).x;
-                        HasTag = CurrentGameObject.tag != UNTAGGED || !Preferences.HideDefaultTag;
+                        GameObjectName = CurrentGameObject.name;
+                        GameObjectTag = CurrentGameObject.tag;
+                        LabelSize = EditorStyles.label.CalcSize(Utility.GetTempGUIContent(GameObjectName)).x;
+                        HasTag = !CurrentGameObject.CompareTag(UNTAGGED) || !Preferences.HideDefaultTag;
                         HasLayer = CurrentGameObject.layer != UNLAYERED || !Preferences.HideDefaultLayer;
                         CurrentStyle = Utility.GetHierarchyLabelStyle(CurrentGameObject);
                         CurrentColor = CurrentStyle.normal.textColor;
-                        MonoBehaviours = CurrentGameObject.GetComponents<MonoBehaviour>();
+                        CurrentGameObject.GetComponents(Components);
                     }
 
                     if(IsFirstVisible)
                         FinalRect = RawRect;
 
                     RawRect = rect;
+                    rect.xMin = 0f;
+                    FullSizeRect = rect;
                 }
                 catch(Exception e) {
                     Utility.LogException(e);
