@@ -22,29 +22,41 @@ namespace EMSP.Data.Serialization
         #endregion
 
         #region Structures
-        public struct SerializibleProjectSettings
+        public struct SerializableProjectSettings
         {
-            public int CountPointsPerCubeEdge;
-            public int TimeStepsCount;
-            public Range TimeRange;
+            public readonly int RangeLength;
+
+            public readonly Range TimeRange;
+
+            public readonly int TimeStepsCount;
+
+            public SerializableProjectSettings(int rangeLength, Range timeRange, int timeStepsCount)
+            {
+                RangeLength = rangeLength;
+                TimeRange = timeRange;
+                TimeStepsCount = timeStepsCount;
+            }
         }
         #endregion
 
         #region Classes
-        public class SerializibleProjectBatch
+        public class SerializableProjectBatch
         {
-            public SerializibleProjectBatch(SerializibleProjectSettings settings, GameObject model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
+            public readonly SerializableProjectSettings ProjectSettings;
+
+            public readonly GameObject Model;
+
+            public readonly Wiring Wiring;
+
+            public readonly MagneticTensionInSpace.PointsInfo PointsInfo;
+
+            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
             {
                 ProjectSettings = settings;
                 Model = model;
                 Wiring = wiring;
                 PointsInfo = pointsInfo;
             }
-
-            public readonly SerializibleProjectSettings ProjectSettings;
-            public readonly GameObject Model;
-            public readonly Wiring Wiring;
-            public readonly MagneticTensionInSpace.PointsInfo PointsInfo;
         }
         #endregion
 
@@ -69,7 +81,7 @@ namespace EMSP.Data.Serialization
         #region Methods
         public abstract byte[] Serialize();
 
-        public abstract SerializibleProjectBatch Deserialize(Stream stream);
+        public abstract SerializableProjectBatch Deserialize(Stream stream);
 
         #region Binary operation methods
         protected void WritePreamble(BinaryWriter writer)
@@ -502,7 +514,7 @@ namespace EMSP.Data.Serialization
             string preamble = Encoding.ASCII.GetString(reader.ReadBytes(_preamble.Length));
             if (preamble != _preamble)
             {
-                throw new InvalidDataException("File is not present MRB structure");
+                throw new InvalidDataException("File is not present EMSP structure");
             }
         }
 
@@ -732,6 +744,16 @@ namespace EMSP.Data.Serialization
             }
 
             return gameObject;
+        }
+
+        protected Range ReadRange(BinaryReader reader)
+        {
+            return new Range(reader.ReadSingle(), reader.ReadSingle());
+        }
+
+        protected SerializableProjectSettings ReadProjectSettings(BinaryReader reader)
+        {
+            return new SerializableProjectSettings(reader.ReadInt32(), ReadRange(reader), reader.ReadInt32());
         }
         #endregion
         #endregion

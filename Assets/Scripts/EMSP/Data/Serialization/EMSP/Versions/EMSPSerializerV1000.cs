@@ -93,7 +93,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             return emspData;
         }
 
-        public SerializibleProjectBatch DeserializeTest()
+        public SerializableProjectBatch DeserializeTest()
         {
             var result = Deserialize(File.OpenRead(_temporaryFileName));
             File.Delete(_temporaryFileName);
@@ -101,21 +101,21 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             return result;
         }
 
-        public SerializibleProjectBatch Deserialize(string path)
+        public SerializableProjectBatch Deserialize(string path)
         {
             return Deserialize(File.OpenRead(path));
         }
 
-        public override SerializibleProjectBatch Deserialize(Stream stream)
+        public override SerializableProjectBatch Deserialize(Stream stream)
         {
-            SerializibleProjectSettings settings;
+            SerializableProjectSettings settings;
             GameObject model = null;
             Wiring wiring = null;
             MagneticTensionInSpace.PointsInfo pointsInfo = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
-                // <-- 0
+                #region Preamble, version and project settings
                 ReadPreambleAndCheck(reader);
 
                 Version version = ReadVersion(reader);
@@ -123,18 +123,11 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 {
                     throw new EMSPVersionCompatibilityException(string.Format("File version is {0}, but you try to use serializer with {1} version", version, _version));
                 }
-                // --> 0
 
-                // <-- 1
-                settings = new SerializibleProjectSettings()
-                {
-                    CountPointsPerCubeEdge = reader.ReadInt32(),
-                    TimeRange = new Range(reader.ReadSingle(), reader.ReadSingle()),
-                    TimeStepsCount = reader.ReadInt32()
-                };
-                // --> 1
+                settings = ReadProjectSettings(reader);
+                #endregion
 
-                // <-- 2
+                #region Model
                 bool hasModel = reader.ReadBoolean();
                 if (hasModel)
                 {
@@ -144,9 +137,9 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     List<Material> materials = ReadMaterials(reader, shaders, textures);
                     model = ReadHierarchy(reader, meshes, materials);
                 }
-                // --> 2
+                #endregion
 
-                // <-- 3
+                #region Wiring
                 bool hasWiring = reader.ReadBoolean();
 
                 if (hasWiring)
@@ -165,16 +158,16 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                         }
                     }
                 }
-                // --> 3
+                #endregion
 
-                // <-- 4
+                #region Magnetic tension in space
                 bool hasMagneticTensionInSpace = reader.ReadBoolean();
 
                 if (hasMagneticTensionInSpace)
                 {
                     float pointSize = reader.ReadSingle();
 
-                    int pointsCount = (int)Mathf.Pow(settings.CountPointsPerCubeEdge, 3);
+                    int pointsCount = (int)Mathf.Pow(settings.RangeLength, 3);
                     List<MagneticTensionInSpace.PointInfo> ptsInfo = new List<MagneticTensionInSpace.PointInfo>();
 
                     for(int i = 0; i < pointsCount; ++i)
@@ -193,11 +186,11 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                         ptsInfo.Add(new MagneticTensionInSpace.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
                     }
 
-                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointsCount, ptsInfo.ToArray());
+                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointsCount, ptsInfo);
                 }
-                // --> 4
+                #endregion
 
-                return new SerializibleProjectBatch(settings, model, wiring, pointsInfo);
+                return new SerializableProjectBatch(settings, model, wiring, pointsInfo);
             }
         }
 

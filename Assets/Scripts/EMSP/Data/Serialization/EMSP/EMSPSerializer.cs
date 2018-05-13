@@ -73,12 +73,12 @@ namespace EMSP.Data.Serialization.EMSP
         #endregion
 
         #region Deserialize
-        public EMSPSerializerVersion.SerializibleProjectBatch Deserialize(Stream stream)
+        public EMSPSerializerVersion.SerializableProjectBatch Deserialize(Stream stream)
         {
             return _serializer.Deserialize(stream);
         }
 
-        public EMSPSerializerVersion.SerializibleProjectBatch Deserialize(string path)
+        public EMSPSerializerVersion.SerializableProjectBatch Deserialize(string path)
         {
             return Deserialize(new FileStream(path, FileMode.Open));
         }

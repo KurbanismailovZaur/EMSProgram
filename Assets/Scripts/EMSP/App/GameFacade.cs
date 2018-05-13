@@ -16,6 +16,7 @@ using EMSP.Data;
 using EMSP.Mathematic.MagneticTension;
 using EMSP.Timing;
 using EMSP.UI.Dialogs.CalculationSettings;
+using EMSP.Data.Serialization.EMSP.Versions;
 
 namespace EMSP.App
 {
@@ -219,26 +220,26 @@ namespace EMSP.App
         [ContextMenu("Save")]
         private void TestSaveProject()
         {
-            var serializer = new EMSP.Data.Serialization.EMSP.Versions.EMSPSerializerV1000();
+            var serializer = new EMSPSerializerV1000();
             serializer.Serialize();
         }
 
         [ContextMenu("Load")]
         private void TestLoadProject()
         {
-            var serializer = new EMSP.Data.Serialization.EMSP.Versions.EMSPSerializerV1000();
+            var serializer = new EMSPSerializerV1000();
             var projectBatch = serializer.DeserializeTest();
 
             TimeManager.Instance.TimeRange = projectBatch.ProjectSettings.TimeRange;
             TimeManager.Instance.StepsCount = projectBatch.ProjectSettings.TimeStepsCount;
-            MathematicManager.Instance.RangeLength = projectBatch.ProjectSettings.CountPointsPerCubeEdge;
+            MathematicManager.Instance.RangeLength = projectBatch.ProjectSettings.RangeLength;
 
             if(projectBatch.Model != null)
                 ModelManager.Instance.CreateNewModel(projectBatch.Model);
 
             WiringManager.Instance.CreateNewWiring(projectBatch.Wiring);
 
-            MathematicManager.Instance.MagneticTensionInSpace.Restore(projectBatch);
+            MathematicManager.Instance.MagneticTensionInSpace.Restore(projectBatch.PointsInfo);
         }
         #endregion
 
