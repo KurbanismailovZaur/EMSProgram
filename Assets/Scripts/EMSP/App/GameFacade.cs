@@ -17,6 +17,7 @@ using EMSP.Mathematic.MagneticTension;
 using EMSP.Timing;
 using EMSP.UI.Dialogs.CalculationSettings;
 using EMSP.Data.Serialization.EMSP.Versions;
+using EMSP.Data.Serialization.EMSP;
 
 namespace EMSP.App
 {
@@ -98,7 +99,15 @@ namespace EMSP.App
 
         private void SaveProject()
         {
-            print("Save Project");
+            string path = StandaloneFileBrowser.SaveFilePanel("Save Project", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            EMSPSerializer serializer = EMSPSerializer.LatestVersion;
+            serializer.Serialize(path);
         }
 
         private void CloseProject()

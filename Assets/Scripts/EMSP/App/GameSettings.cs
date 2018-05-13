@@ -30,6 +30,8 @@ namespace EMSP.App
 
         private ExtensionFilter[] _wiringExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("Excel Worksheets 2003", "xls") };
 
+        private ExtensionFilter[] _projectExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("EMSP", "emsp") };
+
         private string _projectDefaultName = "Untitled";
 
         private Vector3 _orbitControllerDefaultTargetVector = Vector3.up;
@@ -53,6 +55,8 @@ namespace EMSP.App
         public ExtensionFilter[] ModelExtensionFilter { get { return _modelExtensionFilter; } }
 
         public ExtensionFilter[] WiringExtensionFilter { get { return _wiringExtensionFilter; } }
+
+        public ExtensionFilter[] ProjectExtensionFilter { get { return _projectExtensionFilter; } }
 
         public string ProjectDefaultName { get { return _projectDefaultName; } }
 

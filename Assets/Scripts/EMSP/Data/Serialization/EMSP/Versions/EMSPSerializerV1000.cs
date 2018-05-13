@@ -88,7 +88,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             }
 
             byte[] emspData = File.ReadAllBytes(_temporaryFileName);
-            //File.Delete(_temporaryFileName); // commented for test
+            File.Delete(_temporaryFileName);
 
             return emspData;
         }

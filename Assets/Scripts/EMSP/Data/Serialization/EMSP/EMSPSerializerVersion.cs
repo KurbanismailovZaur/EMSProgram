@@ -131,15 +131,6 @@ namespace EMSP.Data.Serialization
                             textures.Add((Texture2D)material.mainTexture);
                         }
                     }
-
-                    Texture detailTex = material.GetTexture("_DetailTex");
-                    if (detailTex)
-                    {
-                        if (!textures.Contains((Texture2D)detailTex))
-                        {
-                            textures.Add((Texture2D)detailTex);
-                        }
-                    }
                 }
             }
 
@@ -366,20 +357,6 @@ namespace EMSP.Data.Serialization
                     writer.Write(textures.IndexOf((Texture2D)material.mainTexture));
                     WriteVector2(writer, material.mainTextureScale);
                     WriteVector2(writer, material.mainTextureOffset);
-                }
-                else
-                {
-                    writer.Write(false);
-                }
-
-                Texture detailTexture = material.GetTexture("_DetailTex");
-                if (detailTexture)
-                {
-                    writer.Write(true);
-
-                    writer.Write(textures.IndexOf((Texture2D)detailTexture));
-                    WriteVector2(writer, material.GetTextureScale("_DetailTex"));
-                    WriteVector2(writer, material.GetTextureOffset("_DetailTex"));
                 }
                 else
                 {
@@ -689,14 +666,6 @@ namespace EMSP.Data.Serialization
                     material.mainTexture = textures[reader.ReadInt32()];
                     material.mainTextureScale = ReadVector2(reader);
                     material.mainTextureOffset = ReadVector2(reader);
-                }
-
-                // Detail texture handle
-                if (reader.ReadBoolean())
-                {
-                    material.SetTexture("_DetailTex", textures[reader.ReadInt32()]);
-                    material.SetTextureScale("_DetailTex", ReadVector2(reader));
-                    material.SetTextureOffset("_DetailTex", ReadVector2(reader));
                 }
 
                 materials.Add(material);

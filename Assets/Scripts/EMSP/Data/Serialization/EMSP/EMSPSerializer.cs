@@ -61,14 +61,14 @@ namespace EMSP.Data.Serialization.EMSP
 
         public void Serialize(string path)
         {
-            byte[] mrbData = Serialize();
+            byte[] data = Serialize();
 
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
 
-            File.WriteAllBytes(path, mrbData);
+            File.WriteAllBytes(path, data);
         }
         #endregion
 
@@ -80,7 +80,7 @@ namespace EMSP.Data.Serialization.EMSP
 
         public EMSPSerializerVersion.SerializableProjectBatch Deserialize(string path)
         {
-            return Deserialize(new FileStream(path, FileMode.Open));
+            return Deserialize(File.OpenRead(path));
         }
         #endregion
         #endregion

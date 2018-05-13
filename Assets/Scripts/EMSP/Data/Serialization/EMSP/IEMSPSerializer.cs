@@ -8,10 +8,10 @@ namespace EMSP.Data.Serialization.EMSP
 {
     public interface IEMSPSerializer
     {
+        Version Version { get; }
+
         byte[] Serialize();
 
         EMSPSerializerVersion.SerializableProjectBatch Deserialize(Stream stream);
-
-        Version Version { get; }
     }
 }
