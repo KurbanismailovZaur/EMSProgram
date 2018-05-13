@@ -89,6 +89,7 @@ namespace EMSP.App
                 return;
             }
 
+            CloseProject();
             CreateNewProject();
         }
 
@@ -106,6 +107,11 @@ namespace EMSP.App
                 return;
             }
 
+            SaveProject(path);
+        }
+
+        private void SaveProject(string path)
+        {
             EMSPSerializer serializer = EMSPSerializer.LatestVersion;
             serializer.Serialize(path);
         }
@@ -203,7 +209,6 @@ namespace EMSP.App
 
         private void CreateNewProject()
         {
-            ProjectManager.Instance.CloseProject();
             ProjectManager.Instance.CreateNewProject();
         }
 
@@ -345,10 +350,12 @@ namespace EMSP.App
             switch (action)
             {
                 case SaveProjectDialog.Action.Save:
-                    SaveProject();
+                    //SaveProject(ProjectManager.Instance.Project.Path);
+                    CloseProject();
                     CreateNewProject();
                     break;
                 case SaveProjectDialog.Action.DontSave:
+                    CloseProject();
                     CreateNewProject();
                     break;
                 case SaveProjectDialog.Action.Cancel:
