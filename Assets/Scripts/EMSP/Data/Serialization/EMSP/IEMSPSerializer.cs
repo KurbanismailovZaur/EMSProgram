@@ -10,7 +10,7 @@ namespace EMSP.Data.Serialization.EMSP
     {
         Version Version { get; }
 
-        byte[] Serialize();
+        byte[] Serialize(EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch);
 
         EMSPSerializerVersion.SerializableProjectBatch Deserialize(Stream stream);
     }

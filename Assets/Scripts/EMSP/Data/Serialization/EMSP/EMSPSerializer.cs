@@ -54,14 +54,14 @@ namespace EMSP.Data.Serialization.EMSP
         }
 
         #region Serialize
-        public byte[] Serialize()
+        public byte[] Serialize(EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch)
         {
-            return _serializer.Serialize();
+            return _serializer.Serialize(serializableProjectBatch);
         }
 
-        public void Serialize(string path)
+        public void Serialize(string path, EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch)
         {
-            byte[] data = Serialize();
+            byte[] data = Serialize(serializableProjectBatch);
 
             if (File.Exists(path))
             {

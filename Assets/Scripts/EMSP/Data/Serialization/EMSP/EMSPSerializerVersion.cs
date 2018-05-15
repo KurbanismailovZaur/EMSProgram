@@ -44,16 +44,18 @@ namespace EMSP.Data.Serialization
         {
             public readonly SerializableProjectSettings ProjectSettings;
 
-            public readonly GameObject Model;
+            public readonly GameObject ModelGameObject;
 
             public readonly Wiring Wiring;
 
             public readonly MagneticTensionInSpace.PointsInfo PointsInfo;
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
+            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, pointsInfo) { }
+
+            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
             {
                 ProjectSettings = settings;
-                Model = model;
+                ModelGameObject = modelGameObject;
                 Wiring = wiring;
                 PointsInfo = pointsInfo;
             }
@@ -65,7 +67,7 @@ namespace EMSP.Data.Serialization
         #endregion
 
         #region Fields
-        protected readonly string _temporaryFileName = string.Format("{0}/serializedata.emsp", UnityApplication.temporaryCachePath);
+        protected string TemporaryFileName { get { return string.Format("{0}/serializedata.emsp", UnityApplication.temporaryCachePath); } }
 
         // 64 bytes preamble for file
         private readonly string _preamble = @"H6FIPXTYXqDxCT92Y@$gsOfQ$301nGQT0BRtcqO80e6x3dnNh9TFiS3lsxCOfp$x";
@@ -79,7 +81,7 @@ namespace EMSP.Data.Serialization
         #endregion
 
         #region Methods
-        public abstract byte[] Serialize();
+        public abstract byte[] Serialize(SerializableProjectBatch serializableProjectBatch);
 
         public abstract SerializableProjectBatch Deserialize(Stream stream);
 
@@ -405,28 +407,34 @@ namespace EMSP.Data.Serialization
             }
         }
 
-        protected void WriteModel(BinaryWriter writer, GameObject target)
+        protected void WriteModel(BinaryWriter writer, Model model)
+        {
+            GameObject modelGameObject = model.gameObject;
+            WriteModel(writer, modelGameObject);
+        }
+
+        protected void WriteModel(BinaryWriter writer, GameObject modelGameObject)
         {
             List<Material> materials = new List<Material>();
             List<Texture2D> textures = new List<Texture2D>();
             List<Shader> shaders = new List<Shader>();
             List<Mesh> meshes = new List<Mesh>();
 
-            ExcludeData(target, materials, textures, shaders, meshes);
+            ExcludeData(modelGameObject, materials, textures, shaders, meshes);
 
             WriteMeshes(writer, meshes);
             WriteTextures(writer, textures);
             WriteShaders(writer, shaders);
             WriteMaterials(writer, materials, shaders, textures);
-            WriteHierarchy(writer, target, meshes, materials);
+            WriteHierarchy(writer, modelGameObject, meshes, materials);
         }
 
-        protected void WriteSettings(BinaryWriter writer, int rangeLength, Range timeRange, int timeStepsCount)
+        protected void WriteSettings(BinaryWriter writer, SerializableProjectSettings serializableProjectSettings)
         {
-            writer.Write(rangeLength);
-            writer.Write(timeRange.Start);
-            writer.Write(timeRange.End);
-            writer.Write(timeStepsCount);
+            writer.Write(serializableProjectSettings.RangeLength);
+            writer.Write(serializableProjectSettings.TimeRange.Start);
+            writer.Write(serializableProjectSettings.TimeRange.End);
+            writer.Write(serializableProjectSettings.TimeStepsCount);
         }
 
         protected void WriteWiring(BinaryWriter writer, Wiring wiring)
@@ -448,19 +456,19 @@ namespace EMSP.Data.Serialization
             }
         }
 
-        protected void WriteMagneticTensionInSpace(BinaryWriter writer, MagneticTensionInSpace magneticTensionInSpace)
+        protected void WriteMagneticTensionInSpace(BinaryWriter writer, MagneticTensionInSpace.PointsInfo pointsInfo)
         {
-            writer.Write(magneticTensionInSpace.PointsSize);
+            writer.Write(pointsInfo.PointsSize);
 
-            foreach (MagneticTensionPoint point in magneticTensionInSpace.MTPoints)
+            foreach (MagneticTensionInSpace.PointInfo pointInfo in pointsInfo.Infos)
             {
-                WriteVector3(writer, point.transform.position);
+                WriteVector3(writer, pointInfo.Position);
 
-                writer.Write(point.PrecomputedMagneticTension);
+                writer.Write(pointInfo.PrecomputedMagneticTension);
 
-                for (int i = 0; i < point.CalculatedMagneticTensionsInTime.Length; ++i)
+                for (int i = 0; i < pointInfo.CalculatedMagneticTensionsInTime.Length; ++i)
                 {
-                    writer.Write(point.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
+                    writer.Write(pointInfo.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
                 }
             }
         }

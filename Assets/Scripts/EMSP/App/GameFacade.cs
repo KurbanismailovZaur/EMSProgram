@@ -18,6 +18,7 @@ using EMSP.Timing;
 using EMSP.UI.Dialogs.CalculationSettings;
 using EMSP.Data.Serialization.EMSP.Versions;
 using EMSP.Data.Serialization.EMSP;
+using EMSP.Data.Serialization;
 
 namespace EMSP.App
 {
@@ -66,6 +67,8 @@ namespace EMSP.App
 
         [SerializeField]
         private GeneralPanel _generalPanel;
+
+        EMSPSerializer serializer = EMSPSerializer.LatestVersion;
         #endregion
 
         #region Events
@@ -95,12 +98,32 @@ namespace EMSP.App
 
         private void OpenProject()
         {
-            print("Open Project");
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Открыть Проект", Application.dataPath, GameSettings.Instance.ProjectExtensionFilter, false);
+
+            if (results.Length == 0)
+            {
+                return;
+            }
+
+            CreateNewProject();
+
+            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = serializer.Deserialize(results[0]);
+
+            MathematicManager.Instance.RangeLength = serializableProjectBatch.ProjectSettings.RangeLength;
+            TimeManager.Instance.SetTimeParameters(serializableProjectBatch.ProjectSettings.TimeRange, serializableProjectBatch.ProjectSettings.TimeStepsCount);
+
+            ModelManager.Instance.CreateNewModel(serializableProjectBatch.ModelGameObject);
+            WiringManager.Instance.CreateNewWiring(serializableProjectBatch.Wiring);
+
+            MathematicManager.Instance.MagneticTensionInSpace.Restore(serializableProjectBatch.PointsInfo);
+            MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
+
+            UpdateTimeAndTensionSlider();
         }
 
         private void SaveProject()
         {
-            string path = StandaloneFileBrowser.SaveFilePanel("Save Project", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
+            string path = StandaloneFileBrowser.SaveFilePanel("Сохранить проект", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -112,8 +135,10 @@ namespace EMSP.App
 
         private void SaveProject(string path)
         {
-            EMSPSerializer serializer = EMSPSerializer.LatestVersion;
-            serializer.Serialize(path);
+            EMSPSerializerVersion.SerializableProjectSettings serializableSettings = new EMSPSerializerVersion.SerializableProjectSettings(MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
+            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, ModelManager.Instance.Model, WiringManager.Instance.Wiring, MathematicManager.Instance.MagneticTensionInSpace.GetPointsInfo());
+
+            serializer.Serialize(path, serializableProjectBatch);
         }
 
         private void CloseProject()
@@ -128,7 +153,7 @@ namespace EMSP.App
 
         private void ImportModel()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Model", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, false);
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Открыть Модель", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, false);
 
             if (results.Length == 0)
             {
@@ -140,7 +165,7 @@ namespace EMSP.App
 
         private void ImportWiring()
         {
-            string[] results = StandaloneFileBrowser.OpenFilePanel("Open Wiring", Application.dataPath, GameSettings.Instance.WiringExtensionFilter, false);
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Открыть Проводку", Application.dataPath, GameSettings.Instance.WiringExtensionFilter, false);
 
             if (results.Length == 0)
             {
@@ -152,7 +177,7 @@ namespace EMSP.App
 
         private void ExportMagneticTensionInSpace()
         {
-            string path = StandaloneFileBrowser.SaveFilePanel("Save Magnetic Tension in Space", Application.dataPath, GameSettings.Instance.MagneticTensionInSpaceDefaultName, GameSettings.Instance.WiringExtensionFilter);
+            string path = StandaloneFileBrowser.SaveFilePanel("Экспорт Магнитного Напряжения в Пространстве", Application.dataPath, GameSettings.Instance.MagneticTensionInSpaceDefaultName, GameSettings.Instance.WiringExtensionFilter);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -199,6 +224,26 @@ namespace EMSP.App
         {
             MathematicManager.Instance.Calculate(CalculationType.MagneticTensionInSpace);
             MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
+
+            UpdateTimeAndTensionSlider();
+        }
+
+        private void UpdateTimeAndTensionSlider()
+        {
+            TimeManager.Instance.TimeIndex = 0;
+
+            UpdateTensionSlider();
+        }
+
+        private void UpdateTensionSlider(bool affectOnCurrent = true)
+        {
+            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTension);
+
+            if (affectOnCurrent)
+            {
+                _tensionFilterSlider.SetMin(0f);
+                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
+            }
         }
 
         private void OpenParameters()
@@ -229,31 +274,6 @@ namespace EMSP.App
         {
             Grid.Instance.Visibility = false;
             _viewBlocker.BlockView();
-        }
-
-        [ContextMenu("Save")]
-        private void TestSaveProject()
-        {
-            var serializer = new EMSPSerializerV1000();
-            serializer.Serialize();
-        }
-
-        [ContextMenu("Load")]
-        private void TestLoadProject()
-        {
-            var serializer = new EMSPSerializerV1000();
-            var projectBatch = serializer.DeserializeTest();
-
-            TimeManager.Instance.TimeRange = projectBatch.ProjectSettings.TimeRange;
-            TimeManager.Instance.StepsCount = projectBatch.ProjectSettings.TimeStepsCount;
-            MathematicManager.Instance.RangeLength = projectBatch.ProjectSettings.RangeLength;
-
-            if(projectBatch.Model != null)
-                ModelManager.Instance.CreateNewModel(projectBatch.Model);
-
-            WiringManager.Instance.CreateNewWiring(projectBatch.Wiring);
-
-            MathematicManager.Instance.MagneticTensionInSpace.Restore(projectBatch.PointsInfo);
         }
         #endregion
 
@@ -328,12 +348,6 @@ namespace EMSP.App
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
                     CalculateMagneticTensionsInSpace();
-
-                    TimeManager.Instance.TimeIndex = 0;
-
-                    _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
-                    _tensionFilterSlider.SetMin(0f);
-                    _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
                     break;
                 case CalculationsContextMethods.ActionType.Parameters:
                     OpenParameters();

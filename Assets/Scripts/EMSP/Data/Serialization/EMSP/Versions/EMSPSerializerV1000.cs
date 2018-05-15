@@ -49,73 +49,60 @@ namespace EMSP.Data.Serialization.EMSP.Versions
         #endregion
 
         #region Methods
-        public override byte[] Serialize()
+        public override byte[] Serialize(SerializableProjectBatch serializableProjectBatch)
         {
-            using (BinaryWriter writer = new BinaryWriter(new FileStream(_temporaryFileName, FileMode.Create)))
+            using (BinaryWriter writer = new BinaryWriter(new FileStream(TemporaryFileName, FileMode.Create)))
             {
                 WritePreambleAndVersion(writer, _version);
-                WriteSettings(writer, MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
+                WriteSettings(writer, serializableProjectBatch.ProjectSettings);
 
                 #region Write model
-                bool hasModel = (ModelManager.Instance.Model == null) ? false : true;
+                bool hasModel = serializableProjectBatch.ModelGameObject != null;
                 writer.Write(hasModel);
 
                 if (hasModel)
                 {
-                    WriteModel(writer, ModelManager.Instance.Model.gameObject);
+                    WriteModel(writer, serializableProjectBatch.ModelGameObject);
                 }
                 #endregion
 
                 #region Write wiring
-                bool hasWiring = (WiringManager.Instance.Wiring == null) ? false : true;
+                bool hasWiring = serializableProjectBatch.Wiring != null;
                 writer.Write(hasWiring);
 
                 if (hasWiring)
                 {
-                    WriteWiring(writer, WiringManager.Instance.Wiring);
+                    WriteWiring(writer, serializableProjectBatch.Wiring);
                 }
                 #endregion
 
                 #region Write magnetic tension in space
-                bool hasMagneticTensionInSpace = MathematicManager.Instance.MagneticTensionInSpace.IsCalculated;
+                bool hasMagneticTensionInSpace = serializableProjectBatch.PointsInfo != null;
                 writer.Write(hasMagneticTensionInSpace);
 
                 if (hasMagneticTensionInSpace)
                 {
-                    WriteMagneticTensionInSpace(writer, MathematicManager.Instance.MagneticTensionInSpace);
+                    WriteMagneticTensionInSpace(writer, serializableProjectBatch.PointsInfo);
                 }
                 #endregion
             }
 
-            byte[] emspData = File.ReadAllBytes(_temporaryFileName);
-            File.Delete(_temporaryFileName);
+            byte[] emspData = File.ReadAllBytes(TemporaryFileName);
+            File.Delete(TemporaryFileName);
 
             return emspData;
-        }
-
-        public SerializableProjectBatch DeserializeTest()
-        {
-            var result = Deserialize(File.OpenRead(_temporaryFileName));
-            File.Delete(_temporaryFileName);
-
-            return result;
-        }
-
-        public SerializableProjectBatch Deserialize(string path)
-        {
-            return Deserialize(File.OpenRead(path));
         }
 
         public override SerializableProjectBatch Deserialize(Stream stream)
         {
             SerializableProjectSettings settings;
-            GameObject model = null;
+            GameObject modelGameObject = null;
             Wiring wiring = null;
             MagneticTensionInSpace.PointsInfo pointsInfo = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
-                #region Preamble, version and project settings
+                #region Preamble and version
                 ReadPreambleAndCheck(reader);
 
                 Version version = ReadVersion(reader);
@@ -123,9 +110,9 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 {
                     throw new EMSPVersionCompatibilityException(string.Format("File version is {0}, but you try to use serializer with {1} version", version, _version));
                 }
+                #endregion
 
                 settings = ReadProjectSettings(reader);
-                #endregion
 
                 #region Model
                 bool hasModel = reader.ReadBoolean();
@@ -135,7 +122,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     List<Texture2D> textures = ReadTextures(reader);
                     List<Shader> shaders = ReadShaders(reader);
                     List<Material> materials = ReadMaterials(reader, shaders, textures);
-                    model = ReadHierarchy(reader, meshes, materials);
+                    modelGameObject = ReadHierarchy(reader, meshes, materials);
                 }
                 #endregion
 
@@ -186,14 +173,13 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                         ptsInfo.Add(new MagneticTensionInSpace.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
                     }
 
-                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointsCount, ptsInfo);
+                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointSize, ptsInfo);
                 }
                 #endregion
 
-                return new SerializableProjectBatch(settings, model, wiring, pointsInfo);
+                return new SerializableProjectBatch(settings, modelGameObject, wiring, pointsInfo);
             }
         }
-
         #endregion
     }
 }
