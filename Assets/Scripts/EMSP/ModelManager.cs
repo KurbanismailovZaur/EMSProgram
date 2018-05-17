@@ -66,6 +66,8 @@ namespace EMSP
         {
             DestroyModel();
 
+            if (!gameObject) return;
+
             Model.Factory modelFactory = new Model.Factory();
             _model = modelFactory.MakeFactory(gameObject);
 
