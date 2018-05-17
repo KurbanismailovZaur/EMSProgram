@@ -244,7 +244,7 @@ namespace EMSP.App
             if (affectOnCurrent)
             {
                 _tensionFilterSlider.SetMin(0f);
-                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
+                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTension);
             }
         }
 
