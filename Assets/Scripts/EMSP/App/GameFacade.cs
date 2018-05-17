@@ -238,12 +238,12 @@ namespace EMSP.App
         private void UpdateTensionSlider(bool affectOnCurrent = true)
         {
             Debug.Log("--UpdateTensionSlider");
-            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
+            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentModeMaxMagneticTension);
 
             if (affectOnCurrent)
             {
                 _tensionFilterSlider.SetMin(0f);
-                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentMaxMagneticTension);
+                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentModeMaxMagneticTension);
             }
         }
 

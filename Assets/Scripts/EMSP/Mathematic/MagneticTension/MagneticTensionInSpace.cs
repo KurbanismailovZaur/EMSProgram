@@ -147,7 +147,7 @@ namespace EMSP.Mathematic.MagneticTension
 
         public MaxMagneticTensions MaxMagneticTensionsInTime { get { return _maxMagneticTensions; } }
 
-        public float CurrentMaxMagneticTension { get { return _amperageMode == AmperageMode.Computational ? _maxMagneticTensions.Calculated : _maxMagneticTensions.Precomputed; } }
+        public float CurrentModeMaxMagneticTension { get { return _amperageMode == AmperageMode.Computational ? _maxMagneticTensions.Calculated : _maxMagneticTensions.Precomputed; } }
 
         public float MaxMagneticTension { get { return _maxMagneticTensions.Max; } }
 
