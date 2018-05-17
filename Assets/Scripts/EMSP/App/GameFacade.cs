@@ -112,7 +112,8 @@ namespace EMSP.App
             MathematicManager.Instance.RangeLength = serializableProjectBatch.ProjectSettings.RangeLength;
             TimeManager.Instance.SetTimeParameters(serializableProjectBatch.ProjectSettings.TimeRange, serializableProjectBatch.ProjectSettings.TimeStepsCount);
 
-            ModelManager.Instance.CreateNewModel(serializableProjectBatch.ModelGameObject);
+            if(serializableProjectBatch.ModelGameObject != null)
+                ModelManager.Instance.CreateNewModel(serializableProjectBatch.ModelGameObject);
             WiringManager.Instance.CreateNewWiring(serializableProjectBatch.Wiring);
 
             MathematicManager.Instance.MagneticTensionInSpace.Restore(serializableProjectBatch.PointsInfo);
@@ -237,6 +238,7 @@ namespace EMSP.App
 
         private void UpdateTensionSlider(bool affectOnCurrent = true)
         {
+            Debug.Log("--UpdateTensionSlider");
             _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.MaxMagneticTension);
 
             if (affectOnCurrent)
@@ -443,11 +445,15 @@ namespace EMSP.App
 
         public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
         {
+            Debug.Log(string.Format("--FilterRangeSlider_OnValueChanged: min = {0}; max = {1}", range.Min, range.Max));
+
             MathematicManager.Instance.MagneticTensionInSpace.FilterPointsByTension(range);
         }
 
         public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MagneticTensionInSpace magneticTensionInSpace, Range range)
         {
+            Debug.Log("--MagneticTensionInSpace_CurrentTensionFilterRangeChanged");
+
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
         }

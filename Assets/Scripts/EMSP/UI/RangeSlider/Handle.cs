@@ -35,7 +35,7 @@ namespace EMSP.UI
         [SerializeField]
         private RectTransform _rectTransform;
 
-        private float _maxValue;
+        private float _maxValue = -1;
 
         [SerializeField]
         private RangeSlider _rangeSlider;
@@ -56,6 +56,17 @@ namespace EMSP.UI
         public RectTransform RectTransform { get { return (RectTransform)transform; } }
 
         public Image Image { get { return _image; } }
+
+        private float MaxValue
+        {
+            get
+            {
+                if(_maxValue == -1)
+                    _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
+
+                return _maxValue;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -120,18 +131,19 @@ namespace EMSP.UI
             {
                 if (yPosition < 0)
                     yPosition = 0;
-                else if (yPosition > _maxValue - distance)
-                    yPosition = _maxValue - distance;
+                else if (yPosition > MaxValue - distance)
+                    yPosition = MaxValue - distance;
             }
             else
             {
-                if (yPosition > _maxValue)
-                    yPosition = _maxValue;
+                if (yPosition > MaxValue)
+                    yPosition = MaxValue;
                 else if (yPosition < distance)
                     yPosition = distance;
             }
 
             _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
+            _rectTransform.ForceUpdateRectTransforms();
         }
         #endregion
 

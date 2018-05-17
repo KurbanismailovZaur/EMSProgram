@@ -237,6 +237,8 @@ namespace EMSP.UI
 
         public void SetRangeLimits(float min, float max, bool wholeNumbers = false, float minRangeLenght = 0)
         {
+            Debug.Log(string.Format("Attempt SetRangeLimits: min = {0}; max = {1}", min, max));
+
             if (minRangeLenght > max - min)
             {
                 throw new Exception("Min range lenght can not be more big than all lenght");
@@ -252,6 +254,8 @@ namespace EMSP.UI
 
         public void SetMin(float min)
         {
+            Debug.Log(string.Format("Attempt SetMin: {0}", min));
+
             if (_wholeNumbers)
                 min = Convert.ToInt32(min);
 
@@ -261,11 +265,14 @@ namespace EMSP.UI
 
         public void SetMax(float max)
         {
+            Debug.Log(string.Format("Attempt SetMax: {0}", max));
             if (_wholeNumbers)
                 max = Convert.ToInt32(max);
 
             _handleMax.SetValue(max);
             _maxValue = max;
+
+            if (!started && isActiveAndEnabled) StartCoroutine(WaitAndUpdateValues());
         }
 
         public void SetGradientColors(Color color0, Color color1, Color color2, Color color3, Color color4, Color color5, Color color6, Color color7)
@@ -278,6 +285,16 @@ namespace EMSP.UI
             BgGradient.SetColor("_Color5", color5);
             BgGradient.SetColor("_Color6", color6);
             BgGradient.SetColor("_Color7", color7);
+        }
+
+        bool started = false;
+        IEnumerator WaitAndUpdateValues()
+        {
+            started = true;
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            UpdateValues();
         }
         #endregion
 
