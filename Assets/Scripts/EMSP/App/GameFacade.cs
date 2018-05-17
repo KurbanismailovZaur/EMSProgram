@@ -256,6 +256,10 @@ namespace EMSP.App
         private void CreateNewProject()
         {
             ProjectManager.Instance.CreateNewProject();
+
+            MathematicManager.Instance.RangeLength = GameSettings.Instance.CalculationDefaultMinRangeLength;
+            TimeManager.Instance.TimeRange = GameSettings.Instance.DefaultTimeRange;
+            TimeManager.Instance.StepsCount = GameSettings.Instance.DefaultTimeStepsCount;
         }
 
         private void ResetOrbitController()

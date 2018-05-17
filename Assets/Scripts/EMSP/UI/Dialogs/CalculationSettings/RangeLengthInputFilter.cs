@@ -74,14 +74,14 @@ namespace EMSP.UI.Dialogs.CalculationSettings
 
             if (data.Length == 0)
             {
-                pointsCount = (int)Mathf.Pow(GameSettings.Instance.CalculationMinRange, 3);
+                pointsCount = (int)Mathf.Pow(GameSettings.Instance.CalculationDefaultMinRangeLength, 3);
             }
             else
             {
                 pointsCount = int.Parse(data);
             }
 
-            int minPointsCountAllowed = (int)Mathf.Pow(GameSettings.Instance.CalculationMinRange, 3);
+            int minPointsCountAllowed = (int)Mathf.Pow(GameSettings.Instance.CalculationDefaultMinRangeLength, 3);
 
             if (pointsCount < minPointsCountAllowed)
             {

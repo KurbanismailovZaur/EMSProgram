@@ -26,25 +26,29 @@ namespace EMSP.App
         #endregion
 
         #region Fields
-        private ExtensionFilter[] _modelExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("3D Model", "obj") };
+        private readonly ExtensionFilter[] _modelExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("3D Model", "obj") };
 
-        private ExtensionFilter[] _wiringExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("Excel Worksheets 2003", "xls") };
+        private readonly ExtensionFilter[] _wiringExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("Excel Worksheets 2003", "xls") };
 
-        private ExtensionFilter[] _projectExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("EMSP", "emsp") };
+        private readonly ExtensionFilter[] _projectExtensionFilter = new ExtensionFilter[] { new ExtensionFilter("EMSP", "emsp") };
 
-        private string _projectDefaultName = "Untitled";
+        private readonly string _projectDefaultName = "Untitled";
 
-        private Vector3 _orbitControllerDefaultTargetVector = Vector3.up;
+        private readonly Vector3 _orbitControllerDefaultTargetVector = Vector3.up;
 
-        private float _orbitControllerDefaultTargetUpAngle = 0f;
+        private readonly float _orbitControllerDefaultTargetUpAngle = 0f;
 
-        private float _orbitCOntrollerDefaultDistance = 8f;
+        private readonly float _orbitControllerDefaultDistance = 8f;
 
-        private string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
+        private readonly string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
 
-        private int _calculationMinRange = 22;
+        private readonly int _calculationDefaultMinRangeLength = 22;
 
-        private string _numberDecimalSeparator = ".";
+        private readonly string _numberDecimalSeparator = ".";
+
+        private readonly Range _defaultTimeRange = new Range(0f, 0.1f);
+
+        private readonly int _defaultTimeStepsCount = 36;
         #endregion
 
         #region Events
@@ -64,13 +68,17 @@ namespace EMSP.App
 
         public float OrbitControllerDefaultTargetUpAngle { get { return _orbitControllerDefaultTargetUpAngle; } }
 
-        public float OrbitControllerDefaultDistance { get { return _orbitCOntrollerDefaultDistance; } }
+        public float OrbitControllerDefaultDistance { get { return _orbitControllerDefaultDistance; } }
 
         public string MagneticTensionInSpaceDefaultName { get { return _magneticTensionInSpaceDefaultName; } }
 
-        public int CalculationMinRange { get { return _calculationMinRange; } }
+        public int CalculationDefaultMinRangeLength { get { return _calculationDefaultMinRangeLength; } }
 
         public string NumberDecimalSeparator { get { return _numberDecimalSeparator; } }
+
+        public Range DefaultTimeRange { get { return _defaultTimeRange; } }
+
+        public int DefaultTimeStepsCount { get { return _defaultTimeStepsCount; } }
         #endregion
 
         #region Constructors
