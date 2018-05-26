@@ -243,6 +243,8 @@ namespace EMSP.Mathematic.MagneticTension
         {
             DestroyMagneticTensions();
 
+            if (pointsInfo == null) return;
+
             int pointsCount = pointsInfo.Infos.Count;
 
             MagneticTensionInfo[] magneticTensionsInfo = new MagneticTensionInfo[pointsCount];

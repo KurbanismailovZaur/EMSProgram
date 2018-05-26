@@ -35,6 +35,7 @@ namespace EMSP.UI.Dialogs.SaveProject
         #endregion
 
         #region Fields
+        private Action<Action> _callback;
         #endregion
 
         #region Events
@@ -49,9 +50,25 @@ namespace EMSP.UI.Dialogs.SaveProject
         #endregion
 
         #region Methods
+        public void ShowModal(Action<Action> callback)
+        {
+            _callback = callback;
+            ShowModal();
+        }
+
+        private void InvokeCallback(Action action)
+        {
+            if (_callback != null)
+            {
+                _callback.Invoke(action);
+            }
+        }
+
         public void ChoseSave()
         {
             Hide();
+
+            InvokeCallback(Action.Save);
 
             Chosen.Invoke(this, Action.Save);
         }
@@ -60,12 +77,16 @@ namespace EMSP.UI.Dialogs.SaveProject
         {
             Hide();
 
+            InvokeCallback(Action.DontSave);
+
             Chosen.Invoke(this, Action.DontSave);
         }
 
         public void ChoseCancel()
         {
             Hide();
+
+            InvokeCallback(Action.Cancel);
 
             Chosen.Invoke(this, Action.Cancel);
         }

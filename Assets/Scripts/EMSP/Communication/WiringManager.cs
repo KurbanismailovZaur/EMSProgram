@@ -90,7 +90,7 @@ namespace EMSP.Communication
         {
             DestroyWiring();
 
-            if (!wiring.CheckPointsExist()) return;
+            if (!wiring || !wiring.CheckPointsExist()) return;
 
             _wiring = wiring;
             _wiring.SetWiringMaterial(_lineMaterial);

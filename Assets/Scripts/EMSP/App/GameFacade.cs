@@ -19,6 +19,7 @@ using EMSP.UI.Dialogs.CalculationSettings;
 using EMSP.Data.Serialization.EMSP.Versions;
 using EMSP.Data.Serialization.EMSP;
 using EMSP.Data.Serialization;
+using System;
 
 namespace EMSP.App
 {
@@ -67,8 +68,6 @@ namespace EMSP.App
 
         [SerializeField]
         private GeneralPanel _generalPanel;
-
-        EMSPSerializer serializer = EMSPSerializer.LatestVersion;
         #endregion
 
         #region Events
@@ -83,39 +82,81 @@ namespace EMSP.App
 
         #region Methods
         #region File context methods
+        private bool IsProjectChanged()
+        {
+            return ProjectManager.Instance.Project != null && ProjectManager.Instance.Project.IsChanged;
+        }
+
         private void CreateNewProjectWithCheckToSave()
         {
-            if (ProjectManager.Instance.Project != null && !ProjectManager.Instance.Project.IsChanged)
+            if (IsProjectChanged())
             {
-                _saveProjectDialog.Chosen.AddListener(SaveProjectDialog_Chosen);
-                _saveProjectDialog.ShowModal();
+                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, CreateNewProject); });
+            }
+            else
+            {
+                CloseProject();
+                CreateNewProject();
+            }
+        }
+
+        private void OpenProjectWithCheckToSave()
+        {
+            string path = OpenProjectFilePanel();
+
+            if (string.IsNullOrEmpty(path))
+            {
                 return;
             }
 
-            CloseProject();
-            CreateNewProject();
+            if (!IsProjectChanged())
+            {
+                CloseProject();
+                OpenProject(path);
+            }
+            else
+            {
+                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, () => { OpenProject(path); }); });
+            }
         }
 
-        private void OpenProject()
+        private void OnSaveProjectDialog(SaveProjectDialog.Action action, Action callback)
+        {
+            switch (action)
+            {
+                case SaveProjectDialog.Action.Save:
+                    SaveProject();
+                    goto case SaveProjectDialog.Action.DontSave;
+                case SaveProjectDialog.Action.DontSave:
+                    CloseProject();
+                    callback.Invoke();
+                    break;
+                case SaveProjectDialog.Action.Cancel:
+                    break;
+            }
+        }
+
+        private void SelectCloseAndOpenProject()
+        {
+
+        }
+
+        private string OpenProjectFilePanel()
         {
             string[] results = StandaloneFileBrowser.OpenFilePanel("Открыть Проект", Application.dataPath, GameSettings.Instance.ProjectExtensionFilter, false);
 
             if (results.Length == 0)
             {
-                return;
+                return string.Empty;
             }
 
-            CreateNewProject();
+            return results[0];
+        }
 
-            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = serializer.Deserialize(results[0]);
+        private void OpenProject(string path)
+        {
+            ProjectManager.Instance.OpenProject(path);
 
-            MathematicManager.Instance.RangeLength = serializableProjectBatch.ProjectSettings.RangeLength;
-            TimeManager.Instance.SetTimeParameters(serializableProjectBatch.ProjectSettings.TimeRange, serializableProjectBatch.ProjectSettings.TimeStepsCount);
-
-            ModelManager.Instance.CreateNewModel(serializableProjectBatch.ModelGameObject);
-            WiringManager.Instance.CreateNewWiring(serializableProjectBatch.Wiring);
-
-            MathematicManager.Instance.MagneticTensionInSpace.Restore(serializableProjectBatch.PointsInfo);
             MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
 
             UpdateTimeAndTensionSlider();
@@ -123,22 +164,18 @@ namespace EMSP.App
 
         private void SaveProject()
         {
-            string path = StandaloneFileBrowser.SaveFilePanel("Сохранить проект", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
-
-            if (string.IsNullOrEmpty(path))
+            if (!ProjectManager.Instance.Project.IsStored)
             {
-                return;
+                string path = StandaloneFileBrowser.SaveFilePanel("Сохранить проект", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
+
+                if (string.IsNullOrEmpty(path)) return;
+
+                ProjectManager.Instance.SaveProject(path);
             }
-
-            SaveProject(path);
-        }
-
-        private void SaveProject(string path)
-        {
-            EMSPSerializerVersion.SerializableProjectSettings serializableSettings = new EMSPSerializerVersion.SerializableProjectSettings(MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
-            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, ModelManager.Instance.Model, WiringManager.Instance.Wiring, MathematicManager.Instance.MagneticTensionInSpace.GetPointsInfo());
-
-            serializer.Serialize(path, serializableProjectBatch);
+            else
+            {
+                ProjectManager.Instance.ResaveProject();
+            }
         }
 
         private void CloseProject()
@@ -237,7 +274,6 @@ namespace EMSP.App
 
         private void UpdateTensionSlider(bool affectOnCurrent = true)
         {
-            Debug.Log("--UpdateTensionSlider");
             _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentModeMaxMagneticTension);
 
             if (affectOnCurrent)
@@ -256,10 +292,6 @@ namespace EMSP.App
         private void CreateNewProject()
         {
             ProjectManager.Instance.CreateNewProject();
-
-            MathematicManager.Instance.RangeLength = GameSettings.Instance.CalculationDefaultMinRangeLength;
-            TimeManager.Instance.TimeRange = GameSettings.Instance.DefaultTimeRange;
-            TimeManager.Instance.StepsCount = GameSettings.Instance.DefaultTimeStepsCount;
         }
 
         private void ResetOrbitController()
@@ -294,7 +326,7 @@ namespace EMSP.App
                     CreateNewProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.OpenProject:
-                    OpenProject();
+                    OpenProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.SaveProject:
                     SaveProject();
@@ -360,26 +392,6 @@ namespace EMSP.App
             }
 
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
-        }
-
-        private void SaveProjectDialog_Chosen(SaveProjectDialog saveProjectDialog, SaveProjectDialog.Action action)
-        {
-            _saveProjectDialog.Chosen.RemoveListener(SaveProjectDialog_Chosen);
-
-            switch (action)
-            {
-                case SaveProjectDialog.Action.Save:
-                    //SaveProject(ProjectManager.Instance.Project.Path);
-                    CloseProject();
-                    CreateNewProject();
-                    break;
-                case SaveProjectDialog.Action.DontSave:
-                    CloseProject();
-                    CreateNewProject();
-                    break;
-                case SaveProjectDialog.Action.Cancel:
-                    break;
-            }
         }
 
         public void ViewCube_AxisSelected(ViewCube viewCube, AxisDirection axisDirection)

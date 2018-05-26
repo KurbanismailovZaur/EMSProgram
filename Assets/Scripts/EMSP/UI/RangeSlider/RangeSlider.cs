@@ -237,8 +237,6 @@ namespace EMSP.UI
 
         public void SetRangeLimits(float min, float max, bool wholeNumbers = false, float minRangeLenght = 0)
         {
-            Debug.Log(string.Format("Attempt SetRangeLimits: min = {0}; max = {1}", min, max));
-
             if (minRangeLenght > max - min)
             {
                 throw new Exception("Min range lenght can not be more big than all lenght");
@@ -254,8 +252,6 @@ namespace EMSP.UI
 
         public void SetMin(float min)
         {
-            Debug.Log(string.Format("Attempt SetMin: {0}", min));
-
             if (_wholeNumbers)
                 min = Convert.ToInt32(min);
 
@@ -265,7 +261,6 @@ namespace EMSP.UI
 
         public void SetMax(float max)
         {
-            Debug.Log(string.Format("Attempt SetMax: {0}", max));
             if (_wholeNumbers)
                 max = Convert.ToInt32(max);
 

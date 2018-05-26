@@ -1100,7 +1100,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000031879692
+      value: 0.0000009536743
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}
@@ -7581,34 +7581,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectCreated:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1878075468}
-        m_MethodName: ProjectManager_ProjectCreated
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: EMSP.App.ProjectManager+ProjectCreatedEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   ProjectDestroyed:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1878075468}
-        m_MethodName: ProjectManager_ProjectDestroyed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: EMSP.App.ProjectManager+ProjectDestroyedEvent, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &1792159447

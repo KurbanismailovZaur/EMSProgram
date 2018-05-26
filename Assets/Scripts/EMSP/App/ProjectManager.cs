@@ -1,4 +1,6 @@
-﻿using Numba;
+﻿using EMSP.Data.Serialization;
+using EMSP.Data.Serialization.EMSP;
+using Numba;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,13 +65,30 @@ namespace EMSP.App
 
             ProjectDestroyed.Invoke(_project);
         }
-		#endregion
-		
-		#region Indexers
-		#endregion
-		
-		#region Events handlers
-		#endregion
-		#endregion
-	}
+
+        public void SaveProject(string path)
+        {
+            _project.Save(path);
+        }
+
+        public void ResaveProject()
+        {
+            _project.Resave();
+        }
+
+        public void OpenProject(string path)
+        {
+            CreateNewProject();
+
+            _project.Load(path);
+        }
+        #endregion
+
+        #region Indexers
+        #endregion
+
+        #region Events handlers
+        #endregion
+        #endregion
+    }
 }
