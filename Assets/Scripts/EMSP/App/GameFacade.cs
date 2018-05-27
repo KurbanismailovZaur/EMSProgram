@@ -129,16 +129,12 @@ namespace EMSP.App
                     goto case SaveProjectDialog.Action.DontSave;
                 case SaveProjectDialog.Action.DontSave:
                     CloseProject();
-                    callback.Invoke();
+
+                    if (callback != null) callback.Invoke();
                     break;
                 case SaveProjectDialog.Action.Cancel:
                     break;
             }
-        }
-
-        private void SelectCloseAndOpenProject()
-        {
-
         }
 
         private string OpenProjectFilePanel()
@@ -175,6 +171,18 @@ namespace EMSP.App
             else
             {
                 ProjectManager.Instance.ResaveProject();
+            }
+        }
+
+        private void CloseProjectWithCheckToSave()
+        {
+            if (IsProjectChanged())
+            {
+                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, null); });
+            }
+            else
+            {
+                CloseProject();
             }
         }
 
@@ -332,7 +340,7 @@ namespace EMSP.App
                     SaveProject();
                     break;
                 case FileContextMethods.ActionType.CloseProject:
-                    CloseProject();
+                    CloseProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.ImportModel:
                     ImportModel();
