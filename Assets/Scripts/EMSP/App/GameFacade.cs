@@ -89,15 +89,7 @@ namespace EMSP.App
 
         private void CreateNewProjectWithCheckToSave()
         {
-            if (IsProjectChanged())
-            {
-                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, CreateNewProject); });
-            }
-            else
-            {
-                CloseProject();
-                CreateNewProject();
-            }
+            CloseProjectWithCheckToSaveAndDo(CreateNewProject, (action) => { OnSaveProjectDialog(action, CreateNewProject); });
         }
 
         private void OpenProjectWithCheckToSave()
@@ -109,15 +101,7 @@ namespace EMSP.App
                 return;
             }
 
-            if (!IsProjectChanged())
-            {
-                CloseProject();
-                OpenProject(path);
-            }
-            else
-            {
-                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, () => { OpenProject(path); }); });
-            }
+            CloseProjectWithCheckToSaveAndDo(() => { OpenProject(path); }, (action) => { OnSaveProjectDialog(action, () => { OpenProject(path); }); });
         }
 
         private void OnSaveProjectDialog(SaveProjectDialog.Action action, Action callback)
@@ -125,11 +109,10 @@ namespace EMSP.App
             switch (action)
             {
                 case SaveProjectDialog.Action.Save:
-                    SaveProject();
+                    if (!SaveProject()) return;
                     goto case SaveProjectDialog.Action.DontSave;
                 case SaveProjectDialog.Action.DontSave:
                     CloseProject();
-
                     if (callback != null) callback.Invoke();
                     break;
                 case SaveProjectDialog.Action.Cancel:
@@ -158,13 +141,13 @@ namespace EMSP.App
             UpdateTimeAndTensionSlider();
         }
 
-        private void SaveProject()
+        private bool SaveProject()
         {
             if (!ProjectManager.Instance.Project.IsStored)
             {
                 string path = StandaloneFileBrowser.SaveFilePanel("Сохранить проект", Application.dataPath, GameSettings.Instance.ProjectDefaultName, GameSettings.Instance.ProjectExtensionFilter);
 
-                if (string.IsNullOrEmpty(path)) return;
+                if (string.IsNullOrEmpty(path)) return false;
 
                 ProjectManager.Instance.SaveProject(path);
             }
@@ -172,17 +155,21 @@ namespace EMSP.App
             {
                 ProjectManager.Instance.ResaveProject();
             }
+
+            return true;
         }
 
-        private void CloseProjectWithCheckToSave()
+        private void CloseProjectWithCheckToSaveAndDo(Action notChangedAction, Action<SaveProjectDialog.Action> changedAction)
         {
-            if (IsProjectChanged())
+            if (!IsProjectChanged())
             {
-                _saveProjectDialog.ShowModal((SaveProjectDialog.Action action) => { OnSaveProjectDialog(action, null); });
+                CloseProject();
+
+                if (notChangedAction != null) notChangedAction.Invoke();
             }
             else
             {
-                CloseProject();
+                _saveProjectDialog.ShowModal(changedAction);
             }
         }
 
@@ -340,7 +327,7 @@ namespace EMSP.App
                     SaveProject();
                     break;
                 case FileContextMethods.ActionType.CloseProject:
-                    CloseProjectWithCheckToSave();
+                    CloseProjectWithCheckToSaveAndDo(null, (action) => { OnSaveProjectDialog(action, null); });
                     break;
                 case FileContextMethods.ActionType.ImportModel:
                     ImportModel();
