@@ -149,6 +149,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
                         _amplitudeInput.onEndEdit.RemoveAllListeners();
                         _frequencyInput.onValueChanged.RemoveAllListeners();
                         _frequencyInput.onEndEdit.RemoveAllListeners();
+                        _amperageInput.onValueChanged.RemoveAllListeners();
+                        _amperageInput.onEndEdit.RemoveAllListeners();
 
                         _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
                         _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
@@ -324,6 +326,8 @@ namespace EMSP.UI.Dialogs.WiringEditor
                     _amplitudeInput.onEndEdit.RemoveAllListeners();
                     _frequencyInput.onValueChanged.RemoveAllListeners();
                     _frequencyInput.onEndEdit.RemoveAllListeners();
+                    _amperageInput.onValueChanged.RemoveAllListeners();
+                    _amperageInput.onEndEdit.RemoveAllListeners();
 
                     _amplitudeInput.text = WiresProperties[wireNumber].Amplitude.ToString();
                     _frequencyInput.text = WiresProperties[wireNumber].Frequency.ToString();
@@ -641,18 +645,5 @@ namespace EMSP.UI.Dialogs.WiringEditor
         #region Events handlers
         #endregion
         #endregion
-
-        private void PrintWiring(Wiring wiring)
-        {
-            foreach(Wire wire in wiring)
-            {
-                Debug.Log("==========");
-                Debug.Log(wire.Name);
-                foreach(var point in wire)
-                {
-                    Debug.Log(string.Format("x: {0}; y: {1}; z:{2}", point.x, point.y, point.z));
-                }
-            }
-        }
     }
 }
