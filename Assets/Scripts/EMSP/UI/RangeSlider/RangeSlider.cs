@@ -108,6 +108,9 @@ namespace EMSP.UI
         public float CurrentMaxValue { get { return (_wholeNumbers) ? Convert.ToInt32(_minRangeValue + HandleMaxYPosition * _valuesPerPixel) : _minRangeValue + HandleMaxYPosition * _valuesPerPixel; } }
         public float CurrentRangeLenght { get { return Max - Min; } }
 
+        private float _curDinamycRange = 0;
+        public float CurDinamycRange { get { return _curDinamycRange; } set { _curDinamycRange = value * _valuesPerPixel; } }
+
         private Material BgGradient
         {
             get
@@ -175,7 +178,6 @@ namespace EMSP.UI
             float _height = _handleMax.RectTransform.anchoredPosition3D.y - _handleMin.RectTransform.anchoredPosition3D.y;// - _handleMax.RectTransform.rect.height;
 
             _fillRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _height);
-            //_fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _handleMax.RectTransform.rect.height / 2 + _height / 2, _fillRect.anchoredPosition3D.z);
             _fillRect.anchoredPosition3D = new Vector3(_fillRect.anchoredPosition3D.x, _handleMin.RectTransform.anchoredPosition3D.y + _height / 2, _fillRect.anchoredPosition3D.z);
 
         }
@@ -195,34 +197,25 @@ namespace EMSP.UI
             SetMax(_maxValue);
         }
 
-        /*
-        public void InvokeValueChanged()
-        {
-            _minValue = _minRangeValue + HandleMinYPosition * _valuesPerPixel;
-            _maxValue = _minRangeValue + HandleMaxYPosition * _valuesPerPixel;
-
-            if (_wholeNumbers)
-            {
-                OnValueChanged.Invoke(this, new Range(Convert.ToInt32(_minValue), Convert.ToInt32(_maxValue)));
-            }
-            else
-            {
-                OnValueChanged.Invoke(this, new Range(_minValue, _maxValue));
-            }
-        }
-        */
-
         public void TryChangeValue(float minYpos, float maxYpos, bool byFillDragging = false)
         {
             float newMinValue = _minRangeValue + minYpos * _valuesPerPixel;
             float newMaxValue = _minRangeValue + maxYpos * _valuesPerPixel;
 
+
             if(byFillDragging)
             {
-                if(Min == MinRangeValue && newMaxValue <= Max)
-                    return;
-                if (Max == MaxRangeValue && newMinValue >= Min)
-                    return;
+
+                if (Min == MinRangeValue && newMaxValue <= Min + CurDinamycRange)
+                {
+                    newMinValue = Min;
+                    newMaxValue = Min + CurDinamycRange;
+                }
+                if (Max == MaxRangeValue && newMinValue >= Max - CurDinamycRange)
+                {
+                    newMinValue = Max - CurDinamycRange;
+                    newMaxValue = Max;
+                }
             }
 
             if (_wholeNumbers)

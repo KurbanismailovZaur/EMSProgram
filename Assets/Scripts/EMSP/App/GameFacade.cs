@@ -442,7 +442,6 @@ namespace EMSP.App
 
                 _tensionFilterSlider.Hide();
             }
-
         }
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
@@ -460,15 +459,11 @@ namespace EMSP.App
 
         public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
         {
-            Debug.Log(string.Format("--FilterRangeSlider_OnValueChanged: min = {0}; max = {1}", range.Min, range.Max));
-
             MathematicManager.Instance.MagneticTensionInSpace.FilterPointsByTension(range);
         }
 
         public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MagneticTensionInSpace magneticTensionInSpace, Range range)
         {
-            Debug.Log("--MagneticTensionInSpace_CurrentTensionFilterRangeChanged");
-
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
         }

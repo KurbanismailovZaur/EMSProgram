@@ -44,6 +44,11 @@ namespace EMSP.UI
         #endregion
 
         #region Methods
+        private void Update()
+        {
+            if(_beginDrag)
+                OnDrag(null);
+        }
         #endregion
 
         #region Indexers
@@ -53,39 +58,39 @@ namespace EMSP.UI
 
         private float offset;
         private float fromFillCenterOffset;
+        private bool _beginDrag;
 
         public void OnPointerDown(PointerEventData eventData)
         {
             _currentRange = _rangeSlider.CurrentRangeDistance;
+            _rangeSlider.CurDinamycRange = _currentRange;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            _beginDrag = true;
+            _rangeSlider.HandleMin.IsDragByUser = true;
+            _rangeSlider.HandleMax.IsDragByUser = true;
+
             offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rangeSlider.HandleMin.GetComponent<RectTransform>().rect.height;
             fromFillCenterOffset = GetComponent<RectTransform>().position.y - Input.mousePosition.y;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            //_rangeSlider.HandleMin.ValidateAndSetNewYPosition(Input.mousePosition.y - offset - _currentRange / 2, _currentRange);
-            //_rangeSlider.HandleMax.ValidateAndSetNewYPosition(Input.mousePosition.y - offset + _currentRange / 2, _currentRange);
-
-            //_rangeSlider.InvokeValueChanged();
-
             _rangeSlider.TryChangeValue(Input.mousePosition.y - offset - _currentRange / 2 + fromFillCenterOffset, Input.mousePosition.y - offset + _currentRange / 2 + fromFillCenterOffset, true);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            _beginDrag = false;
+
+            _rangeSlider.HandleMin.IsDragByUser = false;
+            _rangeSlider.HandleMax.IsDragByUser = false;
         }
 
         public void OnScroll(float deltaY)
         {
-            //_rangeSlider.HandleMin.ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + deltaY, _currentRange);
-            //_rangeSlider.HandleMax.ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition + deltaY, _currentRange);
-
-            //_rangeSlider.InvokeValueChanged();
-
             _rangeSlider.TryChangeValue(_rangeSlider.HandleMinYPosition + deltaY, _rangeSlider.HandleMaxYPosition + deltaY, true);
         }
 

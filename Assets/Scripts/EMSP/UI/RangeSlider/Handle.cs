@@ -40,7 +40,7 @@ namespace EMSP.UI
         [SerializeField]
         private RangeSlider _rangeSlider;
 
-        private bool _isDragByUser = false;
+        public bool IsDragByUser { get; set; }
 
         private float _lastValue;
 
@@ -76,39 +76,9 @@ namespace EMSP.UI
         private void Awake()
         {
             _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
+            IsDragByUser = false;
         }
 
-        private void Update()
-        {
-            if (!_isDragByUser)
-            {
-                if (IsMin)
-                {
-                    if (_rangeSlider.HandleMaxYPosition - _rangeSlider.HandleMinYPosition < _rangeSlider.MinHandlesDistance)
-                    {
-                        ValidateAndSetNewYPosition(_rangeSlider.HandleMaxYPosition - _rangeSlider.MinHandlesDistance);
-                    }
-                }
-                else
-                {
-                    if (_rangeSlider.HandleMaxYPosition - _rangeSlider.HandleMinYPosition < _rangeSlider.MinHandlesDistance)
-                    {
-                        ValidateAndSetNewYPosition(_rangeSlider.HandleMinYPosition + _rangeSlider.MinHandlesDistance);
-                    }
-                }
-            }
-
-            if(IsMin)
-            {
-                _lastValue = _rangeSlider.CurrentMinValue;
-                _textField.text = _rangeSlider.CurrentMinValue.ToString();
-            }
-            else
-            {
-                _lastValue = _rangeSlider.CurrentMaxValue;
-                _textField.text = _rangeSlider.CurrentMaxValue.ToString();
-            }
-        }
 
         public void RecalculateInternalValues()
         {
@@ -156,14 +126,11 @@ namespace EMSP.UI
         public void OnBeginDrag(PointerEventData eventData)
         {
             offset = _rangeSlider.GetComponent<RectTransform>().position.y - _rangeSlider.GetComponent<RectTransform>().rect.height / 2 + _rectTransform.rect.height;
-            _isDragByUser = true;
+            IsDragByUser = true;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            //    ValidateAndSetNewYPosition(Input.mousePosition.y - offset);
-            //    _rangeSlider.InvokeValueChanged();
-
             if (IsMin)
                 _rangeSlider.TryChangeValue(Input.mousePosition.y - offset, _rangeSlider.HandleMaxYPosition);
             else
@@ -172,7 +139,7 @@ namespace EMSP.UI
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            _isDragByUser = false;
+            IsDragByUser = false;
         }
         #endregion
         #endregion
