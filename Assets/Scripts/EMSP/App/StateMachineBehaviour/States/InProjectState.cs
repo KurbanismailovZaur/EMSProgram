@@ -1,6 +1,7 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic;
 using EMSP.Mathematic.MagneticTension;
+using EMSP.UI.Menu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,31 +32,10 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Fields
         [Header("Menus")]
         [SerializeField]
-        private Button _fileSaveProjectButton;
+        private FileGroupItemButtons _fileGroupItemButtons;
 
         [SerializeField]
-        private Button _fileCloseProjectButton;
-
-        [SerializeField]
-        private Button _fileImportModelButton;
-
-        [SerializeField]
-        private Button _fileImportWiringButton;
-
-        [SerializeField]
-        private Button _fileExportMagneticTensionInSpace;
-
-        [SerializeField]
-        private Button _editRemoveModelButton;
-
-        [SerializeField]
-        private Button _editRemoveWiringButton;
-
-        [SerializeField]
-        private Button _editCalculationRemoveMagneticTensionInSpaceButton;
-
-        [SerializeField]
-        private Button _editWiringButton;
+        private EditGroupItemButtons _editGroupItemButtons;
 
         [SerializeField]
         private Button _viewModelIsVisibilityButton;
@@ -92,11 +72,12 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
-            _fileSaveProjectButton.interactable = true;
-            _fileCloseProjectButton.interactable = true;
-            _fileImportModelButton.interactable = true;
-            _fileImportWiringButton.interactable = true;
-            _editWiringButton.interactable = true;
+            _fileGroupItemButtons.SaveProjectButton.interactable = true;
+            _fileGroupItemButtons.CloseProjectButton.interactable = true;
+            _fileGroupItemButtons.ImportModelButton.interactable = true;
+            _fileGroupItemButtons.ImportWiringButton.interactable = true;
+
+            _editGroupItemButtons.WiringButton.interactable = true;
             _viewGridVisibilityButton.interactable = true;
             _calculationsSettingButton.interactable = true;
 
@@ -140,43 +121,43 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         private void ModelManager_ModelCreated(Model model)
         {
-            _editRemoveModelButton.interactable = true;
+            _editGroupItemButtons.RemoveModelButton.interactable = true;
             _viewModelIsVisibilityButton.interactable = true;
             _viewModelIsTransparentButton.interactable = true;
         }
 
         private void ModelManager_ModelDestroyed(Model model)
         {
-            _editRemoveModelButton.interactable = false;
+            _editGroupItemButtons.RemoveModelButton.interactable = false;
             _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
         }
 
         private void WiringManager_WiringCreated(Wiring wiring)
         {
-            _editRemoveWiringButton.interactable = true;
+            _editGroupItemButtons.RemoveWiringButton.interactable = true;
             _viewWiringIsVisibilityButton.interactable = true;
             _calculationsComputationMagneticTensionInSpaceButton.interactable = true;
         }
 
         private void WiringManager_WiringDestroyed(Wiring wiring)
         {
-            _editRemoveWiringButton.interactable = false;
+            _editGroupItemButtons.RemoveWiringButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = false;
             _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
         }
 
         private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
         {
-            _fileExportMagneticTensionInSpace.interactable = true;
-            _editCalculationRemoveMagneticTensionInSpaceButton.interactable = true;
+            _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = true;
+            _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = true;
             _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
         }
 
         private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
         {
-            _fileExportMagneticTensionInSpace.interactable = false;
-            _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;
+            _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = false;
+            _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = false;
             _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
         }
         #endregion

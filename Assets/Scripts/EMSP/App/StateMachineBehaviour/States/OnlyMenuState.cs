@@ -1,4 +1,5 @@
 ﻿using EMSP.App;
+using EMSP.UI.Menu;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,31 +29,10 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Fields
         [Header("Menus")]
         [SerializeField]
-        private Button _fileSaveProjectButton;
+        private FileGroupItemButtons _fileGroupItemButtons;
 
         [SerializeField]
-        private Button _fileCloseProjectButton;
-
-        [SerializeField]
-        private Button _fileImportModelButton;
-
-        [SerializeField]
-        private Button _fileImportWiringButton;
-
-        [SerializeField]
-        private Button _fileExportMagneticTensionInSpace;
-
-        [SerializeField]
-        private Button _editRemoveModelButton;
-
-        [SerializeField]
-        private Button _editRemoveWiringButton;
-
-        [SerializeField]
-        private Button _editCalculationRemoveMagneticTensionInSpaceButton;
-
-        [SerializeField]
-        private Button _editWiringButton;
+        private EditGroupItemButtons _editGroupItemButtons;
 
         [SerializeField]
         private Button _viewModelIsVisibilityButton;
@@ -89,20 +69,15 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
-            _fileSaveProjectButton.interactable = false;
-            _fileCloseProjectButton.interactable = false;
-            _fileImportModelButton.interactable = false;
-            _fileImportWiringButton.interactable = false;
-            _fileExportMagneticTensionInSpace.interactable = false;
-            _editRemoveModelButton.interactable = false;
-            _editRemoveWiringButton.interactable = false;
-            _editCalculationRemoveMagneticTensionInSpaceButton.interactable = false;
-            _editWiringButton.interactable = false;
+            _fileGroupItemButtons.SetAllButtonsInteractableTo(false);
+            _editGroupItemButtons.SetAllButtonsInteractableTo(false);
+
             _viewModelIsVisibilityButton.interactable = false;
             _viewModelIsTransparentButton.interactable = false;
             _viewWiringIsVisibilityButton.interactable = false;
             _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
             _viewGridVisibilityButton.interactable = false;
+
             _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
             _calculationsSettingButton.interactable = false;
 
