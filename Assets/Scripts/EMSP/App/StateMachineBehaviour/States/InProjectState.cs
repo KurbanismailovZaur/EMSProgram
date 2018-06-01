@@ -38,25 +38,10 @@ namespace EMSP.App.StateMachineBehaviour.States
         private EditGroupItemButtons _editGroupItemButtons;
 
         [SerializeField]
-        private Button _viewModelIsVisibilityButton;
+        private ViewGroupItemButtons _viewGroupItemButtons;
 
         [SerializeField]
-        private Button _viewModelIsTransparentButton;
-
-        [SerializeField]
-        private Button _viewWiringIsVisibilityButton;
-
-        [SerializeField]
-        private Button _viewComputationMagneticTensionInSpaceIsVisibleButton;
-
-        [SerializeField]
-        private Button _viewGridVisibilityButton;
-
-        [SerializeField]
-        private Button _calculationsComputationMagneticTensionInSpaceButton;
-
-        [SerializeField]
-        private Button _calculationsSettingButton;
+        private CalculationsGroupItemButtons _calculationsGroupItemButtons;
         #endregion
 
         #region Events
@@ -78,8 +63,8 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileGroupItemButtons.ImportWiringButton.interactable = true;
 
             _editGroupItemButtons.WiringButton.interactable = true;
-            _viewGridVisibilityButton.interactable = true;
-            _calculationsSettingButton.interactable = true;
+            _viewGroupItemButtons.GridVisibilityButton.interactable = true;
+            _calculationsGroupItemButtons.SettingButton.interactable = true;
 
             GameFacade.Instance.InitializeActivateProjectEnvironment();
 
@@ -122,43 +107,43 @@ namespace EMSP.App.StateMachineBehaviour.States
         private void ModelManager_ModelCreated(Model model)
         {
             _editGroupItemButtons.RemoveModelButton.interactable = true;
-            _viewModelIsVisibilityButton.interactable = true;
-            _viewModelIsTransparentButton.interactable = true;
+            _viewGroupItemButtons.ModelIsVisibilityButton.interactable = true;
+            _viewGroupItemButtons.ModelIsTransparentButton.interactable = true;
         }
 
         private void ModelManager_ModelDestroyed(Model model)
         {
             _editGroupItemButtons.RemoveModelButton.interactable = false;
-            _viewModelIsVisibilityButton.interactable = false;
-            _viewModelIsTransparentButton.interactable = false;
+            _viewGroupItemButtons.ModelIsVisibilityButton.interactable = false;
+            _viewGroupItemButtons.ModelIsTransparentButton.interactable = false;
         }
 
         private void WiringManager_WiringCreated(Wiring wiring)
         {
             _editGroupItemButtons.RemoveWiringButton.interactable = true;
-            _viewWiringIsVisibilityButton.interactable = true;
-            _calculationsComputationMagneticTensionInSpaceButton.interactable = true;
+            _viewGroupItemButtons.WiringIsVisibilityButton.interactable = true;
+            _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = true;
         }
 
         private void WiringManager_WiringDestroyed(Wiring wiring)
         {
             _editGroupItemButtons.RemoveWiringButton.interactable = false;
-            _viewWiringIsVisibilityButton.interactable = false;
-            _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
+            _viewGroupItemButtons.WiringIsVisibilityButton.interactable = false;
+            _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = false;
         }
 
         private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = true;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = true;
-            _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
+            _viewGroupItemButtons.ComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
         }
 
         private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = false;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = false;
-            _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
+            _viewGroupItemButtons.ComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
         }
         #endregion
         #endregion

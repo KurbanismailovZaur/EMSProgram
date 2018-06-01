@@ -35,25 +35,10 @@ namespace EMSP.App.StateMachineBehaviour.States
         private EditGroupItemButtons _editGroupItemButtons;
 
         [SerializeField]
-        private Button _viewModelIsVisibilityButton;
+        private ViewGroupItemButtons _viewGroupItemButtons;
 
         [SerializeField]
-        private Button _viewModelIsTransparentButton;
-
-        [SerializeField]
-        private Button _viewWiringIsVisibilityButton;
-
-        [SerializeField]
-        private Button _viewComputationMagneticTensionInSpaceIsVisibleButton;
-
-        [SerializeField]
-        private Button _viewGridVisibilityButton;
-
-        [SerializeField]
-        private Button _calculationsComputationMagneticTensionInSpaceButton;
-
-        [SerializeField]
-        private Button _calculationsSettingButton;
+        private CalculationsGroupItemButtons _calculationsGroupItemButtons;
         #endregion
 
         #region Events
@@ -72,14 +57,9 @@ namespace EMSP.App.StateMachineBehaviour.States
             _fileGroupItemButtons.SetAllButtonsInteractableTo(false);
             _editGroupItemButtons.SetAllButtonsInteractableTo(false);
 
-            _viewModelIsVisibilityButton.interactable = false;
-            _viewModelIsTransparentButton.interactable = false;
-            _viewWiringIsVisibilityButton.interactable = false;
-            _viewComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
-            _viewGridVisibilityButton.interactable = false;
+            _viewGroupItemButtons.SetAllButtonsInteractableTo(false);
 
-            _calculationsComputationMagneticTensionInSpaceButton.interactable = false;
-            _calculationsSettingButton.interactable = false;
+            _calculationsGroupItemButtons.SetAllButtonsInteractableTo(false);
 
             GameFacade.Instance.DeactivateProjectEnvironment();
 
