@@ -1088,7 +1088,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 0.0000058909163
       objectReference: {fileID: 0}
     - target: {fileID: 224025802798570468, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
@@ -1125,6 +1125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd3fd2cd3fd96bd44a5895cd4f38876d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _alphaForTransparent: 0.05
   ModelCreated:
     m_PersistentCalls:
       m_Calls:
@@ -8495,7 +8496,7 @@ MonoBehaviour:
   _interpolation: 16
   _autoControlByMouse: 1
   _autoControlByMouseDeltaMultiplier: 4
-  _autoControlByMouseScrollMultiplier: 16
+  _autoControlByMouseScrollMultiplier: 64
   _drawDebugLines: 1
 --- !u!114 &2019584178
 MonoBehaviour:

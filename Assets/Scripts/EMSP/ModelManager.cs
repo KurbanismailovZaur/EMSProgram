@@ -36,6 +36,10 @@ namespace EMSP
         #region Fields
         private OBJImporter _importer = new OBJImporter();
 
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float _alphaForTransparent = 0.1f;
+
         private Model _model;
         #endregion
 
@@ -69,7 +73,7 @@ namespace EMSP
             if (!gameObject) return;
 
             Model.Factory modelFactory = new Model.Factory();
-            _model = modelFactory.MakeFactory(gameObject);
+            _model = modelFactory.MakeFactory(gameObject, _alphaForTransparent);
 
             _model.transform.position = Vector3.zero;
             _model.transform.SetParent(transform);

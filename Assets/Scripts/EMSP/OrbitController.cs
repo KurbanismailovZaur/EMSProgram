@@ -53,7 +53,7 @@ namespace EMSP
         private float _autoControlByMouseDeltaMultiplier = 1f;
 
         [SerializeField]
-        [Range(1f, 16f)]
+        [Range(1f, 64)]
         private float _autoControlByMouseScrollMultiplier = 1f;
 
 #if UNITY_EDITOR

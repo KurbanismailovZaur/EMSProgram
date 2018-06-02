@@ -26,7 +26,7 @@ namespace EMSP
         #region Classes
         public class Factory
         {
-            public Model MakeFactory(GameObject obj)
+            public Model MakeFactory(GameObject obj, float alphaForTransparent)
             {
                 Model model = obj.AddComponent<Model>();
                 Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
@@ -44,6 +44,7 @@ namespace EMSP
                 }
 
                 model._sharedMaterials = uniqueMaterials.ToArray();
+                model._alphaForTransparent = alphaForTransparent;
 
                 return model;
             }
@@ -66,6 +67,8 @@ namespace EMSP
         private bool _isVisible = true;
 
         private Material[] _sharedMaterials;
+
+        private float _alphaForTransparent;
         #endregion
 
         #region Events
@@ -129,7 +132,7 @@ namespace EMSP
             material.renderQueue = 3000;
 
             Color color = material.color;
-            color.a = 0.2f;
+            color.a = _alphaForTransparent;
             material.color = color;
         }
 
