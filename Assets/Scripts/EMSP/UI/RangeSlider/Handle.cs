@@ -89,6 +89,7 @@ namespace EMSP.UI
         public void SetValue(float value)
         {
             ValidateAndSetNewYPosition((value - _rangeSlider.MinRangeValue) / _rangeSlider.ValuesPerPixel);
+            _textField.text = value.ToString();
         }
 
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
