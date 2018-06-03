@@ -42,8 +42,6 @@ namespace EMSP.UI
 
         public bool IsDragByUser { get; set; }
 
-        private float _lastValue;
-
         [SerializeField]
         private Image _image;
         #endregion
@@ -83,7 +81,6 @@ namespace EMSP.UI
         public void RecalculateInternalValues()
         {
             _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
-            SetValue(_lastValue);
         }
 
         public void SetValue(float value)

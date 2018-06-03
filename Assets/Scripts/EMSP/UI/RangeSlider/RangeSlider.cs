@@ -152,6 +152,8 @@ namespace EMSP.UI
                 _handleMin.RecalculateInternalValues();
                 _handleMax.RecalculateInternalValues();
 
+                UpdateValues();
+
                 return;
             }
 
