@@ -35,6 +35,7 @@ namespace EMSP.Communication
 
         #region Fields
         private WiringDataReader _wiringDataReader = new WiringDataReader();
+        private WiringDataWriter _wiringDataWriter = new WiringDataWriter();
 
         [SerializeField]
         private Material _lineMaterial;
@@ -97,6 +98,13 @@ namespace EMSP.Communication
             _wiring.transform.SetParent(transform, true);
 
             WiringCreated.Invoke(_wiring);
+        }
+
+        public void SaveWiring(string pathForWriting)
+        {
+            if (!_wiring || !_wiring.CheckPointsExist()) return;
+
+            _wiringDataWriter.WriteWiring(pathForWriting, _wiring);
         }
 
         public void DestroyWiring()
