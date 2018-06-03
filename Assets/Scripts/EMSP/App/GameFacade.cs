@@ -207,7 +207,6 @@ namespace EMSP.App
             WiringManager.Instance.CreateNewWiring(results[0]);
         }
 
-        [ContextMenu("ExportWiring")]
         private void ExportWiring()
         {
             string result = "none";
@@ -351,6 +350,9 @@ namespace EMSP.App
                     break;
                 case FileContextMethods.ActionType.ExportMagneticTensionInSpace:
                     ExportMagneticTensionInSpace();
+                    break;
+                case FileContextMethods.ActionType.ExportWiring:
+                    ExportWiring();
                     break;
                 case FileContextMethods.ActionType.Exit:
                     ExitApplication();
