@@ -370,7 +370,9 @@ namespace EMSP.Data.Serialization
         protected void WriteHierarchy(BinaryWriter writer, GameObject parent, List<Mesh> meshes, List<Material> materials)
         {
             WriteStringAsUnicode(writer, parent.name);
-            writer.Write(parent.activeSelf);
+
+            // Write activeSelf as always true
+            writer.Write(true);
 
             WriteTransform(writer, parent.transform);
 
