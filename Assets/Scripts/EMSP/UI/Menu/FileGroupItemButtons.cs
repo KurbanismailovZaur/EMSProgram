@@ -39,6 +39,9 @@ namespace EMSP.UI.Menu
 
         [SerializeField]
         private Button _exportMagneticTensionInSpace;
+
+        [SerializeField]
+        private Button _exportWiring;
         #endregion
 
         #region Events
@@ -55,6 +58,8 @@ namespace EMSP.UI.Menu
         public Button ImportWiringButton { get { return _importWiringButton; } }
 
         public Button ExportMagneticTensionInSpace { get { return _exportMagneticTensionInSpace; } }
+
+        public Button ExportWiring { get { return _exportWiring; } }
         #endregion
 
         #region Constructors
@@ -68,6 +73,7 @@ namespace EMSP.UI.Menu
             _importModelButton.interactable = state;
             _importWiringButton.interactable = state;
             _exportMagneticTensionInSpace.interactable = state;
+            _exportWiring.interactable = state;
         }
         #endregion
 

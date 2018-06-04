@@ -14632,6 +14632,7 @@ MonoBehaviour:
   _importModelButton: {fileID: 114953156507865366}
   _importWiringButton: {fileID: 114744014675275648}
   _exportMagneticTensionInSpace: {fileID: 114726628977905420}
+  _exportWiring: {fileID: 114279198557326686}
 --- !u!114 &114890765315028376
 MonoBehaviour:
   m_ObjectHideFlags: 1

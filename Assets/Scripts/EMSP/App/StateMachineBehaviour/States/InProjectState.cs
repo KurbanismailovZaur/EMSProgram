@@ -120,6 +120,7 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         private void WiringManager_WiringCreated(Wiring wiring)
         {
+            _fileGroupItemButtons.ExportWiring.interactable = true;
             _editGroupItemButtons.RemoveWiringButton.interactable = true;
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = true;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = true;
@@ -127,6 +128,7 @@ namespace EMSP.App.StateMachineBehaviour.States
 
         private void WiringManager_WiringDestroyed(Wiring wiring)
         {
+            _fileGroupItemButtons.ExportWiring.interactable = false;
             _editGroupItemButtons.RemoveWiringButton.interactable = false;
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = false;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = false;
