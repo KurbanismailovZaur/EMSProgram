@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace EMSP.Mathematic.Magnetic
+namespace EMSP.Mathematic
 {
     public abstract class MathematicBase : MonoBehaviour
     {

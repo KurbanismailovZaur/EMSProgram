@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.Mathematic.Magnetic
+namespace EMSP.Mathematic
 {
     [Serializable]
     public struct MaxCalculatedValues
