@@ -472,7 +472,7 @@ namespace EMSP.App
             MathematicManager.Instance.MagneticTension.FilterPointsByTension(range);
         }
 
-        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MagneticTension magneticTensionInSpace, Range range)
+        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
         {
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
