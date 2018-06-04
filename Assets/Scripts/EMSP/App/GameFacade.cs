@@ -207,19 +207,6 @@ namespace EMSP.App
             WiringManager.Instance.CreateNewWiring(results[0]);
         }
 
-        private void ExportWiring()
-        {
-            string result = "none";
-            result = StandaloneFileBrowser.SaveFilePanel("Сохранить проводку", Application.dataPath, "Проводка", "xls");
-
-            if (result == "none")
-            {
-                return;
-            }
-
-            WiringManager.Instance.SaveWiring(result);
-        }
-
         private void ExportMagneticTensionInSpace()
         {
             string path = StandaloneFileBrowser.SaveFilePanel("Экспорт Магнитного Напряжения в Пространстве", Application.dataPath, GameSettings.Instance.MagneticTensionInSpaceDefaultName, GameSettings.Instance.WiringExtensionFilter);
@@ -230,6 +217,18 @@ namespace EMSP.App
             }
 
             _exporter.ExportMagneticTensionInSpace(path);
+        }
+
+        private void ExportWiring()
+        {
+            string path = StandaloneFileBrowser.SaveFilePanel("Сохранить проводку", Application.dataPath, "Проводка", "xls");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            WiringManager.Instance.SaveWiring(path);
         }
 
         private void ExitApplication()
