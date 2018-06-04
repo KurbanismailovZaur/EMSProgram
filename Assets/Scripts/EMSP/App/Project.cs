@@ -68,8 +68,8 @@ namespace EMSP.App
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
 
-            MathematicManager.Instance.MagneticTensionInSpace.Calculated.AddListener(MagneticTensionInSpace_Calculated);
-            MathematicManager.Instance.MagneticTensionInSpace.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
+            MathematicManager.Instance.MagneticTension.Calculated.AddListener(MagneticTensionInSpace_Calculated);
+            MathematicManager.Instance.MagneticTension.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
         }
 
         public void Save(string path)
@@ -84,7 +84,7 @@ namespace EMSP.App
         private void Save()
         {
             EMSPSerializerVersion.SerializableProjectSettings serializableSettings = new EMSPSerializerVersion.SerializableProjectSettings(MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
-            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, ModelManager.Instance.Model, WiringManager.Instance.Wiring, MathematicManager.Instance.MagneticTensionInSpace.GetPointsInfo());
+            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, ModelManager.Instance.Model, WiringManager.Instance.Wiring, MathematicManager.Instance.MagneticTension.GetPointsInfo());
 
             _serializer.Serialize(_path, serializableProjectBatch);
 
@@ -109,7 +109,7 @@ namespace EMSP.App
             ModelManager.Instance.CreateNewModel(serializableProjectBatch.ModelGameObject);
             WiringManager.Instance.CreateNewWiring(serializableProjectBatch.Wiring);
 
-            MathematicManager.Instance.MagneticTensionInSpace.Restore(serializableProjectBatch.PointsInfo);
+            MathematicManager.Instance.MagneticTension.Restore(serializableProjectBatch.PointsInfo);
 
             _isChanged = false;
         }
@@ -152,12 +152,12 @@ namespace EMSP.App
             _isChanged = true;
         }
 
-        private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
+        private void MagneticTensionInSpace_Calculated(MathematicBase mathematicBase)
         {
             _isChanged = true;
         }
 
-        private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
+        private void MagneticTensionInSpace_Destroyed(MathematicBase mathematicBase)
         {
             _isChanged = true;
         }

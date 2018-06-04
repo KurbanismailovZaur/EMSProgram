@@ -72,7 +72,7 @@ namespace EMSP.Data
                 headerCell3.SetCellValue("Magnetic Tension (calculated amperage)");
                 headerCell4.SetCellValue("Magnetic Tension (precomputed amperage)");
 
-                ReadOnlyCollection<MagneticTensionPoint> mtPoints = MathematicManager.Instance.MagneticTensionInSpace.MTPoints;
+                ReadOnlyCollection<CalculationPoint> mtPoints = MathematicManager.Instance.MagneticTension.CalculatedPoints;
 
                 for (int i = 0; i < mtPoints.Count; i++)
                 {

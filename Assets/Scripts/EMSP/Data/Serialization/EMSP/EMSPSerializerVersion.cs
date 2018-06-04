@@ -48,11 +48,11 @@ namespace EMSP.Data.Serialization
 
             public readonly Wiring Wiring;
 
-            public readonly MagneticTensionInSpace.PointsInfo PointsInfo;
+            public readonly MagneticTension.PointsInfo PointsInfo;
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, pointsInfo) { }
+            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTension.PointsInfo pointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, pointsInfo) { }
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTensionInSpace.PointsInfo pointsInfo)
+            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTension.PointsInfo pointsInfo)
             {
                 ProjectSettings = settings;
                 ModelGameObject = modelGameObject;
@@ -458,19 +458,19 @@ namespace EMSP.Data.Serialization
             }
         }
 
-        protected void WriteMagneticTensionInSpace(BinaryWriter writer, MagneticTensionInSpace.PointsInfo pointsInfo)
+        protected void WriteMagneticTensionInSpace(BinaryWriter writer, MagneticTension.PointsInfo pointsInfo)
         {
             writer.Write(pointsInfo.PointsSize);
 
-            foreach (MagneticTensionInSpace.PointInfo pointInfo in pointsInfo.Infos)
+            foreach (MagneticTension.PointInfo pointInfo in pointsInfo.Infos)
             {
                 WriteVector3(writer, pointInfo.Position);
 
-                writer.Write(pointInfo.PrecomputedMagneticTension);
+                writer.Write(pointInfo.PrecomputedValue);
 
-                for (int i = 0; i < pointInfo.CalculatedMagneticTensionsInTime.Length; ++i)
+                for (int i = 0; i < pointInfo.CalculatedValuesInTime.Length; ++i)
                 {
-                    writer.Write(pointInfo.CalculatedMagneticTensionsInTime[i].CalculatedMagneticTension);
+                    writer.Write(pointInfo.CalculatedValuesInTime[i].CalculatedMagneticTension);
                 }
             }
         }

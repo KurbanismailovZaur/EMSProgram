@@ -249,9 +249,9 @@ namespace EMSP.App
             WiringManager.Instance.DestroyWiring();
         }
 
-        private void RemoveMagneticTensionInSpace()
+        private void RemoveMagneticTensionPoints()
         {
-            MathematicManager.Instance.MagneticTensionInSpace.DestroyMagneticTensions();
+            MathematicManager.Instance.MagneticTension.DestroyCalculatedPoints();
         }
 
         private void EditWiring()
@@ -278,12 +278,12 @@ namespace EMSP.App
 
         private void UpdateTensionSlider(bool affectOnCurrent = true)
         {
-            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTensionInSpace.CurrentModeMaxMagneticTension);
+            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTension.CurrentModeMaxCalculatedValue);
 
             if (affectOnCurrent)
             {
                 _tensionFilterSlider.SetMin(0f);
-                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTensionInSpace.CurrentModeMaxMagneticTension);
+                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTension.CurrentModeMaxCalculatedValue);
             }
         }
 
@@ -369,7 +369,7 @@ namespace EMSP.App
                     RemoveWiring();
                     break;
                 case EditContextMethods.ActionType.RemoveMagneticTensionInSpace:
-                    RemoveMagneticTensionInSpace();
+                    RemoveMagneticTensionPoints();
                     break;
                 case EditContextMethods.ActionType.EditWiring:
                     EditWiring();
@@ -434,11 +434,11 @@ namespace EMSP.App
             WiringManager.Instance.CreateNewWiring(wiring);
         }
 
-        public void MagneticTensionInSpace_VisibilityChanged(MagneticTensionInSpace magneticTensionInSpace, bool state)
+        public void MagneticTensionInSpace_VisibilityChanged(MathematicBase mathematicBase, bool state)
         {
             if (state)
             {
-                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTensionInSpace.IsCalculated)
+                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTension.IsCalculated)
                 {
                     _timeLine.Show();
                 }
@@ -456,7 +456,7 @@ namespace EMSP.App
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
-            MathematicManager.Instance.MagneticTensionInSpace.SetPointsToTime(index);
+            MathematicManager.Instance.MagneticTension.SetPointsToTime(index);
         }
 
         public void CalculationSettingsDialog_Applyed(CalculationSettingsDialog calculationSettingsDialog, CalculationSettingsDialog.Settings settings)
@@ -469,10 +469,10 @@ namespace EMSP.App
 
         public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
         {
-            MathematicManager.Instance.MagneticTensionInSpace.FilterPointsByTension(range);
+            MathematicManager.Instance.MagneticTension.FilterPointsByTension(range);
         }
 
-        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MagneticTensionInSpace magneticTensionInSpace, Range range)
+        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MagneticTension magneticTensionInSpace, Range range)
         {
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
@@ -480,7 +480,7 @@ namespace EMSP.App
 
         public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)
         {
-            if (amperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTensionInSpace.IsCalculated)
+            if (amperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTension.IsCalculated)
             {
                 _timeLine.Show();
             }

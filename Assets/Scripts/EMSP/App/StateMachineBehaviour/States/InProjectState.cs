@@ -76,8 +76,8 @@ namespace EMSP.App.StateMachineBehaviour.States
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
 
-            MathematicManager.Instance.MagneticTensionInSpace.Calculated.AddListener(MagneticTensionInSpace_Calculated);
-            MathematicManager.Instance.MagneticTensionInSpace.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
+            MathematicManager.Instance.MagneticTension.Calculated.AddListener(MagneticTensionInSpace_Calculated);
+            MathematicManager.Instance.MagneticTension.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
         }
 
         public override void OnExit()
@@ -90,8 +90,8 @@ namespace EMSP.App.StateMachineBehaviour.States
             WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
 
-            MathematicManager.Instance.MagneticTensionInSpace.Calculated.RemoveListener(MagneticTensionInSpace_Calculated);
-            MathematicManager.Instance.MagneticTensionInSpace.Destroyed.RemoveListener(MagneticTensionInSpace_Destroyed);
+            MathematicManager.Instance.MagneticTension.Calculated.RemoveListener(MagneticTensionInSpace_Calculated);
+            MathematicManager.Instance.MagneticTension.Destroyed.RemoveListener(MagneticTensionInSpace_Destroyed);
         }
         #endregion
 
@@ -136,14 +136,14 @@ namespace EMSP.App.StateMachineBehaviour.States
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = false;
         }
 
-        private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
+        private void MagneticTensionInSpace_Calculated(MathematicBase mathematicBase)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = true;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = true;
             _viewGroupItemButtons.ComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
         }
 
-        private void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
+        private void MagneticTensionInSpace_Destroyed(MathematicBase mathematicBase)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = false;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = false;

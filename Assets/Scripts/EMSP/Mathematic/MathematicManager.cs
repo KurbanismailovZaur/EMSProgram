@@ -47,7 +47,7 @@ namespace EMSP.Mathematic
 
         [Header("Mathematics")]
         [SerializeField]
-        private MagneticTensionInSpace _magneticTensionInSpace;
+        private MagneticTension _magneticTension;
 
         [SerializeField]
         private ElectricField _electricField;
@@ -89,13 +89,13 @@ namespace EMSP.Mathematic
                 }
 
                 _amperageMode = value;
-                _magneticTensionInSpace.AmperageMode = _amperageMode;
+                _magneticTension.AmperageMode = _amperageMode;
 
                 AmperageModeChanged.Invoke(this, _amperageMode);
             }
         }
 
-        public MagneticTensionInSpace MagneticTensionInSpace { get { return _magneticTensionInSpace; } }
+        public MagneticTension MagneticTension { get { return _magneticTension; } }
         #endregion
 
         #region Constructors
@@ -107,7 +107,7 @@ namespace EMSP.Mathematic
             switch (calculationType)
             {
                 case CalculationType.MagneticTensionInSpace:
-                    _magneticTensionInSpace.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
+                    _magneticTension.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
                 case CalculationType.ElectricField:
                     _electricField.Calculate();
@@ -120,7 +120,7 @@ namespace EMSP.Mathematic
             switch (calculationType)
             {
                 case CalculationType.MagneticTensionInSpace:
-                    _magneticTensionInSpace.IsVisible = true;
+                    _magneticTension.IsVisible = true;
                     break;
                 case CalculationType.ElectricField:
                     //_magneticTensionInSpace.IsVisible = true;
@@ -133,14 +133,14 @@ namespace EMSP.Mathematic
             switch (calculationType)
             {
                 case CalculationType.MagneticTensionInSpace:
-                    _magneticTensionInSpace.IsVisible = false;
+                    _magneticTension.IsVisible = false;
                     break;
             }
         }
 
         public void DestroyCalculations()
         {
-            MagneticTensionInSpace.DestroyMagneticTensions();
+            MagneticTension.DestroyCalculatedPoints();
         }
         #endregion
 

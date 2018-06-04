@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EMSP.Mathematic.Magnetic
 {
     [Serializable]
-    public struct MaxMagneticTensions
+    public struct MaxCalculatedValues
     {
         private float _calculated;
 
@@ -18,7 +18,7 @@ namespace EMSP.Mathematic.Magnetic
 
         public float Max { get { return Mathf.Max(_calculated, _precomputed); } }
 
-        public MaxMagneticTensions(float calculated, float precomputed)
+        public MaxCalculatedValues(float calculated, float precomputed)
         {
             _calculated = calculated;
             _precomputed = precomputed;

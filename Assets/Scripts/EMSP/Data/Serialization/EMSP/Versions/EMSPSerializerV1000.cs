@@ -98,7 +98,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             SerializableProjectSettings settings;
             GameObject modelGameObject = null;
             Wiring wiring = null;
-            MagneticTensionInSpace.PointsInfo pointsInfo = null;
+            MagneticTension.PointsInfo pointsInfo = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -155,25 +155,25 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     float pointSize = reader.ReadSingle();
 
                     int pointsCount = (int)Mathf.Pow(settings.RangeLength, 3);
-                    List<MagneticTensionInSpace.PointInfo> ptsInfo = new List<MagneticTensionInSpace.PointInfo>();
+                    List<MagneticTension.PointInfo> ptsInfo = new List<MagneticTension.PointInfo>();
 
                     for(int i = 0; i < pointsCount; ++i)
                     {
                         var position = ReadVector3(reader);
                         var precomputed = reader.ReadSingle();
-                        List<CalculatedMagneticTensionInTime> calculatedMagneticTensionInTime = new List<CalculatedMagneticTensionInTime>();
+                        List<CalculatedValueInTime> calculatedMagneticTensionInTime = new List<CalculatedValueInTime>();
 
 
                         float[] timeSteps = TimeManager.Instance.CalculateSteps(settings.TimeRange.Start, settings.TimeRange.End, settings.TimeStepsCount);
                         for (int j = 0; j < settings.TimeStepsCount; ++j)
                         {
-                            calculatedMagneticTensionInTime.Add(new CalculatedMagneticTensionInTime(timeSteps[j], reader.ReadSingle()));
+                            calculatedMagneticTensionInTime.Add(new CalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
                         }
 
-                        ptsInfo.Add(new MagneticTensionInSpace.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
+                        ptsInfo.Add(new MagneticTension.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
                     }
 
-                    pointsInfo =  new MagneticTensionInSpace.PointsInfo(pointSize, ptsInfo);
+                    pointsInfo =  new MagneticTension.PointsInfo(pointSize, ptsInfo);
                 }
                 #endregion
 

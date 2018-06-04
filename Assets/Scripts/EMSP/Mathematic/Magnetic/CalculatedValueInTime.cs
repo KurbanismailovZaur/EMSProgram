@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EMSP.Mathematic.Magnetic
 {
     [Serializable]
-    public struct CalculatedMagneticTensionInTime
+    public struct CalculatedValueInTime
     {
         private float _time;
 
@@ -16,7 +16,7 @@ namespace EMSP.Mathematic.Magnetic
 
         public float CalculatedMagneticTension { get { return _calculatedMagneticTension; } }
 
-        public CalculatedMagneticTensionInTime(float time, float calculatedMagneticTension)
+        public CalculatedValueInTime(float time, float calculatedMagneticTension)
         {
             _time = time;
             _calculatedMagneticTension = calculatedMagneticTension;

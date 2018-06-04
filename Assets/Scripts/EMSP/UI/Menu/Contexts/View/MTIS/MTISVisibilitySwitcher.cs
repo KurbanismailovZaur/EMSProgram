@@ -45,7 +45,7 @@ namespace EMSP.UI.Menu.Contexts.View.MTIS
         #region Methods
         private void TrySwitchVisibility()
         {
-            MathematicManager.Instance.MagneticTensionInSpace.IsVisible = !MathematicManager.Instance.MagneticTensionInSpace.IsVisible;
+            MathematicManager.Instance.MagneticTension.IsVisible = !MathematicManager.Instance.MagneticTension.IsVisible;
         }
         #endregion
 
@@ -58,17 +58,17 @@ namespace EMSP.UI.Menu.Contexts.View.MTIS
             TrySwitchVisibility();
         }
 
-        public void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)
+        public void MagneticTensionInSpace_Calculated(MathematicBase mathematicBase)
         {
             _stateImage.enabled = true;
         }
 
-        public void MagneticTensionInSpace_Destroyed(MagneticTensionInSpace magneticTensionInSpace)
+        public void MagneticTensionInSpace_Destroyed(MathematicBase mathematicBase)
         {
             _stateImage.enabled = false;
         }
 
-        public void MagneticTensionInSpace_VisibilityChanged(MagneticTensionInSpace magneticTensionInSpace, bool state)
+        public void MagneticTensionInSpace_VisibilityChanged(MathematicBase mathematicBase, bool state)
         {
             _stateImage.enabled = state;
         }

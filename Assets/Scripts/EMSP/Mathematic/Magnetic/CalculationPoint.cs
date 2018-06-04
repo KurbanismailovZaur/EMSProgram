@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EMSP.Mathematic.Magnetic
 {
-	public class MagneticTensionPoint : MonoBehaviour 
+	public class CalculationPoint : MonoBehaviour 
 	{
         #region Entities
         #region Enums
@@ -20,27 +20,27 @@ namespace EMSP.Mathematic.Magnetic
         #region Classes
         public class Factory
         {
-            public MagneticTensionPoint Create(MagneticTensionInSpace magneticTensionInSpace, PrimitiveType primitiveType, Transform parent, Material material, float size, float gradientValue, MagneticTensionInfo mtInfo)
+            public CalculationPoint Create(MathematicBase mathematicBase, PrimitiveType primitiveType, Transform parent, Material material, float size, float gradientValue, CalculatedValueInfo mtInfo)
             {
-                MagneticTensionPoint magneticTensionPoint = GameObject.CreatePrimitive(primitiveType).AddComponent<MagneticTensionPoint>();
+                CalculationPoint magneticTensionPoint = GameObject.CreatePrimitive(primitiveType).AddComponent<CalculationPoint>();
                 magneticTensionPoint.name = "Point";
                 magneticTensionPoint.transform.position = mtInfo.Point;
                 magneticTensionPoint.transform.localScale = new Vector3(size, size, size);
                 magneticTensionPoint.transform.SetParent(parent, true);
 
-                magneticTensionPoint._magneticTensionInSpace = magneticTensionInSpace;
+                magneticTensionPoint._mathematicBase = mathematicBase;
 
                 Renderer magneticTensionRenderer = magneticTensionPoint.GetComponent<Renderer>();
 
                 magneticTensionPoint._material = new Material(material)
                 {
-                    color = magneticTensionPoint._magneticTensionInSpace.GetTensionColorFromGradient(gradientValue)
+                    color = magneticTensionPoint._mathematicBase.GetTensionColorFromGradient(gradientValue)
                 };
 
                 magneticTensionRenderer.material = magneticTensionPoint._material;
 
-                magneticTensionPoint._precomputedMagneticTension = mtInfo.PrecomputedMagneticTension;
-                magneticTensionPoint._calculatedMagneticTensionsInTime = mtInfo.CalculatedMagneticTensionsInTime;
+                magneticTensionPoint._precomputedMagneticTension = mtInfo.PrecomputedValue;
+                magneticTensionPoint._calculatedMagneticTensionsInTime = mtInfo.CalculatedValueInTime;
 
                 return magneticTensionPoint;
             }
@@ -52,13 +52,13 @@ namespace EMSP.Mathematic.Magnetic
         #endregion
 
         #region Fields
-        private MagneticTensionInSpace _magneticTensionInSpace;
+        private MathematicBase _mathematicBase;
 
         private Material _material;
 
         private float _precomputedMagneticTension;
 
-        private CalculatedMagneticTensionInTime[] _calculatedMagneticTensionsInTime;
+        private CalculatedValueInTime[] _calculatedMagneticTensionsInTime;
 
         private int _currentTimeIndex;
         #endregion
@@ -70,7 +70,7 @@ namespace EMSP.Mathematic.Magnetic
         #region Properties
         public float PrecomputedMagneticTension { get { return _precomputedMagneticTension; } }
 
-        public CalculatedMagneticTensionInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
+        public CalculatedValueInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
 
         public float CurrentCalculatedMagneticTension { get { return _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension; } }
         #endregion
@@ -91,18 +91,18 @@ namespace EMSP.Mathematic.Magnetic
             float magneticTension = 0f;
             float concreteMaxMagneticTension = 0f;
 
-            if (_magneticTensionInSpace.AmperageMode == AmperageMode.Computational)
+            if (_mathematicBase.AmperageMode == AmperageMode.Computational)
             {
                 magneticTension = _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension;
-                concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Calculated;
+                concreteMaxMagneticTension = _mathematicBase.MaxCalculatedValuesInTime.Calculated;
             }
             else
             {
                 magneticTension = _precomputedMagneticTension;
-                concreteMaxMagneticTension = _magneticTensionInSpace.MaxMagneticTensionsInTime.Precomputed;
+                concreteMaxMagneticTension = _mathematicBase.MaxCalculatedValuesInTime.Precomputed;
             }
 
-            _material.color = _magneticTensionInSpace.GetTensionColorFromGradient(magneticTension.Remap(0f, concreteMaxMagneticTension, 0f, 1f));
+            _material.color = _mathematicBase.GetTensionColorFromGradient(magneticTension.Remap(0f, concreteMaxMagneticTension, 0f, 1f));
         }
         #endregion
 
