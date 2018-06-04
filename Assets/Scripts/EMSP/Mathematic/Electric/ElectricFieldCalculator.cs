@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.Mathematic.Electric
+namespace EMSP.Mathematic
 {
-	public class ElectricField : MathematicBase 
-	{
+    public class ElectricFieldCalculator : MathematicCalculator
+    {
         #region Entities
         #region Enums
         #endregion
@@ -31,30 +31,23 @@ namespace EMSP.Mathematic.Electric
 
         #region Behaviour
         #region Properties
-        protected override MathematicCalculator Calculator
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-        }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-        public void Calculate()
+        public override Vector3 Calculate(Vector3 pointA, Vector3 pointB, Vector3 pointC, float amperage)
         {
-
+            return new Magnetic.MagneticTensionCalculator().Calculate(pointA, pointB, pointC, amperage);
         }
-		#endregion
-		
-		#region Indexers
-		#endregion
-		
-		#region Events handlers
-		#endregion
-		#endregion
-	}
+        #endregion
+
+        #region Indexers
+        #endregion
+
+        #region Events handlers
+        #endregion
+        #endregion
+    }
 }
