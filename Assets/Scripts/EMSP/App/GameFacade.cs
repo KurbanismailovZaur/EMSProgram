@@ -13,12 +13,9 @@ using UnityEngine;
 using Grid = EMSP.Environment.Metrics.Grid;
 using EMSP.UI.Dialogs.WiringEditor;
 using EMSP.Data;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 using EMSP.Timing;
 using EMSP.UI.Dialogs.CalculationSettings;
-using EMSP.Data.Serialization.EMSP.Versions;
-using EMSP.Data.Serialization.EMSP;
-using EMSP.Data.Serialization;
 using System;
 
 namespace EMSP.App
@@ -264,10 +261,10 @@ namespace EMSP.App
         #endregion
 
         #region Calculations context methods
-        private void CalculateMagneticTensionsInSpace()
+        private void Calculate(CalculationType calculationType)
         {
-            MathematicManager.Instance.Calculate(CalculationType.MagneticTensionInSpace);
-            MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
+            MathematicManager.Instance.Calculate(calculationType);
+            MathematicManager.Instance.Show(calculationType);
 
             UpdateTimeAndTensionSlider();
         }
@@ -394,7 +391,10 @@ namespace EMSP.App
             switch (actionType)
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
-                    CalculateMagneticTensionsInSpace();
+                    Calculate(CalculationType.MagneticTensionInSpace);
+                    break;
+                case CalculationsContextMethods.ActionType.ElectricField:
+                    Calculate(CalculationType.ElectricField);
                     break;
                 case CalculationsContextMethods.ActionType.Parameters:
                     OpenParameters();

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace EMSP.Mathematic.MagneticTension
+namespace EMSP.Mathematic.Magnetic
 {
 	public class MagneticTensionCalculator : MathematicBase
 	{

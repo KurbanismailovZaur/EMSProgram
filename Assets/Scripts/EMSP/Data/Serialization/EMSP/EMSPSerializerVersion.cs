@@ -1,5 +1,5 @@
 ﻿using EMSP.Communication;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 using System;
 using System.Collections;
 using System.Collections.Generic;

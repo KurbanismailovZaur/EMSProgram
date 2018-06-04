@@ -1,5 +1,6 @@
 ﻿using EMSP.Communication;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Electric;
+using EMSP.Mathematic.Magnetic;
 using EMSP.Timing;
 using EMSP.Utility.Extensions;
 using Numba;
@@ -37,7 +38,6 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Fields
-        #region Common
         [SerializeField]
         [Range(8, 128)]
         private int _rangeLength = 16;
@@ -48,7 +48,9 @@ namespace EMSP.Mathematic
         [Header("Mathematics")]
         [SerializeField]
         private MagneticTensionInSpace _magneticTensionInSpace;
-        #endregion
+
+        [SerializeField]
+        private ElectricField _electricField;
         #endregion
 
         #region Events
@@ -107,6 +109,9 @@ namespace EMSP.Mathematic
                 case CalculationType.MagneticTensionInSpace:
                     _magneticTensionInSpace.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
+                case CalculationType.ElectricField:
+                    _electricField.Calculate();
+                    break;
             }
         }
 
@@ -116,6 +121,9 @@ namespace EMSP.Mathematic
             {
                 case CalculationType.MagneticTensionInSpace:
                     _magneticTensionInSpace.IsVisible = true;
+                    break;
+                case CalculationType.ElectricField:
+                    //_magneticTensionInSpace.IsVisible = true;
                     break;
             }
         }

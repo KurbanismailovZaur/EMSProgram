@@ -10,7 +10,7 @@ using EMSP.Mathematic;
 using EMSP.Timing;
 using EMSP.Communication;
 using System.Collections.ObjectModel;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 
 namespace EMSP.Data.Serialization.EMSP.Versions
 {

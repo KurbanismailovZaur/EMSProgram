@@ -10,7 +10,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace EMSP.Mathematic.MagneticTension
+namespace EMSP.Mathematic.Magnetic
 {
     public class MagneticTensionInSpace : MonoBehaviour
     {

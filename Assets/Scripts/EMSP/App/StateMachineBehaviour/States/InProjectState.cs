@@ -1,6 +1,6 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 using EMSP.UI.Menu;
 using System;
 using System.Collections;
@@ -124,6 +124,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _editGroupItemButtons.RemoveWiringButton.interactable = true;
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = true;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = true;
+            _calculationsGroupItemButtons.ElectricFieldButton.interactable = true;
         }
 
         private void WiringManager_WiringDestroyed(Wiring wiring)
@@ -132,6 +133,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _editGroupItemButtons.RemoveWiringButton.interactable = false;
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = false;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = false;
+            _calculationsGroupItemButtons.ElectricFieldButton.interactable = false;
         }
 
         private void MagneticTensionInSpace_Calculated(MagneticTensionInSpace magneticTensionInSpace)

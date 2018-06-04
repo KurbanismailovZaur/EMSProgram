@@ -2,7 +2,7 @@
 using EMSP.Data.Serialization;
 using EMSP.Data.Serialization.EMSP;
 using EMSP.Mathematic;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 using EMSP.Timing;
 using System;
 using System.Collections;

@@ -5,7 +5,7 @@ using UnityEngine;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using System.IO;
-using EMSP.Mathematic.MagneticTension;
+using EMSP.Mathematic.Magnetic;
 using EMSP.Mathematic;
 using System.Collections.ObjectModel;
 

@@ -13,6 +13,7 @@ namespace EMSP.UI.Menu.Contexts
         public enum ActionType
         {
             MagneticTensionInSpace,
+            ElectricField,
             Parameters
         }
         #endregion
@@ -50,6 +51,11 @@ namespace EMSP.UI.Menu.Contexts
         public void CalculateMagneticTensionInSpace()
         {
             Selected.Invoke(this, ActionType.MagneticTensionInSpace);
+        }
+
+        public void CalculateElectricFiled()
+        {
+            Selected.Invoke(this, ActionType.ElectricField);
         }
 
         public void OpenParametersDialog()
