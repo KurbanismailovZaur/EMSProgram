@@ -133,7 +133,7 @@ namespace EMSP.App
         {
             ProjectManager.Instance.OpenProject(path);
 
-            MathematicManager.Instance.Show(CalculationType.MagneticTensionInSpace);
+            MathematicManager.Instance.Show(CalculationType.MagneticTension);
 
             UpdateTimeAndTensionSlider();
         }
@@ -174,7 +174,7 @@ namespace EMSP.App
         {
             ModelManager.Instance.DestroyModel();
             WiringManager.Instance.DestroyWiring();
-            MathematicManager.Instance.DestroyCalculations();
+            MathematicManager.Instance.DestroyAllCalculations();
             ProjectManager.Instance.CloseProject();
 
             Resources.UnloadUnusedAssets();
@@ -251,7 +251,7 @@ namespace EMSP.App
 
         private void RemoveMagneticTensionPoints()
         {
-            MathematicManager.Instance.MagneticTension.DestroyCalculatedPoints();
+            MathematicManager.Instance.DestroyCalculations(CalculationType.MagneticTension);
         }
 
         private void EditWiring()
@@ -273,17 +273,17 @@ namespace EMSP.App
         {
             TimeManager.Instance.TimeIndex = 0;
 
-            UpdateTensionSlider();
+            UpdateTensionSlider(true);
         }
 
         private void UpdateTensionSlider(bool affectOnCurrent = true)
         {
-            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.MagneticTension.CurrentModeMaxCalculatedValue);
+            _tensionFilterSlider.SetRangeLimits(0f, MathematicManager.Instance.CurrentCalculationMethod.CurrentModeMaxCalculatedValue);
 
             if (affectOnCurrent)
             {
                 _tensionFilterSlider.SetMin(0f);
-                _tensionFilterSlider.SetMax(MathematicManager.Instance.MagneticTension.CurrentModeMaxCalculatedValue);
+                _tensionFilterSlider.SetMax(MathematicManager.Instance.CurrentCalculationMethod.CurrentModeMaxCalculatedValue);
             }
         }
 
@@ -391,7 +391,7 @@ namespace EMSP.App
             switch (actionType)
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
-                    Calculate(CalculationType.MagneticTensionInSpace);
+                    Calculate(CalculationType.MagneticTension);
                     break;
                 case CalculationsContextMethods.ActionType.ElectricField:
                     Calculate(CalculationType.ElectricField);
@@ -434,6 +434,7 @@ namespace EMSP.App
             WiringManager.Instance.CreateNewWiring(wiring);
         }
 
+        #region Magnetic tensions
         public void MagneticTensionInSpace_VisibilityChanged(MathematicBase mathematicBase, bool state)
         {
             if (state)
@@ -454,9 +455,44 @@ namespace EMSP.App
             }
         }
 
+        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
+        {
+            _tensionFilterSlider.SetMin(range.Min);
+            _tensionFilterSlider.SetMax(range.Max);
+        }
+        #endregion
+
+        #region Electric field
+        public void ElectricField_VisibilityChanged(MathematicBase mathematicBase, bool state)
+        {
+            if (state)
+            {
+                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.ElectricField.IsCalculated)
+                {
+                    _timeLine.Show();
+                }
+
+                _tensionFilterSlider.Show();
+            }
+            else
+            {
+                _timeLine.Stop();
+                _timeLine.Hide();
+
+                _tensionFilterSlider.Hide();
+            }
+        }
+
+        public void ElectricField_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
+        {
+            _tensionFilterSlider.SetMin(range.Min);
+            _tensionFilterSlider.SetMax(range.Max);
+        }
+        #endregion
+
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
-            MathematicManager.Instance.MagneticTension.SetPointsToTime(index);
+            MathematicManager.Instance.CurrentCalculationMethod.SetPointsToTime(index);
         }
 
         public void CalculationSettingsDialog_Applyed(CalculationSettingsDialog calculationSettingsDialog, CalculationSettingsDialog.Settings settings)
@@ -464,41 +500,24 @@ namespace EMSP.App
             MathematicManager.Instance.RangeLength = settings.RangeLength;
             TimeManager.Instance.SetTimeParameters(settings.TimeRange, settings.TimeStepsCount);
 
-            MathematicManager.Instance.DestroyCalculations();
+            MathematicManager.Instance.DestroyAllCalculations();
         }
 
         public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
         {
-            MathematicManager.Instance.MagneticTension.FilterPointsByTension(range);
-        }
-
-        public void MagneticTensionInSpace_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
-        {
-            _tensionFilterSlider.SetMin(range.Min);
-            _tensionFilterSlider.SetMax(range.Max);
+            ((IPointableCalculationMethod)MathematicManager.Instance.CurrentCalculationMethod).FilterPointsByValue(range);
         }
 
         public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)
         {
-            if (amperageMode == AmperageMode.Computational && MathematicManager.Instance.MagneticTension.IsCalculated)
+            if (!MathematicManager.Instance.CurrentCalculationMethod.IsCalculated)
             {
-                _timeLine.Show();
+                _timeLine.StopAndHide();
+                return;
             }
-            else
-            {
-                _timeLine.Stop();
-                _timeLine.Hide();
-            }
-        }
 
-        public void MagneticTension_Calculated(MathematicBase mathematicBase)
-        {
-
-        }
-
-        public void MagneticTension_Destroyed(MathematicBase mathematicBase)
-        {
-
+            if (amperageMode == AmperageMode.Computational) _timeLine.Show();
+            else _timeLine.StopAndHide();
         }
         #endregion
         #endregion

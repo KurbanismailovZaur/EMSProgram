@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace EMSP.Mathematic
 {
-    public abstract class MathematicBase : MonoBehaviour, ICalculations
+    public abstract class MathematicBase : MonoBehaviour, IPointableCalculationMethod
     {
         #region Entities
         #region Enums
@@ -121,6 +121,8 @@ namespace EMSP.Mathematic
 
         #region Behaviour
         #region Properties
+        public abstract CalculationType Type { get; }
+
         protected abstract MathematicCalculator Calculator { get; }
 
         public AmperageMode AmperageMode
@@ -303,10 +305,10 @@ namespace EMSP.Mathematic
 
         public void FilterPointsByTension(float min, float max)
         {
-            FilterPointsByTension(new Range(min, max));
+            FilterPointsByValue(new Range(min, max));
         }
 
-        public void FilterPointsByTension(Range range)
+        public void FilterPointsByValue(Range range)
         {
             CurrentValueFilterRange = range.Clamp(_valueFilterRange);
 
@@ -364,7 +366,7 @@ namespace EMSP.Mathematic
                 mtPoint.SetToTime(_currentTimeIndex);
             }
 
-            FilterPointsByTension(_currentValueFilterRange);
+            FilterPointsByValue(_currentValueFilterRange);
         }
 
         public Color GetTensionColorFromGradient(float percent)

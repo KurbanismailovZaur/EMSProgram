@@ -17,6 +17,12 @@ namespace EMSP.Mathematic
     {
         #region Entities
         #region Enums
+        private enum InnerCalculationsType
+        {
+            None = -1,
+            MagneticTension,
+            ElectricField
+        }
         #endregion
 
         #region Delegates
@@ -52,7 +58,7 @@ namespace EMSP.Mathematic
         [SerializeField]
         private ElectricField _electricField;
 
-        private ICalculations _currentCalculations;
+        private ICalculationMethod _currentCalculationMethod;
         #endregion
 
         #region Events
@@ -98,6 +104,20 @@ namespace EMSP.Mathematic
         }
 
         public MagneticTension MagneticTension { get { return _magneticTension; } }
+
+        public ElectricField ElectricField { get { return _electricField; } }
+
+        private InnerCalculationsType CurrentCalculationsType
+        {
+            get
+            {
+                if (_currentCalculationMethod == null) return InnerCalculationsType.None;
+
+                return (InnerCalculationsType)_currentCalculationMethod.Type;
+            }
+        }
+
+        public ICalculationMethod CurrentCalculationMethod { get { return _currentCalculationMethod; } }
         #endregion
 
         #region Constructors
@@ -108,7 +128,7 @@ namespace EMSP.Mathematic
         {
             switch (calculationType)
             {
-                case CalculationType.MagneticTensionInSpace:
+                case CalculationType.MagneticTension:
                     _magneticTension.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
                 case CalculationType.ElectricField:
@@ -119,31 +139,59 @@ namespace EMSP.Mathematic
 
         public void Show(CalculationType calculationType)
         {
+            if ((int)calculationType == (int)CurrentCalculationsType) return;
+
+            HideCurrentCalculations();
+
             switch (calculationType)
             {
-                case CalculationType.MagneticTensionInSpace:
-                    _magneticTension.IsVisible = true;
+                case CalculationType.MagneticTension:
+                    (_currentCalculationMethod = _magneticTension).IsVisible = true;
                     break;
                 case CalculationType.ElectricField:
-                    _electricField.IsVisible = true;
+                    (_currentCalculationMethod = _electricField).IsVisible = true;
                     break;
             }
         }
 
-        public void Hide(CalculationType calculationType)
+        public void HideCurrentCalculations()
+        {
+            if (_currentCalculationMethod != null) _currentCalculationMethod.IsVisible = false;
+        }
+
+        private void HideCalculations(CalculationType calculationType)
         {
             switch (calculationType)
             {
-                case CalculationType.MagneticTensionInSpace:
+                case CalculationType.MagneticTension:
                     _magneticTension.IsVisible = false;
                     break;
                 case CalculationType.ElectricField:
                     _electricField.IsVisible = false;
                     break;
             }
+
+            if ((int)CurrentCalculationsType == (int)calculationType) _currentCalculationMethod = null;
         }
 
-        public void DestroyCalculations()
+        public void DestroyCalculations(CalculationType calculationType)
+        {
+            HideCalculations(calculationType);
+
+            if ((int)CurrentCalculationsType == (int)calculationType) _currentCalculationMethod = null;
+
+            switch (calculationType)
+            {
+                case CalculationType.MagneticTension:
+                    _magneticTension.DestroyCalculatedPoints();
+                    break;
+                case CalculationType.ElectricField:
+                    _electricField.DestroyCalculatedPoints();
+                    break;
+            }
+        }
+
+        public void DestroyAllCalculations()
         {
             _magneticTension.DestroyCalculatedPoints();
             _electricField.DestroyCalculatedPoints();

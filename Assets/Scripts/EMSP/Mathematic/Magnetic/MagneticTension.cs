@@ -44,6 +44,8 @@ namespace EMSP.Mathematic.Magnetic
                 return _calculator;
             }
         }
+
+        public override CalculationType Type { get { return CalculationType.MagneticTension; } }
         #endregion
 
         #region Constructors

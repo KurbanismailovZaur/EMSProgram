@@ -223,7 +223,6 @@ namespace EMSP.UI
             _stopButton.SetActive(false);
         }
 
-
         public void Show()
         {
             gameObject.SetActive(true);
@@ -234,6 +233,11 @@ namespace EMSP.UI
             gameObject.SetActive(false);
         }
 
+        public void StopAndHide()
+        {
+            Stop();
+            Hide();
+        }
 
         private void CalculateInternalValues()
         {

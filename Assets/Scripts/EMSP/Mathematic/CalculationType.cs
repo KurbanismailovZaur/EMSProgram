@@ -6,7 +6,7 @@ namespace EMSP.Mathematic
 {
     public enum CalculationType
     {
-        MagneticTensionInSpace,
+        MagneticTension,
         ElectricField
     }
 }

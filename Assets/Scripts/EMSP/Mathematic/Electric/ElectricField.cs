@@ -39,19 +39,21 @@ namespace EMSP.Mathematic.Electric
                 return _electricFieldCalculator;
             }
         }
+
+        public override CalculationType Type { get { return CalculationType.ElectricField; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-		#endregion
-		
-		#region Indexers
-		#endregion
-		
-		#region Events handlers
-		#endregion
-		#endregion
-	}
+        #endregion
+
+        #region Indexers
+        #endregion
+
+        #region Events handlers
+        #endregion
+        #endregion
+    }
 }
