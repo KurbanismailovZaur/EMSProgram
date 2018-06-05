@@ -35,7 +35,10 @@ namespace EMSP.UI.Menu
         private Button _wiringIsVisibilityButton;
 
         [SerializeField]
-        private Button _computationMagneticTensionInSpaceIsVisibleButton;
+        private Button _magneticTensionIsVisibleButton;
+
+        [SerializeField]
+        private Button _electricFieldIsVisibleButton;
 
         [SerializeField]
         private Button _gridVisibilityButton;
@@ -52,7 +55,9 @@ namespace EMSP.UI.Menu
 
         public Button WiringIsVisibilityButton { get { return _wiringIsVisibilityButton; } }
 
-        public Button ComputationMagneticTensionInSpaceIsVisibleButton { get { return _computationMagneticTensionInSpaceIsVisibleButton; } }
+        public Button MagneticTensionIsVisibleButton { get { return _magneticTensionIsVisibleButton; } }
+
+        public Button ElectricFieldIsVisibleButton { get { return _electricFieldIsVisibleButton; } }
 
         public Button GridVisibilityButton { get { return _gridVisibilityButton; } }
         #endregion
@@ -66,7 +71,8 @@ namespace EMSP.UI.Menu
             _modelIsVisibilityButton.interactable = state;
             _modelIsTransparentButton.interactable = state;
             _wiringIsVisibilityButton.interactable = state;
-            _computationMagneticTensionInSpaceIsVisibleButton.interactable = state;
+            _magneticTensionIsVisibleButton.interactable = state;
+            _electricFieldIsVisibleButton.interactable = state;
             _gridVisibilityButton.interactable = state;
         }
         #endregion

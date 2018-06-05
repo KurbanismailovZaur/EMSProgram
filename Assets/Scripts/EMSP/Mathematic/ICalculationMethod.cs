@@ -17,5 +17,7 @@ namespace EMSP.Mathematic
         float CurrentModeMaxCalculatedValue { get; }
 
         void SetPointsToTime(int index);
-	}
+
+        AmperageMode AmperageMode { get; set; }
+    }
 }

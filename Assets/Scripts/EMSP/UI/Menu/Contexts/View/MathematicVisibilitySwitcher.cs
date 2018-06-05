@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace EMSP.UI.Menu.Contexts.View
 {
-	public class MagneticTensionVisibilitySwitcher : MonoBehaviour 
+	public class MathematicVisibilitySwitcher : MonoBehaviour 
 	{
         #region Entities
         #region Enums
@@ -30,6 +30,9 @@ namespace EMSP.UI.Menu.Contexts.View
         #region Fields
         [SerializeField]
         private Image _stateImage;
+
+        [SerializeField]
+        private CalculationType _calculationType;
         #endregion
 
         #region Events
@@ -45,7 +48,7 @@ namespace EMSP.UI.Menu.Contexts.View
         #region Methods
         private void TrySwitchVisibility()
         {
-            MathematicManager.Instance.MagneticTension.IsVisible = !MathematicManager.Instance.MagneticTension.IsVisible;
+            MathematicManager.Instance.SwitchVisibility(_calculationType);
         }
         #endregion
 
@@ -58,17 +61,7 @@ namespace EMSP.UI.Menu.Contexts.View
             TrySwitchVisibility();
         }
 
-        public void MagneticTensionInSpace_Calculated(MathematicBase mathematicBase)
-        {
-            _stateImage.enabled = true;
-        }
-
-        public void MagneticTensionInSpace_Destroyed(MathematicBase mathematicBase)
-        {
-            _stateImage.enabled = false;
-        }
-
-        public void MagneticTensionInSpace_VisibilityChanged(MathematicBase mathematicBase, bool state)
+        public void MathematicBase_VisibilityChanged(MathematicBase mathematicBase, bool state)
         {
             _stateImage.enabled = state;
         }

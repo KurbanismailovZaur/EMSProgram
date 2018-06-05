@@ -76,8 +76,11 @@ namespace EMSP.App.StateMachineBehaviour.States
             WiringManager.Instance.WiringCreated.AddListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.AddListener(WiringManager_WiringDestroyed);
 
-            MathematicManager.Instance.MagneticTension.Calculated.AddListener(MagneticTensionInSpace_Calculated);
-            MathematicManager.Instance.MagneticTension.Destroyed.AddListener(MagneticTensionInSpace_Destroyed);
+            MathematicManager.Instance.MagneticTension.Calculated.AddListener(MagneticTension_Calculated);
+            MathematicManager.Instance.MagneticTension.Destroyed.AddListener(MagneticTension_Destroyed);
+
+            MathematicManager.Instance.ElectricField.Calculated.AddListener(ElectricField_Calculated);
+            MathematicManager.Instance.ElectricField.Destroyed.AddListener(ElectricField_Destroyed);
         }
 
         public override void OnExit()
@@ -90,8 +93,11 @@ namespace EMSP.App.StateMachineBehaviour.States
             WiringManager.Instance.WiringCreated.RemoveListener(WiringManager_WiringCreated);
             WiringManager.Instance.WiringDestroyed.RemoveListener(WiringManager_WiringDestroyed);
 
-            MathematicManager.Instance.MagneticTension.Calculated.RemoveListener(MagneticTensionInSpace_Calculated);
-            MathematicManager.Instance.MagneticTension.Destroyed.RemoveListener(MagneticTensionInSpace_Destroyed);
+            MathematicManager.Instance.MagneticTension.Calculated.RemoveListener(MagneticTension_Calculated);
+            MathematicManager.Instance.MagneticTension.Destroyed.RemoveListener(MagneticTension_Destroyed);
+
+            MathematicManager.Instance.ElectricField.Calculated.RemoveListener(ElectricField_Calculated);
+            MathematicManager.Instance.ElectricField.Destroyed.RemoveListener(ElectricField_Destroyed);
         }
         #endregion
 
@@ -136,18 +142,30 @@ namespace EMSP.App.StateMachineBehaviour.States
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = false;
         }
 
-        private void MagneticTensionInSpace_Calculated(MathematicBase mathematicBase)
+        private void MagneticTension_Calculated(MathematicBase mathematicBase)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = true;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = true;
-            _viewGroupItemButtons.ComputationMagneticTensionInSpaceIsVisibleButton.interactable = true;
+            _viewGroupItemButtons.MagneticTensionIsVisibleButton.interactable = true;
         }
 
-        private void MagneticTensionInSpace_Destroyed(MathematicBase mathematicBase)
+        private void MagneticTension_Destroyed(MathematicBase mathematicBase)
         {
             _fileGroupItemButtons.ExportMagneticTensionInSpace.interactable = false;
             _editGroupItemButtons.CalculationRemoveMagneticTensionInSpaceButton.interactable = false;
-            _viewGroupItemButtons.ComputationMagneticTensionInSpaceIsVisibleButton.interactable = false;
+            _viewGroupItemButtons.MagneticTensionIsVisibleButton.interactable = false;
+        }
+
+        private void ElectricField_Calculated(MathematicBase mathematicBase)
+        {
+            _editGroupItemButtons.CalculationRemoveElectricFieldButton.interactable = true;
+            _viewGroupItemButtons.ElectricFieldIsVisibleButton.interactable = true;
+        }
+
+        private void ElectricField_Destroyed(MathematicBase mathematicBase)
+        {
+            _editGroupItemButtons.CalculationRemoveElectricFieldButton.interactable = false;
+            _viewGroupItemButtons.ElectricFieldIsVisibleButton.interactable = false;
         }
         #endregion
         #endregion

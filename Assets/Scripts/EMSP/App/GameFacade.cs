@@ -254,6 +254,11 @@ namespace EMSP.App
             MathematicManager.Instance.DestroyCalculations(CalculationType.MagneticTension);
         }
 
+        private void RemoveElectricFieldPoints()
+        {
+            MathematicManager.Instance.DestroyCalculations(CalculationType.ElectricField);
+        }
+
         private void EditWiring()
         {
             _wiringEditorDialog.StartWiringEditing(WiringManager.Instance.Wiring, WiringEditorDialog_OnWiringEdited);
@@ -368,8 +373,11 @@ namespace EMSP.App
                 case EditContextMethods.ActionType.RemoveWiring:
                     RemoveWiring();
                     break;
-                case EditContextMethods.ActionType.RemoveMagneticTensionInSpace:
+                case EditContextMethods.ActionType.RemoveMagneticTension:
                     RemoveMagneticTensionPoints();
+                    break;
+                case EditContextMethods.ActionType.RemoveElectricField:
+                    RemoveElectricFieldPoints();
                     break;
                 case EditContextMethods.ActionType.EditWiring:
                     EditWiring();
@@ -510,7 +518,7 @@ namespace EMSP.App
 
         public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)
         {
-            if (!MathematicManager.Instance.CurrentCalculationMethod.IsCalculated)
+            if (MathematicManager.Instance.CurrentCalculationMethod == null || !MathematicManager.Instance.CurrentCalculationMethod.IsCalculated)
             {
                 _timeLine.StopAndHide();
                 return;

@@ -97,7 +97,7 @@ namespace EMSP.Mathematic
                 }
 
                 _amperageMode = value;
-                _magneticTension.AmperageMode = _amperageMode;
+                if (_currentCalculationMethod != null) _currentCalculationMethod.AmperageMode = _amperageMode;
 
                 AmperageModeChanged.Invoke(this, _amperageMode);
             }
@@ -152,11 +152,29 @@ namespace EMSP.Mathematic
                     (_currentCalculationMethod = _electricField).IsVisible = true;
                     break;
             }
+
+            _currentCalculationMethod.AmperageMode = _amperageMode;
+            _currentCalculationMethod.SetPointsToTime(TimeManager.Instance.TimeIndex);
+        }
+
+        public void SwitchVisibility(CalculationType calculationType)
+        {
+            InnerCalculationsType currentCalculationType = CurrentCalculationsType;
+
+            HideCurrentCalculations();
+
+            if ((int)currentCalculationType == (int)calculationType) return;
+
+            Show(calculationType);
         }
 
         public void HideCurrentCalculations()
         {
-            if (_currentCalculationMethod != null) _currentCalculationMethod.IsVisible = false;
+            if (_currentCalculationMethod != null)
+            {
+                _currentCalculationMethod.IsVisible = false;
+                _currentCalculationMethod = null;
+            }
         }
 
         private void HideCalculations(CalculationType calculationType)
