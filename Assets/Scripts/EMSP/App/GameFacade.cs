@@ -490,6 +490,16 @@ namespace EMSP.App
                 _timeLine.Hide();
             }
         }
+
+        public void MagneticTension_Calculated(MathematicBase mathematicBase)
+        {
+
+        }
+
+        public void MagneticTension_Destroyed(MathematicBase mathematicBase)
+        {
+
+        }
         #endregion
         #endregion
     }

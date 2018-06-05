@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace EMSP.Mathematic
 {
-    public abstract class MathematicBase : MonoBehaviour
+    public abstract class MathematicBase : MonoBehaviour, ICalculations
     {
         #region Entities
         #region Enums

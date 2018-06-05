@@ -51,6 +51,8 @@ namespace EMSP.Mathematic
 
         [SerializeField]
         private ElectricField _electricField;
+
+        private ICalculations _currentCalculations;
         #endregion
 
         #region Events
@@ -110,7 +112,7 @@ namespace EMSP.Mathematic
                     _magneticTension.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
                 case CalculationType.ElectricField:
-                    _electricField.Calculate();
+                    _electricField.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
             }
         }
@@ -123,7 +125,7 @@ namespace EMSP.Mathematic
                     _magneticTension.IsVisible = true;
                     break;
                 case CalculationType.ElectricField:
-                    //_magneticTensionInSpace.IsVisible = true;
+                    _electricField.IsVisible = true;
                     break;
             }
         }
@@ -135,12 +137,16 @@ namespace EMSP.Mathematic
                 case CalculationType.MagneticTensionInSpace:
                     _magneticTension.IsVisible = false;
                     break;
+                case CalculationType.ElectricField:
+                    _electricField.IsVisible = false;
+                    break;
             }
         }
 
         public void DestroyCalculations()
         {
-            MagneticTension.DestroyCalculatedPoints();
+            _magneticTension.DestroyCalculatedPoints();
+            _electricField.DestroyCalculatedPoints();
         }
         #endregion
 

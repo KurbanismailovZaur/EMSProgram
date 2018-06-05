@@ -24,6 +24,7 @@ namespace EMSP.Mathematic.Electric
         #endregion
 
         #region Fields
+        private ElectricFieldCalculator _electricFieldCalculator = new ElectricFieldCalculator();
         #endregion
 
         #region Events
@@ -35,7 +36,7 @@ namespace EMSP.Mathematic.Electric
         {
             get
             {
-                throw new System.NotImplementedException();
+                return _electricFieldCalculator;
             }
         }
         #endregion
@@ -44,10 +45,6 @@ namespace EMSP.Mathematic.Electric
         #endregion
 
         #region Methods
-        public void Calculate()
-        {
-
-        }
 		#endregion
 		
 		#region Indexers

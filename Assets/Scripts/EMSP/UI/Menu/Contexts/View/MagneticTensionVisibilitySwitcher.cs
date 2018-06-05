@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Menu.Contexts.View.MTIS
+namespace EMSP.UI.Menu.Contexts.View
 {
-	public class MTISVisibilitySwitcher : MonoBehaviour 
+	public class MagneticTensionVisibilitySwitcher : MonoBehaviour 
 	{
         #region Entities
         #region Enums
