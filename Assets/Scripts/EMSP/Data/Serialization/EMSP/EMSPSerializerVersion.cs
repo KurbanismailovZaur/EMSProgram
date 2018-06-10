@@ -1,4 +1,5 @@
 ﻿using EMSP.Communication;
+using EMSP.Mathematic.Electric;
 using EMSP.Mathematic.Magnetic;
 using System;
 using System.Collections;
@@ -48,16 +49,18 @@ namespace EMSP.Data.Serialization
 
             public readonly Wiring Wiring;
 
-            public readonly MagneticTension.PointsInfo PointsInfo;
+            public readonly MagneticTension.PointsInfo MagneticTensionPointsInfo;
+            public readonly ElectricField.PointsInfo ElectricFieldPointsInfo;
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTension.PointsInfo pointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, pointsInfo) { }
+            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, mtPointsInfo, efPointsInfo) { }
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTension.PointsInfo pointsInfo)
+            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo)
             {
                 ProjectSettings = settings;
                 ModelGameObject = modelGameObject;
                 Wiring = wiring;
-                PointsInfo = pointsInfo;
+                MagneticTensionPointsInfo = mtPointsInfo;
+                ElectricFieldPointsInfo = efPointsInfo;
             }
         }
         #endregion
@@ -470,7 +473,24 @@ namespace EMSP.Data.Serialization
 
                 for (int i = 0; i < pointInfo.CalculatedValuesInTime.Length; ++i)
                 {
-                    writer.Write(pointInfo.CalculatedValuesInTime[i].CalculatedMagneticTension);
+                    writer.Write(pointInfo.CalculatedValuesInTime[i].CalculatedValue);
+                }
+            }
+        }
+
+        protected void WriteElectricField(BinaryWriter writer, ElectricField.PointsInfo pointsInfo)
+        {
+            writer.Write(pointsInfo.PointsSize);
+
+            foreach (ElectricField.PointInfo pointInfo in pointsInfo.Infos)
+            {
+                WriteVector3(writer, pointInfo.Position);
+
+                writer.Write(pointInfo.PrecomputedValue);
+
+                for (int i = 0; i < pointInfo.CalculatedValuesInTime.Length; ++i)
+                {
+                    writer.Write(pointInfo.CalculatedValuesInTime[i].CalculatedValue);
                 }
             }
         }

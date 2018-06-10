@@ -72,7 +72,7 @@ namespace EMSP.Mathematic
 
         public CalculatedValueInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
 
-        public float CurrentCalculatedMagneticTension { get { return _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension; } }
+        public float CurrentCalculatedMagneticTension { get { return _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedValue; } }
         #endregion
 
         #region Constructors
@@ -93,7 +93,7 @@ namespace EMSP.Mathematic
 
             if (_mathematicBase.AmperageMode == AmperageMode.Computational)
             {
-                magneticTension = _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedMagneticTension;
+                magneticTension = _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedValue;
                 concreteMaxMagneticTension = _mathematicBase.MaxCalculatedValuesInTime.Calculated;
             }
             else

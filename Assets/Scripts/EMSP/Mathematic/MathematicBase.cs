@@ -270,7 +270,7 @@ namespace EMSP.Mathematic
 
                 if (maxCalculatedValue != 0f)
                 {
-                    float calculatedValue = _amperageMode == AmperageMode.Computational ? mtInfo.CalculatedValueInTime[0].CalculatedMagneticTension : mtInfo.PrecomputedValue;
+                    float calculatedValue = _amperageMode == AmperageMode.Computational ? mtInfo.CalculatedValueInTime[0].CalculatedValue : mtInfo.PrecomputedValue;
 
                     gradientValue = calculatedValue.Remap(0f, maxCalculatedValue, 0f, 1f);
                 }
@@ -296,7 +296,7 @@ namespace EMSP.Mathematic
 
                 for (int j = 0; j < calculatedValuesInfo[i].CalculatedValueInTime.Length; j++)
                 {
-                    maxCalculatedValues.Calculated = Math.Max(maxCalculatedValues.Calculated, calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedMagneticTension);
+                    maxCalculatedValues.Calculated = Math.Max(maxCalculatedValues.Calculated, calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue);
                 }
             }
 

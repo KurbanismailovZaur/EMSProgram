@@ -11,6 +11,7 @@ using EMSP.Timing;
 using EMSP.Communication;
 using System.Collections.ObjectModel;
 using EMSP.Mathematic.Magnetic;
+using EMSP.Mathematic.Electric;
 
 namespace EMSP.Data.Serialization.EMSP.Versions
 {
@@ -77,12 +78,22 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 #endregion
 
                 #region Write magnetic tension in space
-                bool hasMagneticTensionInSpace = serializableProjectBatch.PointsInfo != null;
+                bool hasMagneticTensionInSpace = serializableProjectBatch.MagneticTensionPointsInfo != null;
                 writer.Write(hasMagneticTensionInSpace);
 
                 if (hasMagneticTensionInSpace)
                 {
-                    WriteMagneticTensionInSpace(writer, serializableProjectBatch.PointsInfo);
+                    WriteMagneticTensionInSpace(writer, serializableProjectBatch.MagneticTensionPointsInfo);
+                }
+                #endregion
+
+                #region Write electric field
+                bool hasElectricField = serializableProjectBatch.ElectricFieldPointsInfo != null;
+                writer.Write(hasElectricField);
+
+                if (hasElectricField)
+                {
+                    WriteElectricField(writer, serializableProjectBatch.ElectricFieldPointsInfo);
                 }
                 #endregion
             }
@@ -98,7 +109,8 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             SerializableProjectSettings settings;
             GameObject modelGameObject = null;
             Wiring wiring = null;
-            MagneticTension.PointsInfo pointsInfo = null;
+            MagneticTension.PointsInfo mtPointsInfo = null;
+            ElectricField.PointsInfo efPointsInfo = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -173,11 +185,41 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                         ptsInfo.Add(new MagneticTension.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
                     }
 
-                    pointsInfo =  new MagneticTension.PointsInfo(pointSize, ptsInfo);
+                    mtPointsInfo =  new MagneticTension.PointsInfo(pointSize, ptsInfo);
                 }
                 #endregion
 
-                return new SerializableProjectBatch(settings, modelGameObject, wiring, pointsInfo);
+                #region ElectricField
+                bool hasElectricField = reader.ReadBoolean();
+
+                if (hasElectricField)
+                {
+                    float pointSize = reader.ReadSingle();
+
+                    int pointsCount = (int)Mathf.Pow(settings.RangeLength, 3);
+                    List<ElectricField.PointInfo> ptsInfo = new List<ElectricField.PointInfo>();
+
+                    for (int i = 0; i < pointsCount; ++i)
+                    {
+                        var position = ReadVector3(reader);
+                        var precomputed = reader.ReadSingle();
+                        List<CalculatedValueInTime> calculatedElectricFieldInTime = new List<CalculatedValueInTime>();
+
+
+                        float[] timeSteps = TimeManager.Instance.CalculateSteps(settings.TimeRange.Start, settings.TimeRange.End, settings.TimeStepsCount);
+                        for (int j = 0; j < settings.TimeStepsCount; ++j)
+                        {
+                            calculatedElectricFieldInTime.Add(new CalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
+                        }
+
+                        ptsInfo.Add(new ElectricField.PointInfo(position, precomputed, calculatedElectricFieldInTime.ToArray()));
+                    }
+
+                    efPointsInfo = new ElectricField.PointsInfo(pointSize, ptsInfo);
+                }
+                #endregion
+
+                return new SerializableProjectBatch(settings, modelGameObject, wiring, mtPointsInfo, efPointsInfo);
             }
         }
         #endregion
