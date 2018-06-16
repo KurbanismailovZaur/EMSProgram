@@ -1807,7 +1807,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: EMSP.UI.Dialogs.CalculationSettings.Tab+ClickedEvent, Assembly-CSharp,
+    m_TypeName: EMSP.UI.Windows.CalculationSettings.Tab+ClickedEvent, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114627021977141418
 MonoBehaviour:
@@ -1888,7 +1888,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: EMSP.UI.Dialogs.CalculationSettings.Tab+ClickedEvent, Assembly-CSharp,
+    m_TypeName: EMSP.UI.Windows.CalculationSettings.Tab+ClickedEvent, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114650608473125592
 MonoBehaviour:
@@ -2223,7 +2223,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: EMSP.UI.Dialogs.CalculationSettings.CalculationSettingsDialog+ApplyedEvent,
+    m_TypeName: EMSP.UI.Windows.CalculationSettings.CalculationSettingsWindow+ApplyedEvent,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114829743230542932
 MonoBehaviour:

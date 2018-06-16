@@ -17,6 +17,7 @@ using EMSP.Mathematic.Magnetic;
 using EMSP.Timing;
 using EMSP.UI.Windows.CalculationSettings;
 using System;
+using EMSP.UI.Windows.Processing;
 
 namespace EMSP.App
 {
@@ -48,6 +49,9 @@ namespace EMSP.App
 
         [SerializeField]
         private CalculationSettingsWindow _calculationSettingsDialog;
+
+        [SerializeField]
+        private ProcessWindow _processWindow;
 
         [SerializeField]
         private OrbitController _orbitController;
@@ -298,6 +302,13 @@ namespace EMSP.App
         }
         #endregion
 
+        #region Window context methods
+        private void OpenProcessWindow()
+        {
+            _processWindow.ShowModal();
+        }
+        #endregion
+
         private void CreateNewProject()
         {
             ProjectManager.Instance.CreateNewProject();
@@ -410,6 +421,18 @@ namespace EMSP.App
             }
 
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
+        }
+
+        public void WindowContextMethods_Selected(WindowContextMethods windowContextMethods, WindowContextMethods.ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case WindowContextMethods.ActionType.OpenProcessWindow:
+                    OpenProcessWindow();
+                    break;
+            }
+
+            windowContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
         public void ViewCube_AxisSelected(ViewCube viewCube, AxisDirection axisDirection)
