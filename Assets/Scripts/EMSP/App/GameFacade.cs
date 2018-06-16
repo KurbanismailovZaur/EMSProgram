@@ -3,7 +3,7 @@ using EMSP.Control;
 using EMSP.Environment.View;
 using EMSP.Mathematic;
 using EMSP.UI;
-using EMSP.UI.Dialogs.SaveProject;
+using EMSP.UI.Windows.SaveProject;
 using EMSP.UI.Menu.Contexts;
 using Numba;
 using SFB;
@@ -11,11 +11,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Grid = EMSP.Environment.Metrics.Grid;
-using EMSP.UI.Dialogs.WiringEditor;
+using EMSP.UI.Windows.WiringEditor;
 using EMSP.Data;
 using EMSP.Mathematic.Magnetic;
 using EMSP.Timing;
-using EMSP.UI.Dialogs.CalculationSettings;
+using EMSP.UI.Windows.CalculationSettings;
 using System;
 
 namespace EMSP.App
@@ -44,16 +44,16 @@ namespace EMSP.App
         private ViewBlocker _viewBlocker;
 
         [SerializeField]
-        private SaveProjectDialog _saveProjectDialog;
+        private SaveProjectWindow _saveProjectDialog;
 
         [SerializeField]
-        private CalculationSettingsDialog _calculationSettingsDialog;
+        private CalculationSettingsWindow _calculationSettingsDialog;
 
         [SerializeField]
         private OrbitController _orbitController;
 
         [SerializeField]
-        private WiringEditorDialog _wiringEditorDialog;
+        private WiringEditorWindow _wiringEditorDialog;
 
         private Exporter _exporter = new Exporter();
 
@@ -101,18 +101,18 @@ namespace EMSP.App
             CloseProjectWithCheckToSaveAndDo(() => { OpenProject(path); }, (action) => { OnSaveProjectDialog(action, () => { OpenProject(path); }); });
         }
 
-        private void OnSaveProjectDialog(SaveProjectDialog.Action action, Action callback)
+        private void OnSaveProjectDialog(SaveProjectWindow.Action action, Action callback)
         {
             switch (action)
             {
-                case SaveProjectDialog.Action.Save:
+                case SaveProjectWindow.Action.Save:
                     if (!SaveProject()) return;
-                    goto case SaveProjectDialog.Action.DontSave;
-                case SaveProjectDialog.Action.DontSave:
+                    goto case SaveProjectWindow.Action.DontSave;
+                case SaveProjectWindow.Action.DontSave:
                     CloseProject();
                     if (callback != null) callback.Invoke();
                     break;
-                case SaveProjectDialog.Action.Cancel:
+                case SaveProjectWindow.Action.Cancel:
                     break;
             }
         }
@@ -156,7 +156,7 @@ namespace EMSP.App
             return true;
         }
 
-        private void CloseProjectWithCheckToSaveAndDo(Action notChangedAction, Action<SaveProjectDialog.Action> changedAction)
+        private void CloseProjectWithCheckToSaveAndDo(Action notChangedAction, Action<SaveProjectWindow.Action> changedAction)
         {
             if (!IsProjectChanged())
             {
@@ -503,7 +503,7 @@ namespace EMSP.App
             MathematicManager.Instance.CurrentCalculationMethod.SetPointsToTime(index);
         }
 
-        public void CalculationSettingsDialog_Applyed(CalculationSettingsDialog calculationSettingsDialog, CalculationSettingsDialog.Settings settings)
+        public void CalculationSettingsDialog_Applyed(CalculationSettingsWindow calculationSettingsDialog, CalculationSettingsWindow.Settings settings)
         {
             MathematicManager.Instance.RangeLength = settings.RangeLength;
             TimeManager.Instance.SetTimeParameters(settings.TimeRange, settings.TimeStepsCount);

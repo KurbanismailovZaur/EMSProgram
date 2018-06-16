@@ -6,7 +6,7 @@ using System;
 using EMSP.Communication;
 using System.Linq;
 
-namespace EMSP.UI.Dialogs.WiringEditor
+namespace EMSP.UI.Windows.WiringEditor
 {
     public class WireButton : MonoBehaviour
     {
@@ -44,7 +44,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
         private RectTransform _rectTransform = null;
         private string _preEditName;
         private float _preEditWidth = -1;
-        private WiringEditorDialog _wiringManager;
+        private WiringEditorWindow _wiringManager;
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
             }
         }
 
-        public WiringEditorDialog WiringManager { get { return _wiringManager; } set { _wiringManager = value; } }
+        public WiringEditorWindow WiringManager { get { return _wiringManager; } set { _wiringManager = value; } }
 
         public static WireButton CurrentActiveWireButton { get { return _currentActiveButton; } }
 

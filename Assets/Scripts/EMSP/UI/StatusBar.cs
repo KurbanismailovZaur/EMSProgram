@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI
 {
-	public class MagneticTensionPanel : Panel 
+	public class StatusBar : MonoBehaviour 
 	{
 		#region Entities
 		#region Enums
@@ -41,7 +41,7 @@ namespace EMSP.UI.Dialogs.CalculationSettings
 		
 		#region Indexers
 		#endregion
-		
+			
 		#region Events handlers
 		#endregion
 		#endregion

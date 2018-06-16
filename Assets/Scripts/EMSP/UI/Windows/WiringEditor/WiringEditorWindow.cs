@@ -7,9 +7,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.WiringEditor
+namespace EMSP.UI.Windows.WiringEditor
 {
-    public class WiringEditorDialog : ModalDialog
+    public class WiringEditorWindow : ModalWindow
     {
         #region Entities
         #region Enums

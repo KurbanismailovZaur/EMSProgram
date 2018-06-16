@@ -1,13 +1,13 @@
-﻿using EMSP.UI.Dialogs;
+﻿using EMSP.UI.Windows;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace EMSP.UI.Dialogs.SaveProject
+namespace EMSP.UI.Windows.SaveProject
 {
-	public class SaveProjectDialog : ModalDialog 
+	public class SaveProjectWindow : ModalWindow 
 	{
         #region Entities
         #region Enums
@@ -27,7 +27,7 @@ namespace EMSP.UI.Dialogs.SaveProject
 
         #region Classes
         [Serializable]
-        public class ChosenEvent : UnityEvent<SaveProjectDialog, Action> { }
+        public class ChosenEvent : UnityEvent<SaveProjectWindow, Action> { }
         #endregion
 
         #region Interfaces

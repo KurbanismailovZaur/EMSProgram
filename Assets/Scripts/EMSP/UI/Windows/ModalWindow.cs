@@ -1,13 +1,13 @@
-﻿using EMSP.UI.Dialogs.SaveProject;
+﻿using EMSP.UI.Windows.SaveProject;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.UI.Dialogs
+namespace EMSP.UI.Windows
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class ModalDialog : MonoBehaviour 
+    public abstract class ModalWindow : MonoBehaviour 
 	{
         #region Entities
         #region Enums

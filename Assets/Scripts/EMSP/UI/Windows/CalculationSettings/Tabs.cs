@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI.Windows.CalculationSettings
 {
 	public class Tabs : MonoBehaviour 
 	{

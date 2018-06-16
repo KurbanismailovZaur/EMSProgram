@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI.Windows.CalculationSettings
 {
     public class TimeRangeInputFilter : MonoBehaviour
     {

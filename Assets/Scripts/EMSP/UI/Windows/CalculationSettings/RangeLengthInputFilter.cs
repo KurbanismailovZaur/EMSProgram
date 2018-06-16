@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI.Windows.CalculationSettings
 {
     public class RangeLengthInputFilter : MonoBehaviour
     {

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
-namespace EMSP.UI.Dialogs.WiringEditor
+namespace EMSP.UI.Windows.WiringEditor
 {
     public class TabNavigation : MonoBehaviour
     {

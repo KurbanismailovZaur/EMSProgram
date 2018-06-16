@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSP.UI.HotViews
+namespace EMSP.UI.ViewHotKeys
 {
 	public class AmperageButtons : MonoBehaviour 
 	{

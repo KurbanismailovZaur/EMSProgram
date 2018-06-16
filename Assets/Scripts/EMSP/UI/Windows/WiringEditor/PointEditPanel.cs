@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.WiringEditor
+namespace EMSP.UI.Windows.WiringEditor
 {
     public class PointEditPanel : MonoBehaviour
     {
@@ -74,7 +74,7 @@ namespace EMSP.UI.Dialogs.WiringEditor
 
         #region Methods
 
-        public void Initialize(int wireNumber, int pointNumber, WiringEditorDialog wiringManager)
+        public void Initialize(int wireNumber, int pointNumber, WiringEditorWindow wiringManager)
         {
             X.contentType = InputField.ContentType.DecimalNumber;
             Y.contentType = InputField.ContentType.DecimalNumber;

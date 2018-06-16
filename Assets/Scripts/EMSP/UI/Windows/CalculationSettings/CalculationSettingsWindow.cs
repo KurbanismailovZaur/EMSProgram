@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace EMSP.UI.Dialogs.CalculationSettings
+namespace EMSP.UI.Windows.CalculationSettings
 {
-    public class CalculationSettingsDialog : ModalDialog
+    public class CalculationSettingsWindow : ModalWindow
     {
         #region Entities
         #region Enums
@@ -56,7 +56,7 @@ namespace EMSP.UI.Dialogs.CalculationSettings
 
         #region Classes
         [Serializable]
-        public class ApplyedEvent : UnityEvent<CalculationSettingsDialog, Settings> { }
+        public class ApplyedEvent : UnityEvent<CalculationSettingsWindow, Settings> { }
         #endregion
 
         #region Interfaces
