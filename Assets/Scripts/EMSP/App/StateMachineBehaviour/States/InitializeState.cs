@@ -1,4 +1,6 @@
-﻿﻿using System.Collections;
+﻿using EMSP.Logging;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
@@ -41,6 +43,10 @@ namespace EMSP.App.StateMachineBehaviour.States
         #region Methods
         public override void OnEnter()
         {
+            Log.Initialize();
+            Log.WriteOperation("Hello World!");
+            Log.WriteException(new Exception("My exception"));
+
             SetupGlobalization();
             
             _stateMachine.MoveToState("OnlyMenu");
@@ -53,6 +59,11 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             Thread.CurrentThread.CurrentCulture = customCulture;
 
+        }
+
+        private void OnDestroy()
+        {
+            Log.Dispose();
         }
         #endregion
 

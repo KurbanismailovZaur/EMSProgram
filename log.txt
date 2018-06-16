@@ -1,0 +1,9 @@
+[16.06.2018. 18:27:30:2730]
+[Operation]
+Hello World!
+
+[16.06.2018. 18:27:30:2730]
+[Exception]
+Message: My exception
+StackTrace: 
+
