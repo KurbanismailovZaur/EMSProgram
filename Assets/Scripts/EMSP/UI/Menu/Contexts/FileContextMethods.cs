@@ -19,6 +19,7 @@ namespace EMSP.UI.Menu.Contexts
             ImportWiring,
             ExportMagneticTensionInSpace,
             ExportWiring,
+            GenerateVerticesBasedOnOBJ,
             Exit
         }
         #endregion
@@ -91,6 +92,11 @@ namespace EMSP.UI.Menu.Contexts
         public void ExportWiring()
         {
             Selected.Invoke(this, ActionType.ExportWiring);
+        }
+
+        public void GenerateVerticesBasedOnOBJ()
+        {
+            Selected.Invoke(this, ActionType.GenerateVerticesBasedOnOBJ);
         }
 
         public void Exit()

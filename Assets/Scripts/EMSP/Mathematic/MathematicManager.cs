@@ -37,6 +37,9 @@ namespace EMSP.Mathematic
 
         [Serializable]
         public class AmperageModeChangedEvent : UnityEvent<MathematicManager, AmperageMode> { }
+
+        [Serializable]
+        public class CalculationShowedEvent : UnityEvent<MathematicManager, ICalculationMethod> { }
         #endregion
 
         #region Interfaces
@@ -66,6 +69,8 @@ namespace EMSP.Mathematic
         public RangeLengthChangedEvent RangeLengthChanged = new RangeLengthChangedEvent();
 
         public AmperageModeChangedEvent AmperageModeChanged = new AmperageModeChangedEvent();
+
+        public CalculationShowedEvent CalculationShowed = new CalculationShowedEvent();
         #endregion
 
         #region Behaviour
@@ -155,6 +160,17 @@ namespace EMSP.Mathematic
 
             _currentCalculationMethod.AmperageMode = _amperageMode;
             _currentCalculationMethod.SetPointsToTime(TimeManager.Instance.TimeIndex);
+
+            CalculationShowed.Invoke(this, _currentCalculationMethod);
+        }
+
+        public void ShowFirstExistCalculation()
+        {
+            InnerCalculationsType innerCalculationType = _magneticTension.IsCalculated ? InnerCalculationsType.MagneticTension : _electricField.IsCalculated ? InnerCalculationsType.ElectricField : InnerCalculationsType.None;
+
+            if (innerCalculationType == InnerCalculationsType.None) return;
+
+            Show((CalculationType)innerCalculationType);
         }
 
         public void SwitchVisibility(CalculationType calculationType)

@@ -133,9 +133,9 @@ namespace EMSP.App
         {
             ProjectManager.Instance.OpenProject(path);
 
-            MathematicManager.Instance.Show(CalculationType.MagneticTension);
+            //MathematicManager.Instance.ShowFirstExistCalculation();
 
-            UpdateTimeAndTensionSlider();
+            //UpdateTimeAndTensionSlider();
         }
 
         private bool SaveProject()
@@ -389,7 +389,7 @@ namespace EMSP.App
 
         public void ViewContextMethods_Selected(ViewContextMethods viewContextMethods, ViewContextMethods.ActionType actionType)
         {
-            switch (actionType) { }
+            //switch (actionType) { }
 
             viewContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
@@ -526,6 +526,11 @@ namespace EMSP.App
 
             if (amperageMode == AmperageMode.Computational) _timeLine.Show();
             else _timeLine.StopAndHide();
+        }
+
+        public void MathematicManager_CalculationShowed(MathematicManager mathematicManager, ICalculationMethod calculationMethod)
+        {
+            UpdateTensionSlider(true);
         }
         #endregion
         #endregion
