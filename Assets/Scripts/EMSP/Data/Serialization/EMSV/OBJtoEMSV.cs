@@ -63,21 +63,28 @@ namespace EMSV.Data
         {
             using (StreamReader sr = new StreamReader(pathToOBJ))
             {
-                while(!sr.EndOfStream)
+                List<Vector3> tempList = new List<Vector3>();
+
+                while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    if(line.StartsWith("o") || line.StartsWith("O"))
-                    {
-                        string matName = line.Substring(2);
-                        _currentHandlingMaterial = matName;
 
-                        if(!materialVertexesPacks.ContainsKey(_currentHandlingMaterial))
+                    if (line.StartsWith("usemtl"))
+                    {
+                        string matName = line.Substring(7);
+
+                        if (!materialVertexesPacks.ContainsKey(matName))
                             materialVertexesPacks.Add(matName, new List<Vector3>());
+
+
+                        materialVertexesPacks[matName].AddRange(tempList);
+                        tempList.Clear();
+
                     }
-                    else if(line.StartsWith("v") || line.StartsWith("V"))
+                    else if (line.StartsWith("v"))
                     {
                         string vertexString = line.Substring(2);
-                        materialVertexesPacks[_currentHandlingMaterial].Add(GetVector3FromObjString(vertexString));
+                        tempList.Add(GetVector3FromObjString(vertexString));
                     }
                 }
             }
