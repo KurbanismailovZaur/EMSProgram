@@ -40,7 +40,7 @@ namespace EMSP.Logging
         #region Behaviour
         #region Properties
 #if UNITY_EDITOR
-        private static string PathToFile { get { return Path.Combine(Path.GetDirectoryName(Application.dataPath), _filename); } }
+        private static string PathToFile { get { return Path.Combine(Path.Combine(Path.GetDirectoryName(Application.dataPath), "Others"), _filename); } }
 #elif UNITY_STANDALONE
         private static string PathToFile { get { return Path.Combine(Application.dataPath, _filename); } }
 #endif

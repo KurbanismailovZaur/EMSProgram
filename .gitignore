@@ -6,6 +6,8 @@
 /[Uu][Ww][Pp]/
 /Assets/AssetStoreTools*
 /[Uu]nityPackageManager/
+/[Oo]ther
+/[Oo]thers
 
 # Visual Studio 2015 cache directory
 /.vs/
