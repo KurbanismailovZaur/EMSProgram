@@ -1,4 +1,4 @@
-﻿using EMSV.Data.Serialization.EMSV.Versions;
+﻿using EMSP.Data.Serialization.EMSV.Versions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using UnityEngine;
 using UnityApplication = UnityEngine.Application;
 
-namespace EMSV.Data.Serialization.EMSV
+namespace EMSP.Data.Serialization.EMSV
 {
     public class EMSVSerializer
     {

@@ -232,6 +232,16 @@ namespace EMSP.App
             WiringManager.Instance.SaveWiring(path);
         }
 
+        private void GenerateVerticesBasedOnOBJ()
+        {
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Генерировать данные вершин", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, true);
+
+            if (results.Length == 0)
+            {
+                return;
+            }
+        }
+
         private void ExitApplication()
         {
 #if UNITY_EDITOR
@@ -365,6 +375,9 @@ namespace EMSP.App
                     break;
                 case FileContextMethods.ActionType.ExportWiring:
                     ExportWiring();
+                    break;
+                case FileContextMethods.ActionType.GenerateVerticesBasedOnOBJ:
+                    GenerateVerticesBasedOnOBJ();
                     break;
                 case FileContextMethods.ActionType.Exit:
                     ExitApplication();

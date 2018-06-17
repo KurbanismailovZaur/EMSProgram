@@ -5,16 +5,12 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using System.Linq;
-using EMSV.Data.Serialization.EMSV.Exceptions;
 using System.Collections.ObjectModel;
+using OrbCreationExtensions;
+using EMSP.Data.Serialization.EMSV.Exceptions;
 
-
-namespace EMSV.Data.Serialization.EMSV.Versions
+namespace EMSP.Data.Serialization.EMSV.Versions
 {
-    /// <summary>
-    /// This version work only with binary data (JsonEngine not used).
-    /// Also this version start using MRB preamble and file versions writen in file.
-    /// </summary>
     public class EMSVSerializerV1000 : EMSVSerializerVersion, IEMSVSerializer
     {
         #region Entities
@@ -69,6 +65,60 @@ namespace EMSV.Data.Serialization.EMSV.Versions
             File.Delete(TemporaryFileName);
 
             return emsvData;
+        }
+
+        public override void Serialize(string objFilePathForRead, string emsvFilePathForWrite)
+        {
+            var materialVertexPack = GetDataFromOBJ(objFilePathForRead);
+            byte[] bytes = Serialize(materialVertexPack);
+
+            File.WriteAllBytes(emsvFilePathForWrite, bytes);
+        }
+
+        private Dictionary<string, List<Vector3>> GetDataFromOBJ(string pathToOBJ)
+        {
+            Dictionary<string, List<Vector3>> materialVertexesPacks = new Dictionary<string, List<Vector3>>();
+
+            using (StreamReader sr = new StreamReader(pathToOBJ))
+            {
+                List<Vector3> tempList = new List<Vector3>();
+
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+
+                    if (line.StartsWith("usemtl"))
+                    {
+                        string matName = line.Substring(7);
+
+                        if (!materialVertexesPacks.ContainsKey(matName)) materialVertexesPacks.Add(matName, new List<Vector3>());
+
+                        materialVertexesPacks[matName].AddRange(tempList);
+                        tempList.Clear();
+                    }
+                    else if (line.StartsWith("v"))
+                    {
+                        string vertexString = line.Substring(2);
+                        tempList.Add(GetVector3FromObjString(vertexString));
+                    }
+                }
+            }
+
+            return materialVertexesPacks;
+        }
+
+        private Vector3 GetVector3FromObjString(string str)
+        {
+            Vector3 vec = new Vector3(0, 0, 0);
+            int i = 0;
+            for (int elem = 0; elem < 3; elem++)
+            {
+                int e = str.IndexOf(' ', i);
+                if (e < 0) e = str.Length;
+                vec[elem] = str.Substring(i, e - i).MakeFloat();
+                i = str.EndOfCharRepetition(e);
+            }
+            return vec;
         }
 
         public override Dictionary<string, List<Vector3>> Deserialize(Stream stream)

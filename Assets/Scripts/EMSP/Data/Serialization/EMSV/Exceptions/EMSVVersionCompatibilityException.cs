@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EMSV.Data.Serialization.EMSV.Exceptions
+namespace EMSP.Data.Serialization.EMSV.Exceptions
 {
     public class EMSVVersionCompatibilityException : ApplicationException
     {

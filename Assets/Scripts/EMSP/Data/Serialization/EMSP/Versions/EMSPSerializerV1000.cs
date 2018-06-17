@@ -15,10 +15,6 @@ using EMSP.Mathematic.Electric;
 
 namespace EMSP.Data.Serialization.EMSP.Versions
 {
-    /// <summary>
-    /// This version work only with binary data (JsonEngine not used).
-    /// Also this version start using MRB preamble and file versions writen in file.
-    /// </summary>
     public class EMSPSerializerV1000 : EMSPSerializerVersion, IEMSPSerializer
     {
         #region Entities
@@ -63,7 +59,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasModel)
                 {
-                    WriteModel(writer, serializableProjectBatch.ModelGameObject);
+                    WriteGameObject(writer, serializableProjectBatch.ModelGameObject);
                 }
                 #endregion
 
@@ -83,7 +79,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasMagneticTensionInSpace)
                 {
-                    WriteMagneticTensionInSpace(writer, serializableProjectBatch.MagneticTensionPointsInfo);
+                    WriteMathematicPointsInfo(writer, serializableProjectBatch.MagneticTensionPointsInfo);
                 }
                 #endregion
 
@@ -93,7 +89,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasElectricField)
                 {
-                    WriteElectricField(writer, serializableProjectBatch.ElectricFieldPointsInfo);
+                    WriteMathematicPointsInfo(writer, serializableProjectBatch.ElectricFieldPointsInfo);
                 }
                 #endregion
             }
