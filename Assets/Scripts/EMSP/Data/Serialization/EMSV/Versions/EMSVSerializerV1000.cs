@@ -42,38 +42,85 @@ namespace EMSP.Data.Serialization.EMSV.Versions
         #endregion
 
         #region Methods
+        private void SetProgressState(float progress, string name)
+        {
+            Progress = progress;
+            ProgressName = ProgressName;
+        }
+
+        private void CallMethodWithProgressTrack(float startProgress, string startProgressName, Action method)
+        {
+            SetProgressState(startProgress, startProgressName);
+            method.Invoke();
+            SetProgressState(1f, "Completed");
+        }
+
+
         public override byte[] Serialize(Dictionary<string, List<Vector3>> materialVertexPacks)
         {
-            using (BinaryWriter writer = new BinaryWriter(new FileStream(TemporaryFileName, FileMode.Create)))
+            SetProgressState(0.3f, "Make bytes");
+            byte[] bytes = SerializeWitoutEvents(materialVertexPacks);
+            SetProgressState(1f, "Completed");
+
+            return bytes;
+        }
+
+        private byte[] SerializeWitoutEvents(Dictionary<string, List<Vector3>> materialVertexPacks)
+        {
+            string temporaryFileName = Path.GetTempFileName();
+            using (BinaryWriter writer = new BinaryWriter(new FileStream(temporaryFileName, FileMode.Create)))
             {
                 WritePreambleAndVersion(writer, _version);
                 writer.Write(materialVertexPacks.Count);
 
-                foreach(var matVertexPair in materialVertexPacks)
+                int index = 0;
+                float delta = 0.3f / materialVertexPacks.Count;
+
+                foreach (var matVertexPair in materialVertexPacks)
                 {
+                    Progress = 0.3f + (index++ * delta);
                     WriteStringAsUnicode(writer, matVertexPair.Key);
                     writer.Write(matVertexPair.Value.Count);
 
-                    foreach(var vertex in matVertexPair.Value)
+                    foreach (var vertex in matVertexPair.Value)
                     {
                         WriteVector3(writer, vertex);
                     }
                 }
             }
 
-            byte[] emsvData = File.ReadAllBytes(TemporaryFileName);
-            File.Delete(TemporaryFileName);
+            byte[] emsvData = File.ReadAllBytes(temporaryFileName);
+            File.Delete(temporaryFileName);
 
             return emsvData;
         }
 
-        public override void Serialize(string objFilePathForRead, string emsvFilePathForWrite)
+
+        public override void Serialize(Dictionary<string, List<Vector3>> materialVertexPack, string pathToEMSV)
+        {
+            CallMethodWithProgressTrack(0.3f, "Make bytes", () => { SerializeWitoutEvents(materialVertexPack, pathToEMSV); });
+        }
+
+        private void SerializeWitoutEvents(Dictionary<string, List<Vector3>> materialVertexPack, string pathToEMSV)
+        {
+            byte[] bytes = SerializeWitoutEvents(materialVertexPack);
+            SetProgressState(0.6f, "Write bytes");
+            File.WriteAllBytes(pathToEMSV, bytes);
+        }
+
+
+        public override void ParseAndSerialize(string objFilePathForRead, string emsvFilePathForWrite)
+        {
+            CallMethodWithProgressTrack(0f, "Parse OBJ file", () => { ParseAndSerializeWithoutEvents(objFilePathForRead, emsvFilePathForWrite); });
+        }
+
+        private void ParseAndSerializeWithoutEvents(string objFilePathForRead, string emsvFilePathForWrite)
         {
             var materialVertexPack = GetDataFromOBJ(objFilePathForRead);
-            byte[] bytes = Serialize(materialVertexPack);
-
-            File.WriteAllBytes(emsvFilePathForWrite, bytes);
+            SetProgressState(0.3f, "Make bytes");
+            SerializeWitoutEvents(materialVertexPack, emsvFilePathForWrite);
         }
+
 
         private Dictionary<string, List<Vector3>> GetDataFromOBJ(string pathToOBJ)
         {

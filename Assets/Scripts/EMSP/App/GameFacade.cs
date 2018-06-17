@@ -18,6 +18,10 @@ using EMSP.Timing;
 using EMSP.UI.Windows.CalculationSettings;
 using System;
 using EMSP.UI.Windows.Processing;
+using EMSP.Data.Serialization.EMSV;
+using EMSP.Data.Serialization.EMSV.Versions;
+using System.IO;
+using System.Threading;
 
 namespace EMSP.App
 {
@@ -239,6 +243,25 @@ namespace EMSP.App
             if (results.Length == 0)
             {
                 return;
+            }
+
+            foreach (var pathToOBJ in results)
+            {
+                string pathToOBJFile = pathToOBJ;
+
+                new Thread(() =>
+                {
+                    try
+                    {
+                        EMSVSerializerV1000 serializer = new EMSVSerializerV1000();
+                        string pathToEMSV = Path.Combine(Path.GetDirectoryName(pathToOBJFile), string.Format("{0}.emsv", Path.GetFileNameWithoutExtension(pathToOBJFile)));
+                        serializer.ParseAndSerialize(pathToOBJFile, pathToEMSV);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log(ex);
+                    }
+                }).Start();
             }
         }
 
