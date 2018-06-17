@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: 224625202386150582}
   - component: {fileID: 222053894100163574}
   - component: {fileID: 114415646936583992}
+  - component: {fileID: 114796182309763350}
   m_Layer: 5
   m_Name: ProcessPanel
   m_TagString: Untagged
@@ -236,7 +237,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114066571680216022}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114796182309763350}
+        m_MethodName: CancelProcessButton_OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114355731532747962
@@ -339,6 +351,24 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &114796182309763350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1348630495893884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748218ff1e57d3043897925dc80e00d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _processText: {fileID: 114990208856970958}
+  _progressImage: {fileID: 224724825228830386}
+  Completed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.UI.Windows.Processing.ProcessPanel+CompletedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114990208856970958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -483,7 +513,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224828340290887944
 RectTransform:

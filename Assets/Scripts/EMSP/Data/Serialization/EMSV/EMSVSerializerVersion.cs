@@ -46,11 +46,11 @@ namespace EMSP.Data.Serialization.EMSV
         #endregion
 
         #region Events
-        public event Action<float> ProgressChanged;
+        public event Action<IProcessable, float> ProgressChanged;
 
-        public event Action<string> ProgressNameChanged;
+        public event Action<IProcessable, string> ProgressNameChanged;
 
-        public event Action ProgressCanceled;
+        public event Action<IProcessable> ProgressCanceled;
         #endregion
 
         #region Behaviour
@@ -66,9 +66,7 @@ namespace EMSP.Data.Serialization.EMSV
 
                 _progress = value;
 
-                if (ProgressChanged != null) ProgressChanged.Invoke(_progress);
-
-                Debug.Log("Progress changed to: " + _progress);
+                if (ProgressChanged != null) ProgressChanged.Invoke(this, _progress);
             }
         }
 
@@ -81,9 +79,7 @@ namespace EMSP.Data.Serialization.EMSV
 
                 _progressName = value;
 
-                if (ProgressNameChanged != null) ProgressNameChanged.Invoke(_progressName);
-
-                Debug.Log("Progress name changed to: " + _progressName);
+                if (ProgressNameChanged != null) ProgressNameChanged.Invoke(this, _progressName);
             }
         }
         #endregion
@@ -103,9 +99,7 @@ namespace EMSP.Data.Serialization.EMSV
 
             _isCanceled = true;
 
-            if (ProgressCanceled != null) ProgressCanceled.Invoke();
-
-            Debug.Log("Progress canceled");
+            if (ProgressCanceled != null) ProgressCanceled.Invoke(this);
         }
         #endregion
         #endregion

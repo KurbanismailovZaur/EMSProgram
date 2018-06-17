@@ -761,6 +761,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39864fec75cc78e40938435116838e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _processPanelPrefab: {fileID: 114796182309763350, guid: 8086e75b24ea6d9429d8b553547fc466,
+    type: 2}
+  _deviderPrefab: {fileID: 1346083485409450, guid: 8e5c949baf50d9e468ab40e1ad400dbb,
+    type: 2}
 --- !u!114 &114851692583542080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1401,7 +1405,7 @@ CanvasGroup:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1629186444040508}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0

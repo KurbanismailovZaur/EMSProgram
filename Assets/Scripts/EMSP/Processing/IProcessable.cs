@@ -11,8 +11,12 @@ namespace EMSP.Processing
 
         string ProgressName { get; }
 
-        event Action<float> ProgressChanged;
+        event Action<IProcessable, float> ProgressChanged;
 
-        event Action<string> ProgressNameChanged;
+        event Action<IProcessable, string> ProgressNameChanged;
+
+        event Action<IProcessable> ProgressCanceled;
+
+        void Cancel();
     }
 }

@@ -45,22 +45,22 @@ namespace EMSP.Data.Serialization.EMSV.Versions
         private void SetProgressState(float progress, string name)
         {
             Progress = progress;
-            ProgressName = ProgressName;
+            ProgressName = name;
         }
 
         private void CallMethodWithProgressTrack(float startProgress, string startProgressName, Action method)
         {
             SetProgressState(startProgress, startProgressName);
             method.Invoke();
-            SetProgressState(1f, "Completed");
+            SetProgressState(1f, "Завершен");
         }
 
 
         public override byte[] Serialize(Dictionary<string, List<Vector3>> materialVertexPacks)
         {
-            SetProgressState(0.3f, "Make bytes");
+            SetProgressState(0.5f, "Формирование данных");
             byte[] bytes = SerializeWitoutEvents(materialVertexPacks);
-            SetProgressState(1f, "Completed");
+            SetProgressState(1f, "Завершен");
 
             return bytes;
         }
@@ -78,12 +78,16 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
                 foreach (var matVertexPair in materialVertexPacks)
                 {
-                    Progress = 0.3f + (index++ * delta);
+                    if (_isCanceled) return null;
+
+                    Progress = 0.5f + (index++ * delta);
                     WriteStringAsUnicode(writer, matVertexPair.Key);
                     writer.Write(matVertexPair.Value.Count);
 
                     foreach (var vertex in matVertexPair.Value)
                     {
+                        if (_isCanceled) return null;
+
                         WriteVector3(writer, vertex);
                     }
                 }
@@ -98,26 +102,32 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
         public override void Serialize(Dictionary<string, List<Vector3>> materialVertexPack, string pathToEMSV)
         {
-            CallMethodWithProgressTrack(0.3f, "Make bytes", () => { SerializeWitoutEvents(materialVertexPack, pathToEMSV); });
+            CallMethodWithProgressTrack(0.5f, "Формирование данных", () => { SerializeWitoutEvents(materialVertexPack, pathToEMSV); });
         }
 
         private void SerializeWitoutEvents(Dictionary<string, List<Vector3>> materialVertexPack, string pathToEMSV)
         {
             byte[] bytes = SerializeWitoutEvents(materialVertexPack);
-            SetProgressState(0.6f, "Write bytes");
+
+            if (_isCanceled) return;
+
+            SetProgressState(0.9f, "Запись в файл");
             File.WriteAllBytes(pathToEMSV, bytes);
         }
 
 
         public override void ParseAndSerialize(string objFilePathForRead, string emsvFilePathForWrite)
         {
-            CallMethodWithProgressTrack(0f, "Parse OBJ file", () => { ParseAndSerializeWithoutEvents(objFilePathForRead, emsvFilePathForWrite); });
+            CallMethodWithProgressTrack(0.3f, "Обработка файла OBJ", () => { ParseAndSerializeWithoutEvents(objFilePathForRead, emsvFilePathForWrite); });
         }
 
         private void ParseAndSerializeWithoutEvents(string objFilePathForRead, string emsvFilePathForWrite)
         {
             var materialVertexPack = GetDataFromOBJ(objFilePathForRead);
-            SetProgressState(0.3f, "Make bytes");
+
+            if (_isCanceled) return;
+
+            SetProgressState(0.5f, "Формиравание данных");
             SerializeWitoutEvents(materialVertexPack, emsvFilePathForWrite);
         }
 
@@ -132,6 +142,8 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
                 while (!sr.EndOfStream)
                 {
+                    if (_isCanceled) return null;
+
                     string line = sr.ReadLine();
 
                     if (line.StartsWith("usemtl"))

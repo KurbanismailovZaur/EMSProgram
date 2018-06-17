@@ -22,6 +22,7 @@ using EMSP.Data.Serialization.EMSV;
 using EMSP.Data.Serialization.EMSV.Versions;
 using System.IO;
 using System.Threading;
+using EMSP.Processing;
 
 namespace EMSP.App
 {
@@ -73,6 +74,9 @@ namespace EMSP.App
 
         [SerializeField]
         private GeneralPanel _generalPanel;
+
+        [SerializeField]
+        private ProcessManager _processManager;
         #endregion
 
         #region Events
@@ -247,21 +251,7 @@ namespace EMSP.App
 
             foreach (var pathToOBJ in results)
             {
-                string pathToOBJFile = pathToOBJ;
-
-                new Thread(() =>
-                {
-                    try
-                    {
-                        EMSVSerializerV1000 serializer = new EMSVSerializerV1000();
-                        string pathToEMSV = Path.Combine(Path.GetDirectoryName(pathToOBJFile), string.Format("{0}.emsv", Path.GetFileNameWithoutExtension(pathToOBJFile)));
-                        serializer.ParseAndSerialize(pathToOBJFile, pathToEMSV);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Log(ex);
-                    }
-                }).Start();
+                _processManager.CreateGenerateVerticesBasedOnOBJProcess(pathToOBJ);
             }
         }
 
