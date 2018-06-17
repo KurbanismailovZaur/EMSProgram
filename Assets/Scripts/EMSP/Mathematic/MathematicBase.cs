@@ -376,10 +376,7 @@ namespace EMSP.Mathematic
 
         public void DestroyCalculatedPoints()
         {
-            if (!_isCalculated)
-            {
-                return;
-            }
+            if (!_isCalculated) return;
 
             foreach (CalculationPoint point in _calculatedPoints)
             {
