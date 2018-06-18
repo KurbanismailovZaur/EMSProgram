@@ -62,6 +62,19 @@ namespace EMSP.Logging
             if (!Directory.Exists(pathToDirectory)) Directory.CreateDirectory(pathToDirectory);
 
             _writer = new StreamWriter(new FileStream(PathToFile, FileMode.OpenOrCreate, FileAccess.Write));
+
+            Application.logMessageReceivedThreaded += Application_logMessageReceived;
+        }
+
+        private static void Application_logMessageReceived(string condition, string stackTrace, LogType type)
+        {
+            WriteLineWithSquareBrackets(GetCurrentDateTimeString());
+            WriteLineWithSquareBrackets(type.ToString());
+
+            WriteLineField("Message", ReplaceLineBreaksToSpaces(condition));
+            WriteLineField("StackTrace", ReplaceLineBreaksToSpaces(stackTrace));
+
+            WriteLine();
         }
 
         private static string GetCurrentDateTimeString()
