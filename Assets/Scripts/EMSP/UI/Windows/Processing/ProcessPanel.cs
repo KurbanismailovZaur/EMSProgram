@@ -55,6 +55,7 @@ namespace EMSP.UI.Windows.Processing
         private RectTransform _progressImage;
 
         private IProcessable _processable;
+        private bool _completed = false;
         #endregion
 
         #region Events
@@ -63,6 +64,8 @@ namespace EMSP.UI.Windows.Processing
 
         #region Behaviour
         #region Properties
+        public float Progress { get { return _processable.Progress; } }
+        public string ProgressName { get { return _processable.ProgressName; } }
         #endregion
 
         #region Constructors
@@ -82,7 +85,11 @@ namespace EMSP.UI.Windows.Processing
             {
                 _progressImage.anchorMax = new Vector2(progress, 1f);
 
-                if (progress >= 1f) Completed.Invoke(this);
+                if (progress >= 1f && !_completed)
+                {
+                    _completed = true;
+                    Completed.Invoke(this);
+                }
             });
         }
 
@@ -98,7 +105,11 @@ namespace EMSP.UI.Windows.Processing
         {
             ThreadDispatcher.Instance.InvokeFromMainThread(() =>
             {
-                Completed.Invoke(this);
+                if (!_completed)
+                {
+                    _completed = true;
+                    Completed.Invoke(this);
+                }
             });
         }
 

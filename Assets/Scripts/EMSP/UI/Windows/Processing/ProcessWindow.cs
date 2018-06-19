@@ -1,7 +1,9 @@
 ﻿using EMSP.Processing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace EMSP.UI.Windows.Processing
 {
@@ -18,6 +20,8 @@ namespace EMSP.UI.Windows.Processing
         #endregion
 
         #region Classes
+        [Serializable]
+        public class ProcessPanelCreatedEvent : UnityEvent<ProcessPanel> { }
         #endregion
 
         #region Interfaces
@@ -40,10 +44,15 @@ namespace EMSP.UI.Windows.Processing
         #endregion
 
         #region Events
+        public ProcessPanelCreatedEvent ProcessPanelCreated = new ProcessPanelCreatedEvent();
         #endregion
 
         #region Behaviour
         #region Properties
+        public List<ProcessPanel> ProcessPanels
+        {
+            get { return _processPanels; }
+        }
         #endregion
 
         #region Constructors
@@ -56,6 +65,8 @@ namespace EMSP.UI.Windows.Processing
             processPanel.Completed.AddListener(ProcessPanel_Completed);
 
             _processPanels.Add(processPanel);
+
+            ProcessPanelCreated.Invoke(processPanel);
         }
 
         private void RemoveProcessPanel(ProcessPanel processPanel)
