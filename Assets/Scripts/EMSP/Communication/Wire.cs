@@ -218,6 +218,10 @@ namespace EMSP.Communication
         #endregion
 
         #region Indexers
+        public Vector3 this[int index]
+        {
+            get { return _localPoints[index]; }
+        }
         #endregion
 
         #region Events handlers
