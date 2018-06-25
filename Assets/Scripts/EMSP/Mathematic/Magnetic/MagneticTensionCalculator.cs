@@ -47,11 +47,11 @@ namespace EMSP.Mathematic.Magnetic
             Wiring wiring = settings.GetValue<Wiring>("wiring");
             Vector3 point = settings.GetValue<Vector3>("point");
 
-            if (amperageMode == AmperageMode.Precomputed) return new Data() { { "directionLength", CalculateWithPrecomputedAmperage(wiring, point) } };
+            if (amperageMode == AmperageMode.Precomputed) return new Data() { { "result", CalculateWithPrecomputedAmperage(wiring, point) } };
 
             float time = settings.GetValue<float>("time");
 
-            return new Data() { { "directionLength", CalculateWithComputationalAmperage(wiring, point, time) } };
+            return new Data() { { "result", CalculateWithComputationalAmperage(wiring, point, time) } };
         }
 
         public Vector3 Calculate(Vector3 pointA, Vector3 pointB, Vector3 pointC, float amperage)

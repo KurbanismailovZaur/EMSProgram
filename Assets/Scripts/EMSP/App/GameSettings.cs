@@ -42,7 +42,7 @@ namespace EMSP.App
 
         private readonly string _magneticTensionInSpaceDefaultName = "MagneticTensionInSpace";
 
-        private readonly int _calculationDefaultMinRangeLength = 22;
+        private readonly int _calculationDefaultMinRangeLength = 8;
 
         private readonly string _numberDecimalSeparator = ".";
 

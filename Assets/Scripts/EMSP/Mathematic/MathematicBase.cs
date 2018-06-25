@@ -217,10 +217,11 @@ namespace EMSP.Mathematic
                         {
                             { "amperageMode", AmperageMode.Precomputed },
                             { "wiring", wiring },
-                            { "point", point }
+                            { "point", point },
+                            { "time", 0f }
                         });
 
-                        float precomputedValue = precomputedResultData.GetValue<float>("directionLength");
+                        float precomputedValue = precomputedResultData.GetValue<float>("result");
 
                         CalculatedValueInTime[] calculatedValuesInTime = new CalculatedValueInTime[timeSteps.Count()];
 
@@ -236,7 +237,7 @@ namespace EMSP.Mathematic
                                 { "time", time }
                             });
 
-                            float calculatedValue = calculatedResultData.GetValue<float>("directionLength");
+                            float calculatedValue = calculatedResultData.GetValue<float>("result");
 
                             calculatedValuesInTime[w] = new CalculatedValueInTime(time, calculatedValue);
                         }

@@ -45,76 +45,14 @@ namespace Mynamespace
             throw new System.NotImplementedException();
         }
 
-        public float CalculateWiring()
+        public float CalculateWiring(Wiring wiring, Vector3 pointC, float time, AmperageMode amperageMode)
         {
-            Wiring.Factory wiringFactory = new Wiring.Factory();
-
-            Wiring wiring = wiringFactory.Create();
-
-            #region Create wiring
-            Wire wire0 = wiring.CreateWire("K0", 0, 300000000, 1);
-            wire0.Add(1f, 2f, 3f);
-            wire0.Add(7f, 4f, 7f);
-            wire0.Add(5f, 0f, 3f);
-            wire0.Add(6f, 9f, 4f);
-            wire0.Add(0f, 5f, 9f);
-            wire0.Add(2f, 5f, 3f);
-            wire0.Add(3f, 5f, 2f);
-            wire0.Add(4f, 3f, 1f);
-
-            Wire wire1 = wiring.CreateWire("K1", 0, 9000, 2);
-            wire1.Add(1f, 0f, 0f);
-            wire1.Add(8f, 9f, 1f);
-            wire1.Add(0f, 6f, 0f);
-            wire1.Add(9f, 3f, 1f);
-            wire1.Add(0f, 2f, 5f);
-            wire1.Add(8f, 7f, 1f);
-            wire1.Add(0f, 9f, 4f);
-            wire1.Add(2f, 9f, 0f);
-
-            Wire wire2 = wiring.CreateWire("K2", 0, 200000, 0.5f);
-            wire2.Add(2f, 0f, 0f);
-            wire2.Add(6f, 9f, 3f);
-            wire2.Add(9f, 7f, 6f);
-            wire2.Add(7f, 0f, 4f);
-            wire2.Add(9f, 3f, 2f);
-            wire2.Add(1f, 7f, 4f);
-            wire2.Add(3f, 4f, 4f);
-            wire2.Add(4f, 7f, 7f);
-
-            Wire wire3 = wiring.CreateWire("K3", 0, 1000000, -1);
-            wire3.Add(3f, 0f, 0f);
-            wire3.Add(8f, 2f, 6f);
-            wire3.Add(8f, 2f, 0f);
-            wire3.Add(9f, 1f, 8f);
-            wire3.Add(1f, 9f, 0f);
-            wire3.Add(9f, 8f, 4f);
-            wire3.Add(4f, 8f, 8f);
-            wire3.Add(8f, 7f, 7f);
-
-            Wire wire4 = wiring.CreateWire("K4", 0, 500000, -1.5f);
-            wire4.Add(3f, 0f, 0f);
-            wire4.Add(18f, 12f, 16f);
-            wire4.Add(18f, 12f, 10f);
-            wire4.Add(19f, 11f, 18f);
-            wire4.Add(11f, 19f, 10f);
-            wire4.Add(19f, 18f, 14f);
-            wire4.Add(14f, 18f, 18f);
-            wire4.Add(18f, 17f, 17f);
-            #endregion
-
-            // Угловая частота
-            float[] w = new float[wiring.Count];
-
-            // Граница зоны
-            float[] Z = new float[wiring.Count];
-
             // Итоговая напряженность по базовым координатам
             Vector3 exyz = Vector3.zero;
 
             for (int i = 0; i < wiring.Count; i++)
             {
-                exyz += CalculateWire(wiring[i]);
+                exyz += CalculateWire(wiring[i], pointC, time, amperageMode);
             }
 
             float EE = Mathf.Sqrt(Mathf.Pow(exyz.x, 2f) + Mathf.Pow(exyz.y, 2f) + Mathf.Pow(exyz.z, 2f));
@@ -122,10 +60,10 @@ namespace Mynamespace
             return EE;
         }
 
-        private Vector3 CalculateWire(Wire wire)
+        private Vector3 CalculateWire(Wire wire, Vector3 pointC, float time, AmperageMode amperageMode)
         {
-            // Исправить это
-            float t = 0f;
+            // Вычисление силы тока.
+            float amperage = amperageMode == AmperageMode.Computational ? wire.Amplitude * Mathf.Sin(2 * Mathf.PI * wire.Frequency * time) : wire.Amperage;
 
             // Вычисление угловой частоты и границы зоны
             float angularFrequency = wire.Frequency * 2f * Mathf.PI;
@@ -182,8 +120,6 @@ namespace Mynamespace
 
             Vector3 exyz = Vector3.zero;
 
-            Vector3 C = new Vector3(6f, 1f, 0f);
-
             int iterations = 100;
             #endregion
 
@@ -195,9 +131,9 @@ namespace Mynamespace
                 Pxyz[j, 2] = wire[j + 1].z - wire[j].z;
 
                 // Вычисление r0 - r1
-                r0rC[j, 0] = wire[j].x - C.x;
-                r0rC[j, 1] = wire[j].y - C.y;
-                r0rC[j, 2] = wire[j].z - C.z;
+                r0rC[j, 0] = wire[j].x - pointC.x;
+                r0rC[j, 1] = wire[j].y - pointC.y;
+                r0rC[j, 2] = wire[j].z - pointC.z;
 
                 // Вычисление (r0-rC)*p
                 r0rC_p[j] = r0rC[j, 0] * Pxyz[j, 0] + r0rC[j, 1] * Pxyz[j, 1] + r0rC[j, 2] * Pxyz[j, 2];
@@ -224,7 +160,7 @@ namespace Mynamespace
 
                 // Вычисление проекции С
                 nh[j, 0] = Mathf.Sqrt(Mathf.Pow(rb[j, 0] - wire[j].x, 2f) + Mathf.Pow(rb[j, 1] - wire[j].y, 2f) + Mathf.Pow(rb[j, 2] - wire[j].z, 2f)) + ab[j, 0];
-                nh[j, 1] = Mathf.Sqrt(Mathf.Pow(C.x - rb[j, 0], 2f) + Mathf.Pow(C.y - rb[j, 1], 2f) + Mathf.Pow(C.z - rb[j, 2], 2f));
+                nh[j, 1] = Mathf.Sqrt(Mathf.Pow(pointC.x - rb[j, 0], 2f) + Mathf.Pow(pointC.y - rb[j, 1], 2f) + Mathf.Pow(pointC.z - rb[j, 2], 2f));
 
                 // Алгоритм
                 float dx = (ab[j, 1] - ab[j, 0]) / iterations;
@@ -248,15 +184,15 @@ namespace Mynamespace
 
                     float dq;
                     if (it == 0)
-                        dq = -wire.Amperage / angularFrequency * (Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx) / CC)) - Mathf.Cos(angularFrequency * (t - ab[j, 0] / CC)));
+                        dq = -amperage / angularFrequency * (Mathf.Cos(angularFrequency * (time - (ab[j, 0] + dx) / CC)) - Mathf.Cos(angularFrequency * (time - ab[j, 0] / CC)));
                     else
-                        dq = -wire.Amperage / angularFrequency * (Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx * (it + 1)) / CC)) - Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx * it) / CC)));
+                        dq = -amperage / angularFrequency * (Mathf.Cos(angularFrequency * (time - (ab[j, 0] + dx * (it + 1)) / CC)) - Mathf.Cos(angularFrequency * (time - (ab[j, 0] + dx * it) / CC)));
 
                     Erx[j] += (Mathf.Pow(bx, 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
                     Ery[j] += ((bx * nh[j, 1]) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
                     Ettx[j] -= (Mathf.Pow(nh[j, 1], 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq / 2f;
-                    Exd[j] += wire.Amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Pow(Mathf.Sin(tt), 2f);
-                    Eyd[j] += wire.Amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Sin(tt) * costt;
+                    Exd[j] += amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (time - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Pow(Mathf.Sin(tt), 2f);
+                    Eyd[j] += amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (time - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Sin(tt) * costt;
                 }
 
                 Etty[j] = -Ery[j] / 2f;
@@ -271,10 +207,10 @@ namespace Mynamespace
                 for (int k = 0; k < 3; k++)
                 {
                     Lbx[j, k] = Pxyz[j, k] / (ab[j, 1] - ab[j, 0]);
-                    Lby[j, k] = (GetVectorValue(C, k) - rb[j, k]) / nh[j, 1];
+                    Lby[j, k] = (GetVectorValue(pointC, k) - rb[j, k]) / nh[j, 1];
 
                     // Среднее растояние для зоны
-                    Rs += Mathf.Pow(GetVectorValue(C, k) - (GetVectorValue(wire[j + 1], k)) / 2f, 2f);
+                    Rs += Mathf.Pow(GetVectorValue(pointC, k) - (GetVectorValue(wire[j + 1], k)) / 2f, 2f);
                 }
 
                 Rs = Mathf.Sqrt(Rs);
@@ -320,8 +256,66 @@ namespace Mynamespace
     {
         private void Start()
         {
+            #region Create wiring
+            Wiring.Factory wiringFactory = new Wiring.Factory();
+
+            Wiring wiring = wiringFactory.Create();
+
+            Wire wire0 = wiring.CreateWire("K0", 0, 300000000, 1);
+            wire0.Add(1f, 2f, 3f);
+            wire0.Add(7f, 4f, 7f);
+            wire0.Add(5f, 0f, 3f);
+            wire0.Add(6f, 9f, 4f);
+            wire0.Add(0f, 5f, 9f);
+            wire0.Add(2f, 5f, 3f);
+            wire0.Add(3f, 5f, 2f);
+            wire0.Add(4f, 3f, 1f);
+
+            Wire wire1 = wiring.CreateWire("K1", 0, 9000, 2);
+            wire1.Add(1f, 0f, 0f);
+            wire1.Add(8f, 9f, 1f);
+            wire1.Add(0f, 6f, 0f);
+            wire1.Add(9f, 3f, 1f);
+            wire1.Add(0f, 2f, 5f);
+            wire1.Add(8f, 7f, 1f);
+            wire1.Add(0f, 9f, 4f);
+            wire1.Add(2f, 9f, 0f);
+
+            Wire wire2 = wiring.CreateWire("K2", 0, 200000, 0.5f);
+            wire2.Add(2f, 0f, 0f);
+            wire2.Add(6f, 9f, 3f);
+            wire2.Add(9f, 7f, 6f);
+            wire2.Add(7f, 0f, 4f);
+            wire2.Add(9f, 3f, 2f);
+            wire2.Add(1f, 7f, 4f);
+            wire2.Add(3f, 4f, 4f);
+            wire2.Add(4f, 7f, 7f);
+
+            Wire wire3 = wiring.CreateWire("K3", 0, 1000000, -1);
+            wire3.Add(3f, 0f, 0f);
+            wire3.Add(8f, 2f, 6f);
+            wire3.Add(8f, 2f, 0f);
+            wire3.Add(9f, 1f, 8f);
+            wire3.Add(1f, 9f, 0f);
+            wire3.Add(9f, 8f, 4f);
+            wire3.Add(4f, 8f, 8f);
+            wire3.Add(8f, 7f, 7f);
+
+            Wire wire4 = wiring.CreateWire("K4", 0, 500000, -1.5f);
+            wire4.Add(3f, 0f, 0f);
+            wire4.Add(18f, 12f, 16f);
+            wire4.Add(18f, 12f, 10f);
+            wire4.Add(19f, 11f, 18f);
+            wire4.Add(11f, 19f, 10f);
+            wire4.Add(19f, 18f, 14f);
+            wire4.Add(14f, 18f, 18f);
+            wire4.Add(18f, 17f, 17f);
+            #endregion
+
+            Vector3 pointC = new Vector3(6f, 1f, 0f);
+
             Mathematic3Calculator math3 = new Mathematic3Calculator();
-            Debug.Log(math3.CalculateWiring());
+            Debug.Log(math3.CalculateWiring(wiring, pointC, 0f, AmperageMode.Precomputed));
         }
     }
 }
