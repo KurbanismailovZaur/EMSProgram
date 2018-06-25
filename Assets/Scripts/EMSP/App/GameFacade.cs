@@ -23,6 +23,7 @@ using EMSP.Data.Serialization.EMSV.Versions;
 using System.IO;
 using System.Threading;
 using EMSP.Processing;
+using EMSP.Logging;
 
 namespace EMSP.App
 {
@@ -367,33 +368,43 @@ namespace EMSP.App
             switch (actionType)
             {
                 case FileContextMethods.ActionType.NewProject:
+                    Log.WriteOperation("Starting_CreateNewProjectWithCheckToSave");
                     CreateNewProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.OpenProject:
+                    Log.WriteOperation("Starting_OpenProjectWithCheckToSave");
                     OpenProjectWithCheckToSave();
                     break;
                 case FileContextMethods.ActionType.SaveProject:
+                    Log.WriteOperation("Starting_SaveProject");
                     SaveProject();
                     break;
                 case FileContextMethods.ActionType.CloseProject:
+                    Log.WriteOperation("Starting_CloseProjectWithCheckToSaveAndDo");
                     CloseProjectWithCheckToSaveAndDo(null, (action) => { OnSaveProjectDialog(action, null); });
                     break;
                 case FileContextMethods.ActionType.ImportModel:
+                    Log.WriteOperation("Starting_ImportModel");
                     ImportModel();
                     break;
                 case FileContextMethods.ActionType.ImportWiring:
+                    Log.WriteOperation("Starting_ImportWiring");
                     ImportWiring();
                     break;
                 case FileContextMethods.ActionType.ExportMagneticTensionInSpace:
+                    Log.WriteOperation("Starting_ExportMagneticTensionInSpace");
                     ExportMagneticTensionInSpace();
                     break;
                 case FileContextMethods.ActionType.ExportWiring:
+                    Log.WriteOperation("Starting_ExportWiring");
                     ExportWiring();
                     break;
                 case FileContextMethods.ActionType.GenerateVerticesBasedOnOBJ:
+                    Log.WriteOperation("Starting_GenerateVerticesBasedOnOBJ");
                     GenerateVerticesBasedOnOBJ();
                     break;
                 case FileContextMethods.ActionType.Exit:
+                    Log.WriteOperation("Starting_ExitApplication");
                     ExitApplication();
                     break;
             }
@@ -437,9 +448,11 @@ namespace EMSP.App
             switch (actionType)
             {
                 case CalculationsContextMethods.ActionType.MagneticTensionInSpace:
+                    Log.WriteOperation("Starting_Calculate_MagneticTension");
                     Calculate(CalculationType.MagneticTension);
                     break;
                 case CalculationsContextMethods.ActionType.ElectricField:
+                    Log.WriteOperation("Starting_Calculate_ElectricField");
                     Calculate(CalculationType.ElectricField);
                     break;
                 case CalculationsContextMethods.ActionType.Parameters:

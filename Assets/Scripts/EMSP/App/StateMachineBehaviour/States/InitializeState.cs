@@ -45,7 +45,6 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             Log.Initialize();
             Log.WriteOperation("Hello World!");
-            Log.WriteException(new Exception("My exception"));
 
             SetupGlobalization();
             

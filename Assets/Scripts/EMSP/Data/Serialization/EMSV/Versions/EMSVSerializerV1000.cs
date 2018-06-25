@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using OrbCreationExtensions;
 using EMSP.Data.Serialization.EMSV.Exceptions;
+using EMSP.Logging;
 
 namespace EMSP.Data.Serialization.EMSV.Versions
 {
@@ -67,6 +68,7 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
         private byte[] SerializeWitoutEvents(Dictionary<string, List<Vector3>> materialVertexPacks)
         {
+
             string temporaryFileName = Path.GetTempFileName();
             using (BinaryWriter writer = new BinaryWriter(new FileStream(temporaryFileName, FileMode.Create)))
             {
@@ -134,6 +136,8 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
         private Dictionary<string, List<Vector3>> GetDataFromOBJ(string pathToOBJ)
         {
+            Log.WriteOperation("Started_EMSVSerializer_GetDataFromOBJ");
+
             Dictionary<string, List<Vector3>> materialVertexesPacks = new Dictionary<string, List<Vector3>>();
 
             using (StreamReader sr = new StreamReader(pathToOBJ))
@@ -182,6 +186,8 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
         public override Dictionary<string, List<Vector3>> Deserialize(Stream stream)
         {
+            Log.WriteOperation("Started_EMSVSerializer_Deserialize");
+
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 #region Preamble and version
