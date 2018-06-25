@@ -47,6 +47,7 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Methods
+        public abstract Data Calculate(Data settings);
         #endregion
 
         #region Indexers

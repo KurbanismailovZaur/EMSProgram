@@ -37,7 +37,7 @@ namespace EMSP.Mathematic.Magnetic
 
         #region Behaviour
         #region Properties
-        protected override MathematicCalculator Calculator
+        protected override MathematicCalculatorBase Calculator
         {
             get
             {

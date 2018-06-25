@@ -123,7 +123,7 @@ namespace EMSP.Mathematic
         #region Properties
         public abstract CalculationType Type { get; }
 
-        protected abstract MathematicCalculator Calculator { get; }
+        protected abstract MathematicCalculatorBase Calculator { get; }
 
         public AmperageMode AmperageMode
         {
@@ -212,14 +212,31 @@ namespace EMSP.Mathematic
                     {
                         Vector3 point = wiringBounds.center - (new Vector3(stretchedMaxSide, stretchedMaxSide, stretchedMaxSide) / 2f) + (new Vector3(i, j, k) * step);
 
-                        float precomputedValue = Calculator.CalculateWithPrecomputedAmperage(wiring, point);
+                        //float precomputedValue = Calculator.CalculateWithPrecomputedAmperage(wiring, point);
+                        Data precomputedResultData = Calculator.Calculate(new Data()
+                        {
+                            { "amperageMode", AmperageMode.Precomputed },
+                            { "wiring", wiring },
+                            { "point", point }
+                        });
+
+                        float precomputedValue = precomputedResultData.GetValue<float>("directionLength");
 
                         CalculatedValueInTime[] calculatedValuesInTime = new CalculatedValueInTime[timeSteps.Count()];
 
                         for (int w = 0; w < timeSteps.Count(); w++)
                         {
                             float time = timeSteps.ElementAt(w);
-                            float calculatedValue = Calculator.CalculateWithComputationalAmperage(wiring, point, time);
+                            //float calculatedValue = Calculator.CalculateWithComputationalAmperage(wiring, point, time);
+                            Data calculatedResultData = Calculator.Calculate(new Data()
+                            {
+                                { "amperageMode", AmperageMode.Computational },
+                                { "wiring", wiring },
+                                { "point", point },
+                                { "time", time }
+                            });
+
+                            float calculatedValue = calculatedResultData.GetValue<float>("directionLength");
 
                             calculatedValuesInTime[w] = new CalculatedValueInTime(time, calculatedValue);
                         }

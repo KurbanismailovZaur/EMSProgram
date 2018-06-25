@@ -32,7 +32,7 @@ namespace EMSP.Mathematic.Electric
 
         #region Behaviour
         #region Properties
-        protected override MathematicCalculator Calculator
+        protected override MathematicCalculatorBase Calculator
         {
             get
             {

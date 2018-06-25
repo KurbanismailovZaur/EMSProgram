@@ -1,5 +1,6 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic;
+using Numba;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +40,11 @@ namespace Mynamespace
         #endregion
 
         #region Methods
+        public override Data Calculate(Data settings)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public float CalculateWiring()
         {
             Wiring.Factory wiringFactory = new Wiring.Factory();
