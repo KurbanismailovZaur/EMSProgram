@@ -1,4 +1,5 @@
 ﻿using EMSP.Data.Serialization.EMSV.Versions;
+using EMSP.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,12 +56,21 @@ namespace EMSP.Processing
         {
             new Thread(() =>
             {
-                method.Invoke();
+                try
+                {
+                    method.Invoke();
+                }
+                catch(Exception e)
+                {
+                    Log.WriteException(e);
+                }
             }).Start();
         }
 
         public void CreateGenerateVerticesBasedOnOBJProcess(string pathToOBJ)
         {
+            Log.WriteOperation("ProcessManager_CreateGenerateVerticesBasedOnOBJProcess__Started. pTO:" + pathToOBJ);
+
             string pathToEMSV = Path.Combine(Path.GetDirectoryName(pathToOBJ), string.Format("{0}.emsv", Path.GetFileNameWithoutExtension(pathToOBJ)));
 
             EMSVSerializerV1000 serializer = new EMSVSerializerV1000();

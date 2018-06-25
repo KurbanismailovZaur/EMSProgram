@@ -12,6 +12,7 @@ using EMSP.Communication;
 using System.Collections.ObjectModel;
 using EMSP.Mathematic.Magnetic;
 using EMSP.Mathematic.Electric;
+using EMSP.Logging;
 
 namespace EMSP.Data.Serialization.EMSP.Versions
 {
@@ -48,6 +49,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
         #region Methods
         public override byte[] Serialize(SerializableProjectBatch serializableProjectBatch)
         {
+            Log.WriteOperation("Started_EMSPSerializer_Serialize");
             using (BinaryWriter writer = new BinaryWriter(new FileStream(TemporaryFileName, FileMode.Create)))
             {
                 WritePreambleAndVersion(writer, _version);
@@ -102,6 +104,8 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
         public override SerializableProjectBatch Deserialize(Stream stream)
         {
+            Log.WriteOperation("Started_EMSPSerializer_Deserialize");
+
             SerializableProjectSettings settings;
             GameObject modelGameObject = null;
             Wiring wiring = null;
