@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Mynamespace
 {
-	public class Mathematic3Calculator : MathematicCalculatorBase
+    public class Mathematic3Calculator : MathematicCalculatorBase
     {
         #region Entities
         #region Enums
@@ -39,11 +39,8 @@ namespace Mynamespace
         #endregion
 
         #region Methods
-        public float Calculate()
+        public float CalculateWiring()
         {
-            // Исправить это
-            float t = 0f;
-
             Wiring.Factory wiringFactory = new Wiring.Factory();
 
             Wiring wiring = wiringFactory.Create();
@@ -103,188 +100,200 @@ namespace Mynamespace
             // Угловая частота
             float[] w = new float[wiring.Count];
 
-            // Угловая частота
+            // Граница зоны
             float[] Z = new float[wiring.Count];
 
             // Итоговая напряженность по базовым координатам
-            float Ex = 0;
-            float Ey = 0;
-            float Ez = 0;
+            Vector3 exyz = Vector3.zero;
 
             for (int i = 0; i < wiring.Count; i++)
             {
-                // Вычисление угловой частоты и границы зоны
-                w[i] = wiring[i].Frequency * 2f * Mathf.PI;
-                Z[i] = CC / w[i];
-
-                // Максимальное значение для количества узлов
-                int jointCountMinusOne = wiring[i].Count - 1;
-
-                #region Declarations
-                // Вектор прямой
-                float[,,] Pxyz = new float[wiring.Count, jointCountMinusOne, 3];
-
-                // r0 - rc
-                float[,,] r0rC = new float[wiring.Count, jointCountMinusOne, 3];
-
-                // r0 - rc * p
-                float[,] r0rC_p = new float[wiring.Count, jointCountMinusOne];
-
-                // p*p
-                float[,] pp = new float[wiring.Count, jointCountMinusOne];
-
-                // rb
-                float[,,] rb = new float[wiring.Count, jointCountMinusOne, 3];
-
-                // Пределы a b
-                float[,,] ab = new float[wiring.Count, jointCountMinusOne, 2];
-
-                // Проекция C
-                float[,,] nh = new float[wiring.Count, jointCountMinusOne, 2];
-
-                // Искомые элементы напряженности
-                float[,] Erx = new float[wiring.Count, jointCountMinusOne];
-                float[,] Ery = new float[wiring.Count, jointCountMinusOne];
-                float[,] Ettx = new float[wiring.Count, jointCountMinusOne];
-                float[,] Etty = new float[wiring.Count, jointCountMinusOne];
-                float[,] Exb = new float[wiring.Count, jointCountMinusOne];
-                float[,] Eyb = new float[wiring.Count, jointCountMinusOne];
-                float[,] Eb = new float[wiring.Count, jointCountMinusOne];
-                float[,] Exd = new float[wiring.Count, jointCountMinusOne];
-                float[,] Eyd = new float[wiring.Count, jointCountMinusOne];
-                float[,] Ed = new float[wiring.Count, jointCountMinusOne];
-
-                // Переход от локальных к базовым координатам
-                float[,,] Lbx = new float[wiring.Count, jointCountMinusOne, 3];
-                float[,,] Lby = new float[wiring.Count, jointCountMinusOne, 3];
-
-                // Финальные значения по координатам
-                float[,,] Ec = new float[wiring.Count, jointCountMinusOne, 3];
-
-                // Финальные значения по абсолюту
-                float[,] E = new float[wiring.Count, jointCountMinusOne];
-
-                Vector3 C = new Vector3(6f, 1f, 0f);
-
-                int iterations = 100;
-                #endregion
-
-                for (int j = 0; j < jointCountMinusOne; j++)
-                {
-                    // Вычисление вектора прямой
-                    Pxyz[i, j, 0] = wiring[i][j + 1].x - wiring[i][j].x;
-                    Pxyz[i, j, 1] = wiring[i][j + 1].y - wiring[i][j].y;
-                    Pxyz[i, j, 2] = wiring[i][j + 1].z - wiring[i][j].z;
-
-                    // Вычисление r0 - r1
-                    r0rC[i, j, 0] = wiring[i][j].x - C.x;
-                    r0rC[i, j, 1] = wiring[i][j].y - C.y;
-                    r0rC[i, j, 2] = wiring[i][j].z - C.z;
-
-                    // Вычисление (r0-rC)*p
-                    r0rC_p[i, j] = r0rC[i, j, 0] * Pxyz[i, j, 0] + r0rC[i, j, 1] * Pxyz[i, j, 1] + r0rC[i, j, 2] * Pxyz[i, j, 2];
-
-                    // Вычисление p*p
-                    pp[i, j] = Mathf.Pow(Pxyz[i, j, 0], 2f) + Mathf.Pow(Pxyz[i, j, 1], 2f) + Mathf.Pow(Pxyz[i, j, 2], 2f);
-
-                    // Вычисление rb
-                    rb[i, j, 0] = wiring[i][j].x - r0rC_p[i, j] / pp[i, j] * Pxyz[i, j, 0];
-                    rb[i, j, 1] = wiring[i][j].y - r0rC_p[i, j] / pp[i, j] * Pxyz[i, j, 1];
-                    rb[i, j, 2] = wiring[i][j].z - r0rC_p[i, j] / pp[i, j] * Pxyz[i, j, 2];
-
-                    // Вычисление пределов a b
-                    if (j == 0)
-                    {
-                        ab[i, j, 0] = 0;
-                        ab[i, j, 1] = Mathf.Sqrt(pp[i, j]);
-                    }
-                    else
-                    {
-                        ab[i, j, 0] = ab[i, j - 1, 1];
-                        ab[i, j, 1] = Mathf.Sqrt(pp[i, j]) + ab[i, j, 0];
-                    }
-
-                    // Вычисление проекции С
-                    nh[i, j, 0] = Mathf.Sqrt(Mathf.Pow(rb[i, j, 0] - wiring[i][j].x, 2f) + Mathf.Pow(rb[i, j, 1] - wiring[i][j].y, 2f) + Mathf.Pow(rb[i, j, 2] - wiring[i][j].z, 2f)) + ab[i, j, 0];
-                    nh[i, j, 1] = Mathf.Sqrt(Mathf.Pow(C.x - rb[i, j, 0], 2f) + Mathf.Pow(C.y - rb[i, j, 1], 2f) + Mathf.Pow(C.z - rb[i, j, 2], 2f));
-
-                    // Алгоритм
-                    float dx = (ab[i, j, 1] - ab[i, j, 0]) / iterations;
-
-                    Erx[i, j] = 0;
-                    Ery[i, j] = 0;
-                    Ettx[i, j] = 0;
-                    Exd[i, j] = 0;
-                    Eyd[i, j] = 0;
-
-                    for (int it = 0; it < iterations; it++)
-                    {
-                        float x = it * dx + dx / 2f + ab[i, j, 0];
-                        float bx = nh[i, j, 0] - x;
-                        float r = Mathf.Sqrt(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[i, j, 1], 2f));
-                        float R3 = Mathf.Pow(r, 3f);
-                        float RR3 = 1f / R3;
-
-                        float costt = bx / r;
-                        float tt = Mathf.Acos(costt);
-
-                        float dq;
-                        if (it == 0)
-                            dq = -wiring[i].Amperage / w[i] * (Mathf.Cos(w[i] * (t - (ab[i, j, 0] + dx) / CC)) - Mathf.Cos(w[i] * (t - ab[i, j, 0] / CC)));
-                        else
-                            dq = -wiring[i].Amperage / w[i] * (Mathf.Cos(w[i] * (t - (ab[i, j, 0] + dx * (it + 1)) / CC)) - Mathf.Cos(w[i] * (t - (ab[i, j, 0] + dx * it) / CC)));
-
-                        Erx[i, j] += (Mathf.Pow(bx, 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[i, j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
-                        Ery[i, j] += ((bx * nh[i, j, 1]) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[i, j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
-                        Ettx[i, j] -= (Mathf.Pow(nh[i, j, 1], 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[i, j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq / 2f;
-                        Exd[i, j] += wiring[i].Amperage * w[i] * dx * Mathf.Sin(w[i] * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Pow(Mathf.Sin(tt), 2f);
-                        Eyd[i, j] += wiring[i].Amperage * w[i] * dx * Mathf.Sin(w[i] * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Sin(tt) * costt;
-                    }
-
-                    Etty[i, j] = -Ery[i, j] / 2f;
-                    Exb[i, j] = Erx[i, j] + Ettx[i, j];
-                    Eyb[i, j] = Ery[i, j] + Etty[i, j];
-                    Eb[i, j] = Mathf.Sqrt(Mathf.Pow(Exb[i, j], 2f) + Mathf.Pow(Eyb[i, j], 2f));
-                    Ed[i, j] = Mathf.Sqrt(Mathf.Pow(Exd[i, j], 2f) + Mathf.Pow(Eyd[i, j], 2f));
-
-                    // Переход от локальных к базовым координатам
-                    float Rs = 0f;
-
-                    for (int k = 0; k < 3; k++)
-                    {
-                        Lbx[i, j, k] = Pxyz[i, j, k] / (ab[i, j, 1] - ab[i, j, 0]);
-                        Lby[i, j, k] = (GetVectorValue(C, k) - rb[i, j, k]) / nh[i, j, 1];
-
-                        // Среднее растояние для зоны
-                        Rs += Mathf.Pow(GetVectorValue(C, k) - (GetVectorValue(wiring[i][j + 1], k)) / 2f, 2f);
-                    }
-
-                    Rs = Mathf.Sqrt(Rs);
-                    E[i, j] = 0f;
-
-                    for (int k = 0; k < 3; k++)
-                    {
-                        if (Rs < Z[i] / KZ)
-                            Ec[i, j, k] = Exb[i, j] * Lbx[i, j, k] + Eyb[i, j] * Lby[i, j, k];
-                        else if (Rs > Z[i] * KZ)
-                            Ec[i, j, k] = Exd[i, j] * Lbx[i, j, k] + Eyd[i, j] * Lby[i, j, k];
-                        else
-                            Ec[i, j, k] = (Exb[i, j] + Exd[i, j]) * Lbx[i, j, k] + (Eyb[i, j] + Eyd[i, j]) * Lby[i, j, k];
-
-                        E[i, j] += Mathf.Pow(Ec[i, j, k], 2f);
-                    }
-
-                    E[i, j] = Mathf.Sqrt(E[i, j]);
-
-                    Ex += Ec[i, j, 0];
-                    Ey += Ec[i, j, 1];
-                    Ez += Ec[i, j, 2];
-                }
+                exyz += CalculateWire(wiring[i]);
             }
 
-            float EE = Mathf.Sqrt(Mathf.Pow(Ex, 2f) + Mathf.Pow(Ey, 2f) + Mathf.Pow(Ez, 2f));
+            float EE = Mathf.Sqrt(Mathf.Pow(exyz.x, 2f) + Mathf.Pow(exyz.y, 2f) + Mathf.Pow(exyz.z, 2f));
 
             return EE;
+        }
+
+        private Vector3 CalculateWire(Wire wire)
+        {
+            // Исправить это
+            float t = 0f;
+
+            // Вычисление угловой частоты и границы зоны
+            float angularFrequency = wire.Frequency * 2f * Mathf.PI;
+
+            // Вычисление границы зоны
+            float zoneBoundary = CC / angularFrequency;
+
+            // Максимальное значение для количества узлов
+            int jointCountMinusOne = wire.Count - 1;
+
+            #region Declarations
+            // Вектор прямой
+            float[,] Pxyz = new float[jointCountMinusOne, 3];
+
+            // r0 - rc
+            float[,] r0rC = new float[jointCountMinusOne, 3];
+
+            // r0 - rc * p
+            float[] r0rC_p = new float[jointCountMinusOne];
+
+            // p*p
+            float[] pp = new float[jointCountMinusOne];
+
+            // rb
+            float[,] rb = new float[jointCountMinusOne, 3];
+
+            // Пределы a b
+            float[,] ab = new float[jointCountMinusOne, 2];
+
+            // Проекция C
+            float[,] nh = new float[jointCountMinusOne, 2];
+
+            // Искомые элементы напряженности
+            float[] Erx = new float[jointCountMinusOne];
+            float[] Ery = new float[jointCountMinusOne];
+            float[] Ettx = new float[jointCountMinusOne];
+            float[] Etty = new float[jointCountMinusOne];
+            float[] Exb = new float[jointCountMinusOne];
+            float[] Eyb = new float[jointCountMinusOne];
+            float[] Eb = new float[jointCountMinusOne];
+            float[] Exd = new float[jointCountMinusOne];
+            float[] Eyd = new float[jointCountMinusOne];
+            float[] Ed = new float[jointCountMinusOne];
+
+            // Переход от локальных к базовым координатам
+            float[,] Lbx = new float[jointCountMinusOne, 3];
+            float[,] Lby = new float[jointCountMinusOne, 3];
+
+            // Финальные значения по координатам
+            float[,] Ec = new float[ jointCountMinusOne, 3];
+
+            // Финальные значения по абсолюту
+            float[] E = new float[jointCountMinusOne];
+
+            Vector3 exyz = Vector3.zero;
+
+            Vector3 C = new Vector3(6f, 1f, 0f);
+
+            int iterations = 100;
+            #endregion
+
+            for (int j = 0; j < jointCountMinusOne; j++)
+            {
+                // Вычисление вектора прямой
+                Pxyz[j, 0] = wire[j + 1].x - wire[j].x;
+                Pxyz[j, 1] = wire[j + 1].y - wire[j].y;
+                Pxyz[j, 2] = wire[j + 1].z - wire[j].z;
+
+                // Вычисление r0 - r1
+                r0rC[j, 0] = wire[j].x - C.x;
+                r0rC[j, 1] = wire[j].y - C.y;
+                r0rC[j, 2] = wire[j].z - C.z;
+
+                // Вычисление (r0-rC)*p
+                r0rC_p[j] = r0rC[j, 0] * Pxyz[j, 0] + r0rC[j, 1] * Pxyz[j, 1] + r0rC[j, 2] * Pxyz[j, 2];
+
+                // Вычисление p*p
+                pp[j] = Mathf.Pow(Pxyz[j, 0], 2f) + Mathf.Pow(Pxyz[j, 1], 2f) + Mathf.Pow(Pxyz[j, 2], 2f);
+
+                // Вычисление rb
+                rb[j, 0] = wire[j].x - r0rC_p[j] / pp[j] * Pxyz[j, 0];
+                rb[j, 1] = wire[j].y - r0rC_p[j] / pp[j] * Pxyz[j, 1];
+                rb[j, 2] = wire[j].z - r0rC_p[j] / pp[j] * Pxyz[j, 2];
+
+                // Вычисление пределов a b
+                if (j == 0)
+                {
+                    ab[j, 0] = 0;
+                    ab[j, 1] = Mathf.Sqrt(pp[j]);
+                }
+                else
+                {
+                    ab[j, 0] = ab[j - 1, 1];
+                    ab[j, 1] = Mathf.Sqrt(pp[j]) + ab[j, 0];
+                }
+
+                // Вычисление проекции С
+                nh[j, 0] = Mathf.Sqrt(Mathf.Pow(rb[j, 0] - wire[j].x, 2f) + Mathf.Pow(rb[j, 1] - wire[j].y, 2f) + Mathf.Pow(rb[j, 2] - wire[j].z, 2f)) + ab[j, 0];
+                nh[j, 1] = Mathf.Sqrt(Mathf.Pow(C.x - rb[j, 0], 2f) + Mathf.Pow(C.y - rb[j, 1], 2f) + Mathf.Pow(C.z - rb[j, 2], 2f));
+
+                // Алгоритм
+                float dx = (ab[j, 1] - ab[j, 0]) / iterations;
+
+                Erx[j] = 0;
+                Ery[j] = 0;
+                Ettx[j] = 0;
+                Exd[j] = 0;
+                Eyd[j] = 0;
+
+                for (int it = 0; it < iterations; it++)
+                {
+                    float x = it * dx + dx / 2f + ab[j, 0];
+                    float bx = nh[j, 0] - x;
+                    float r = Mathf.Sqrt(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f));
+                    float R3 = Mathf.Pow(r, 3f);
+                    float RR3 = 1f / R3;
+
+                    float costt = bx / r;
+                    float tt = Mathf.Acos(costt);
+
+                    float dq;
+                    if (it == 0)
+                        dq = -wire.Amperage / angularFrequency * (Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx) / CC)) - Mathf.Cos(angularFrequency * (t - ab[j, 0] / CC)));
+                    else
+                        dq = -wire.Amperage / angularFrequency * (Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx * (it + 1)) / CC)) - Mathf.Cos(angularFrequency * (t - (ab[j, 0] + dx * it) / CC)));
+
+                    Erx[j] += (Mathf.Pow(bx, 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
+                    Ery[j] += ((bx * nh[j, 1]) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq;
+                    Ettx[j] -= (Mathf.Pow(nh[j, 1], 2f) / Mathf.Pow(Mathf.Pow(bx, 2f) + Mathf.Pow(nh[j, 1], 2f), 2.5f)) / 2f / Mathf.PI / EPS * dq / 2f;
+                    Exd[j] += wire.Amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Pow(Mathf.Sin(tt), 2f);
+                    Eyd[j] += wire.Amperage * angularFrequency * dx * Mathf.Sin(angularFrequency * (t - r / CC)) / Mathf.Pow(CC, 2f) / r / 4f / Mathf.PI / EPS * Mathf.Sin(tt) * costt;
+                }
+
+                Etty[j] = -Ery[j] / 2f;
+                Exb[j] = Erx[j] + Ettx[j];
+                Eyb[j] = Ery[j] + Etty[j];
+                Eb[j] = Mathf.Sqrt(Mathf.Pow(Exb[j], 2f) + Mathf.Pow(Eyb[j], 2f));
+                Ed[j] = Mathf.Sqrt(Mathf.Pow(Exd[j], 2f) + Mathf.Pow(Eyd[j], 2f));
+
+                // Переход от локальных к базовым координатам
+                float Rs = 0f;
+
+                for (int k = 0; k < 3; k++)
+                {
+                    Lbx[j, k] = Pxyz[j, k] / (ab[j, 1] - ab[j, 0]);
+                    Lby[j, k] = (GetVectorValue(C, k) - rb[j, k]) / nh[j, 1];
+
+                    // Среднее растояние для зоны
+                    Rs += Mathf.Pow(GetVectorValue(C, k) - (GetVectorValue(wire[j + 1], k)) / 2f, 2f);
+                }
+
+                Rs = Mathf.Sqrt(Rs);
+                E[j] = 0f;
+
+                for (int k = 0; k < 3; k++)
+                {
+                    if (Rs < zoneBoundary / KZ)
+                        Ec[j, k] = Exb[j] * Lbx[j, k] + Eyb[j] * Lby[j, k];
+                    else if (Rs > zoneBoundary * KZ)
+                        Ec[j, k] = Exd[j] * Lbx[j, k] + Eyd[j] * Lby[j, k];
+                    else
+                        Ec[j, k] = (Exb[j] + Exd[j]) * Lbx[j, k] + (Eyb[j] + Eyd[j]) * Lby[j, k];
+
+                    E[j] += Mathf.Pow(Ec[j, k], 2f);
+                }
+
+                E[j] = Mathf.Sqrt(E[j]);
+
+                exyz.x += Ec[j, 0];
+                exyz.y += Ec[j, 1];
+                exyz.z += Ec[j, 2];
+            }
+
+            return exyz;
         }
 
         private float GetVectorValue(Vector3 vector3, int index)
@@ -306,7 +315,7 @@ namespace Mynamespace
         private void Start()
         {
             Mathematic3Calculator math3 = new Mathematic3Calculator();
-            Debug.Log(math3.Calculate());
+            Debug.Log(math3.CalculateWiring());
         }
     }
 }
