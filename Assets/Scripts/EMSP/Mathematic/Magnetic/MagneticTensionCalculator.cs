@@ -40,6 +40,22 @@ namespace EMSP.Mathematic.Magnetic
         #endregion
 
         #region Methods
+        public override bool CheckIntersection(Wiring wiring, Vector3 point)
+        {
+            foreach (Wire wire in wiring)
+            {
+                for (int i = 0; i < wire.Count - 1; i++)
+                {
+                    Vector3 ab = wire[i + 1] - wire[i];
+                    Vector3 ac = point - wire[i];
+
+                    if (ab.normalized == ac.normalized && ac.sqrMagnitude <= ab.sqrMagnitude) return true;
+                }
+            }
+
+            return false;
+        }
+
         public override Data Calculate(Data settings)
         {
             // Extract data.

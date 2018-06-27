@@ -201,8 +201,9 @@ namespace EMSP.Mathematic
 
             float step = stretchedMaxSide / (rangeLength - 1);
 
-            CalculatedValueInfo[] calculatedValuesInfo = new CalculatedValueInfo[(int)Mathf.Pow(rangeLength, 3)];
-            int index = 0;
+            List<CalculatedValueInfo> calculatedValueInfos = new List<CalculatedValueInfo>((int)Mathf.Pow(rangeLength, 3));
+            //CalculatedValueInfo[] calculatedValuesInfo = new CalculatedValueInfo[(int)Mathf.Pow(rangeLength, 3)];
+            //int index = 0;
 
             for (int i = 0; i < rangeLength; i++)
             {
@@ -211,6 +212,8 @@ namespace EMSP.Mathematic
                     for (int k = 0; k < rangeLength; k++)
                     {
                         Vector3 point = wiringBounds.center - (new Vector3(stretchedMaxSide, stretchedMaxSide, stretchedMaxSide) / 2f) + (new Vector3(i, j, k) * step);
+
+                        if (Calculator.CheckIntersection(wiring, point)) continue;
 
                         //float precomputedValue = Calculator.CalculateWithPrecomputedAmperage(wiring, point);
                         Data precomputedResultData = Calculator.Calculate(new Data()
@@ -242,18 +245,19 @@ namespace EMSP.Mathematic
                             calculatedValuesInTime[w] = new CalculatedValueInTime(time, calculatedValue);
                         }
 
-                        calculatedValuesInfo[index++] = new CalculatedValueInfo(point, precomputedValue, calculatedValuesInTime);
+                        calculatedValueInfos.Add(new CalculatedValueInfo(point, precomputedValue, calculatedValuesInTime));
+                        //calculatedValuesInfo[index++] = new CalculatedValueInfo(point, precomputedValue, calculatedValuesInTime);
                     }
                 }
             }
 
-            _maxCalculatedValues = GetMaxCalculatedValues(calculatedValuesInfo);
+            _maxCalculatedValues = GetMaxCalculatedValues(calculatedValueInfos);
 
             float maxCalculatedValue = _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
             _pointsSize = step + (step * _pointSizeStretchPercent);
 
-            CreatePoints(calculatedValuesInfo, maxCalculatedValue);
+            CreatePoints(calculatedValueInfos, maxCalculatedValue);
         }
 
         public void Restore(PointsInfo pointsInfo)
@@ -264,7 +268,8 @@ namespace EMSP.Mathematic
 
             int pointsCount = pointsInfo.Infos.Count;
 
-            CalculatedValueInfo[] calculatedValuesInfo = new CalculatedValueInfo[pointsCount];
+            List<CalculatedValueInfo> calculatedValuesInfo = new List<CalculatedValueInfo>(pointsCount);
+            for (int i = 0; i < pointsCount; i++) calculatedValuesInfo.Add(new CalculatedValueInfo());
 
             for (int i = 0; i < pointsCount; ++i)
             {
@@ -280,7 +285,7 @@ namespace EMSP.Mathematic
             CreatePoints(calculatedValuesInfo, maxCalculatedValue);
         }
 
-        private void CreatePoints(CalculatedValueInfo[] calculatedValuesInfo, float maxCalculatedValue)
+        private void CreatePoints(List<CalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
         {
             foreach (CalculatedValueInfo mtInfo in calculatedValuesInfo)
             {
@@ -304,11 +309,11 @@ namespace EMSP.Mathematic
             CurrentValueFilterRange = _valueFilterRange;
         }
 
-        private MaxCalculatedValues GetMaxCalculatedValues(CalculatedValueInfo[] calculatedValuesInfo)
+        private MaxCalculatedValues GetMaxCalculatedValues(List<CalculatedValueInfo> calculatedValuesInfo)
         {
             MaxCalculatedValues maxCalculatedValues = new MaxCalculatedValues(0f, 0f);
 
-            for (int i = 0; i < calculatedValuesInfo.Length; i++)
+            for (int i = 0; i < calculatedValuesInfo.Count; i++)
             {
                 maxCalculatedValues.Precomputed = Math.Max(maxCalculatedValues.Precomputed, calculatedValuesInfo[i].PrecomputedValue);
 

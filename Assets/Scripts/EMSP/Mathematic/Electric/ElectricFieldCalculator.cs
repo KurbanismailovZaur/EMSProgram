@@ -38,6 +38,22 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Methods
+        public override bool CheckIntersection(Wiring wiring, Vector3 point)
+        {
+            foreach (Wire wire in wiring)
+            {
+                for (int i = 0; i < wire.Count - 1; i++)
+                {
+                    Vector3 ab = wire[i + 1] - wire[i];
+                    Vector3 ac = point - wire[i];
+
+                    if (ab.normalized == ac.normalized && ac.sqrMagnitude <= ab.sqrMagnitude) return true;
+                }
+            }
+
+            return false;
+        }
+
         public override Data Calculate(Data settings)
         {
             AmperageMode amperageMode = settings.GetValue<AmperageMode>("amperageMode");
@@ -55,7 +71,12 @@ namespace EMSP.Mathematic
 
             for (int i = 0; i < wiring.Count; i++)
             {
-                exyz += CalculateWire(wiring[i], pointC, time, amperageMode);
+                Vector3 result = CalculateWire(wiring[i], pointC, time, amperageMode);
+
+                if (float.IsNaN(result.x) || float.IsNaN(result.y) || float.IsNaN(result.z))
+                    Debug.Log(result);
+
+                exyz += result;
             }
 
             float EE = Mathf.Sqrt(Mathf.Pow(exyz.x, 2f) + Mathf.Pow(exyz.y, 2f) + Mathf.Pow(exyz.z, 2f));
@@ -123,7 +144,7 @@ namespace EMSP.Mathematic
 
             Vector3 exyz = Vector3.zero;
 
-            int iterations = 2;
+            int iterations = 100;
             #endregion
 
             for (int j = 0; j < jointCountMinusOne; j++)
@@ -210,7 +231,9 @@ namespace EMSP.Mathematic
                 for (int k = 0; k < 3; k++)
                 {
                     Lbx[j, k] = Pxyz[j, k] / (ab[j, 1] - ab[j, 0]);
+
                     Lby[j, k] = (pointC[k] - rb[j, k]) / nh[j, 1];
+                    if (float.IsNaN(Lby[j, k])) Lby[j, k] = 0f;
 
                     // Среднее растояние для зоны
                     Rs += Mathf.Pow(pointC[k] - (wire[j + 1][k]) / 2f, 2f);

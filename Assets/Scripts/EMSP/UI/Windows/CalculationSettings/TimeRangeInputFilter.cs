@@ -1,6 +1,7 @@
 ﻿using EMSP.App;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,7 +61,8 @@ namespace EMSP.UI.Windows.CalculationSettings
             }
 
             char lastSymbol = data[data.Length - 1];
-            if (!char.IsDigit(lastSymbol) && lastSymbol.ToString() != GameSettings.Instance.NumberDecimalSeparator)
+            if ((!char.IsDigit(lastSymbol) && lastSymbol.ToString() != GameSettings.Instance.NumberDecimalSeparator) 
+                || (lastSymbol.ToString() == GameSettings.Instance.NumberDecimalSeparator && data.Count(c => c == GameSettings.Instance.NumberDecimalSeparator[0]) > 1))
             {
                 _inputField.text = data.Substring(0, data.Length - 1);
             }

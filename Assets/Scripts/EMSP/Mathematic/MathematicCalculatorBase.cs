@@ -47,6 +47,8 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Methods
+        public abstract bool CheckIntersection(Wiring wiring, Vector3 point);
+
         public abstract Data Calculate(Data settings);
         #endregion
 
