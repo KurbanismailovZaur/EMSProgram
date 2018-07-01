@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace EMSP.Communication
 {
@@ -38,6 +39,25 @@ namespace EMSP.Communication
                 wire._lineRenderer.numCornerVertices = 4;
                 wire._lineRenderer.numCapVertices = 4;
                 wire._lineRenderer.useWorldSpace = false;
+
+
+                CapsuleCollider lineCollider = new GameObject("LineCollider").AddComponent<CapsuleCollider>();
+                lineCollider.transform.parent = wire._lineRenderer.transform;
+                lineCollider.radius = wire._lineRenderer.startWidth;
+                lineCollider.direction = 2;
+
+                EventTrigger eventTrigger = lineCollider.gameObject.AddComponent<EventTrigger>();
+                var triggersOfET = new List<EventTrigger.Entry>();
+                var entry = new EventTrigger.Entry();
+                entry.eventID = EventTriggerType.PointerDown;
+                entry.callback.AddListener((eD) =>
+                {
+                    Debug.Log("Clicked");
+                });
+
+                triggersOfET.Add(entry);
+                eventTrigger.triggers = triggersOfET;
+
 
                 return wire;
             }
@@ -197,6 +217,18 @@ namespace EMSP.Communication
         {
             _lineRenderer.positionCount = _localPoints.Count;
             _lineRenderer.SetPositions(_localPoints.ToArray());
+
+
+            // Update collider 
+            if (_lineRenderer.positionCount != 2) return;
+
+            Vector3 starttPosition = _lineRenderer.GetPosition(0);
+            Vector3 endPosition = _lineRenderer.GetPosition(1);
+
+            var capsule = _lineRenderer.transform.GetChild(0).GetComponent<CapsuleCollider>();
+            capsule.transform.position = starttPosition + (endPosition - starttPosition) / 2;
+            capsule.transform.LookAt(starttPosition);
+            capsule.height = (endPosition - starttPosition).magnitude;
         }
 
         public Bounds GetBounds()

@@ -1192,7 +1192,7 @@ Prefab:
     - target: {fileID: 224272538636268788, guid: 91636b083fcbfbd44a7a3f774dab0869,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000002861023
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91636b083fcbfbd44a7a3f774dab0869, type: 2}
@@ -9805,6 +9805,7 @@ GameObject:
   - component: {fileID: 2019584173}
   - component: {fileID: 2019584178}
   - component: {fileID: 2019584177}
+  - component: {fileID: 2019584179}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9905,6 +9906,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rectOffsetFromTop: 20
+--- !u!114 &2019584179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2019584172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -768656878, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1001 &2073654283
 Prefab:
   m_ObjectHideFlags: 0
