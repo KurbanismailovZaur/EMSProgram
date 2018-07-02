@@ -40,25 +40,6 @@ namespace EMSP.Communication
                 wire._lineRenderer.numCapVertices = 4;
                 wire._lineRenderer.useWorldSpace = false;
 
-
-                CapsuleCollider lineCollider = new GameObject("LineCollider").AddComponent<CapsuleCollider>();
-                lineCollider.transform.parent = wire._lineRenderer.transform;
-                lineCollider.radius = wire._lineRenderer.startWidth;
-                lineCollider.direction = 2;
-
-                EventTrigger eventTrigger = lineCollider.gameObject.AddComponent<EventTrigger>();
-                var triggersOfET = new List<EventTrigger.Entry>();
-                var entry = new EventTrigger.Entry();
-                entry.eventID = EventTriggerType.PointerDown;
-                entry.callback.AddListener((eD) =>
-                {
-                    Debug.Log("Clicked");
-                });
-
-                triggersOfET.Add(entry);
-                eventTrigger.triggers = triggersOfET;
-
-
                 return wire;
             }
         }
@@ -218,17 +199,50 @@ namespace EMSP.Communication
             _lineRenderer.positionCount = _localPoints.Count;
             _lineRenderer.SetPositions(_localPoints.ToArray());
 
+            UpdateLineRendererColliders();
+        }
 
-            // Update collider 
-            if (_lineRenderer.positionCount != 2) return;
+        private void UpdateLineRendererColliders()
+        {
+            int segmetsCount = _lineRenderer.positionCount - 1;
 
-            Vector3 starttPosition = _lineRenderer.GetPosition(0);
-            Vector3 endPosition = _lineRenderer.GetPosition(1);
+            for(int i = 0; i < _lineRenderer.transform.childCount; ++i)
+            {
+                Destroy(_lineRenderer.transform.GetChild(i).gameObject);
+            }
+            _lineRenderer.transform.DetachChildren();
 
-            var capsule = _lineRenderer.transform.GetChild(0).GetComponent<CapsuleCollider>();
-            capsule.transform.position = starttPosition + (endPosition - starttPosition) / 2;
-            capsule.transform.LookAt(starttPosition);
-            capsule.height = (endPosition - starttPosition).magnitude;
+            if (segmetsCount < 1) return;
+
+            for(int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
+            {
+                // Adding child GameObject with Collider and EventTrigger
+                CapsuleCollider lineCollider = new GameObject("LineCollider").AddComponent<CapsuleCollider>();
+                lineCollider.transform.parent = _lineRenderer.transform;
+                lineCollider.radius = _lineRenderer.startWidth;
+                lineCollider.direction = 2;
+
+                EventTrigger eventTrigger = lineCollider.gameObject.AddComponent<EventTrigger>();
+                var triggerEntries = new List<EventTrigger.Entry>();
+
+                var pointerDownEntry = new EventTrigger.Entry();
+                pointerDownEntry.eventID = EventTriggerType.PointerDown;
+                pointerDownEntry.callback.AddListener((eventData) =>
+                {
+                    lineCollider.GetComponentInParent<Wire>().OnWireClickHandler();
+                });
+
+                triggerEntries.Add(pointerDownEntry);
+                eventTrigger.triggers = triggerEntries;
+
+                // Set position and rotation for GameObject with Collider
+                Vector3 starttPosition = _lineRenderer.GetPosition(segmentIndex);
+                Vector3 endPosition = _lineRenderer.GetPosition(segmentIndex + 1);
+
+                lineCollider.transform.position = starttPosition + (endPosition - starttPosition) / 2;
+                lineCollider.transform.LookAt(starttPosition);
+                lineCollider.height = (endPosition - starttPosition).magnitude;
+            }
         }
 
         public Bounds GetBounds()
@@ -257,6 +271,10 @@ namespace EMSP.Communication
         #endregion
 
         #region Events handlers
+        private void OnWireClickHandler()
+        {
+            Debug.Log(this.Name);
+        }
         #endregion
         #endregion
     }
