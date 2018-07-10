@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace EMSP.Mathematic
+namespace EMSP.Mathematic.Induction
 {
-    public abstract class MathematicCalculatorBase
+    public class InductionCalculator : VectorableMathematicCalculatorBase
     {
         #region Entities
         #region Enums
@@ -27,13 +27,6 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Fields
-        protected const float MAGNETIC_CONSTANT = 4f * Mathf.PI * 1e-7f;
-
-        protected const float CC = 300000000f;
-
-        protected const float EPS = 8.84E-12f;
-
-        protected float KZ = 6f;
         #endregion
 
         #region Events
@@ -47,7 +40,11 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Methods
-        public abstract Data Calculate(Data settings);
+        public override Data Calculate(Data settings)
+        {
+
+            return new Data();
+        }
         #endregion
 
         #region Indexers

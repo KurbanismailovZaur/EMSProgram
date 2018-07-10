@@ -192,7 +192,7 @@ namespace EMSP.Mathematic
                     {
                         Vector3 point = wiringBounds.center - (new Vector3(stretchedMaxSide, stretchedMaxSide, stretchedMaxSide) / 2f) + (new Vector3(i, j, k) * step);
 
-                        if (Calculator.CheckIntersection(wiring, point)) continue;
+                        if (((PointableMathematicCalculatorBase)Calculator).CheckIntersection(wiring, point)) continue;  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                         //float precomputedValue = Calculator.CalculateWithPrecomputedAmperage(wiring, point);
                         Data precomputedResultData = Calculator.Calculate(new Data()

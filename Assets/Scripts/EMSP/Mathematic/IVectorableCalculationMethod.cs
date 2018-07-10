@@ -4,10 +4,7 @@ using UnityEngine;
 
 namespace EMSP.Mathematic
 {
-    public enum CalculationType
+    public interface IVectorableCalculationMethod : ICalculationMethod
     {
-        MagneticTension,
-        ElectricField,
-        Induction
     }
 }

@@ -1,13 +1,15 @@
 ﻿using EMSP.Communication;
+using EMSP.Utility.Extensions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace EMSP.Mathematic
+namespace EMSP.Mathematic.Induction
 {
-    public abstract class MathematicCalculatorBase
+    public class Induction : VectorableMathematicBase
     {
         #region Entities
         #region Enums
@@ -27,13 +29,7 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Fields
-        protected const float MAGNETIC_CONSTANT = 4f * Mathf.PI * 1e-7f;
-
-        protected const float CC = 300000000f;
-
-        protected const float EPS = 8.84E-12f;
-
-        protected float KZ = 6f;
+        private InductionCalculator _calculator = new InductionCalculator();
         #endregion
 
         #region Events
@@ -41,13 +37,21 @@ namespace EMSP.Mathematic
 
         #region Behaviour
         #region Properties
+        protected override MathematicCalculatorBase Calculator
+        {
+            get
+            {
+                return _calculator;
+            }
+        }
+
+        public override CalculationType Type { get { return CalculationType.Induction; } }
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
-        public abstract Data Calculate(Data settings);
         #endregion
 
         #region Indexers

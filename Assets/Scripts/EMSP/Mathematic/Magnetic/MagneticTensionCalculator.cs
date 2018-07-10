@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace EMSP.Mathematic.Magnetic
 {
-	public class MagneticTensionCalculator : MathematicCalculatorBase
+	public class MagneticTensionCalculator : PointableMathematicCalculatorBase
 	{
         #region Entities
         #region Enums

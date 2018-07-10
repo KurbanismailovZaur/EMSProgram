@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1816412859705628}
   m_IsPrefabParent: 1
+--- !u!1 &1114887575240632
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4183084399859050}
+  - component: {fileID: 114365737947487060}
+  m_Layer: 0
+  m_Name: Induction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1270872105894964
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,6 +88,19 @@ Transform:
   m_Father: {fileID: 4988780478096948}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4183084399859050
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1114887575240632}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4988780478096948}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4858883599598586
 Transform:
   m_ObjectHideFlags: 1
@@ -92,14 +121,46 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1816412859705628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000023841858, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4123466397144640}
   - {fileID: 4858883599598586}
+  - {fileID: 4183084399859050}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114365737947487060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1114887575240632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1f0c86983a7e5488f2dd0754f419fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Calculated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+CalculatedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  Destroyed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+DestroyedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  VisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+VisibilityChangedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  CurrentValueFilterRangeChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+CurrentValueFilterRangeChangedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114591187936990582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -111,76 +172,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a63e211688899948846003d106607e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointMaterial: {fileID: 2100000, guid: 00086a8fae2af7042899ad6526ffa646, type: 2}
-  _stretchPercent: 1
-  _pointSizeStretchPercent: 0
-  _meshType: 3
-  _valuesGradient:
-    serializedVersion: 2
-    key0: {r: 0, g: 1, b: 1, a: 1}
-    key1: {r: 0, g: 0.78431374, b: 0.9411765, a: 1}
-    key2: {r: 0.39215687, g: 0.88235295, b: 0, a: 0}
-    key3: {r: 0.78431374, g: 0.88235295, b: 0, a: 0}
-    key4: {r: 1, g: 0.88235295, b: 0, a: 0}
-    key5: {r: 1, g: 0.5294118, b: 0, a: 0}
-    key6: {r: 1, g: 0, b: 0, a: 0}
-    key7: {r: 0.6431373, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 9358
-    ctime2: 18717
-    ctime3: 28075
-    ctime4: 37434
-    ctime5: 46792
-    ctime6: 56150
-    ctime7: 65535
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 8
-    m_NumAlphaKeys: 2
   Calculated:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: MagneticTensionInSpace_Calculated
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: EMSP.Mathematic.Magnetic.MathematicBase+CalculatedEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+CalculatedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   Destroyed:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: MagneticTensionInSpace_Destroyed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: EMSP.Mathematic.Magnetic.MathematicBase+DestroyedEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+DestroyedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   VisibilityChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: MagneticTensionInSpace_VisibilityChanged
+        m_MethodName: MathematicBase_VisibilityChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -201,7 +207,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: EMSP.Mathematic.Magnetic.MathematicBase+VisibilityChangedEvent, Assembly-CSharp,
+    m_TypeName: EMSP.Mathematic.MathematicBase+VisibilityChangedEvent, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   CurrentValueFilterRangeChanged:
     m_PersistentCalls:
@@ -217,8 +223,41 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: EMSP.Mathematic.Magnetic.MathematicBase+CurrentValueFilterRangeChangedEvent,
+    m_TypeName: EMSP.Mathematic.MathematicBase+CurrentValueFilterRangeChangedEvent,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  _pointMaterial: {fileID: 2100000, guid: 00086a8fae2af7042899ad6526ffa646, type: 2}
+  _stretchPercent: 1
+  _pointSizeStretchPercent: 0
+  _meshType: 3
+  _valuesGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 0, a: 1}
+    key2: {r: 1, g: 0, b: 0, a: 0}
+    key3: {r: 0.5019608, g: 0, b: 0, a: 0}
+    key4: {r: 0.5019608, g: 0, b: 0, a: 0}
+    key5: {r: 0.6431373, g: 0, b: 0, a: 0}
+    key6: {r: 0.6431373, g: 0, b: 0, a: 0}
+    key7: {r: 0.6431373, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 32768
+    ctime2: 49151
+    ctime3: 65535
+    ctime4: 65535
+    ctime5: 65535
+    ctime6: 65535
+    ctime7: 65535
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2
 --- !u!114 &114674595718332276
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -277,6 +316,22 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: EMSP.Mathematic.MathematicManager+AmperageModeChangedEvent, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  CalculationShowed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: MathematicManager_CalculationShowed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MathematicManager+CalculationShowedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114993827149378326
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -288,3 +343,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be044250212333443ba87dfba9798552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Calculated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+CalculatedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  Destroyed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: EMSP.Mathematic.MathematicBase+DestroyedEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  VisibilityChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: MathematicBase_VisibilityChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: ElectricField_VisibilityChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MathematicBase+VisibilityChangedEvent, Assembly-CSharp,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  CurrentValueFilterRangeChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: ElectricField_CurrentTensionFilterRangeChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: EMSP.Mathematic.MathematicBase+CurrentValueFilterRangeChangedEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  _pointMaterial: {fileID: 2100000, guid: 00086a8fae2af7042899ad6526ffa646, type: 2}
+  _stretchPercent: 1
+  _pointSizeStretchPercent: 0
+  _meshType: 3
+  _valuesGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 0, a: 1}
+    key2: {r: 1, g: 0, b: 0, a: 0}
+    key3: {r: 0.5019608, g: 0, b: 0, a: 0}
+    key4: {r: 0.5019608, g: 0, b: 0, a: 0}
+    key5: {r: 0.6431373, g: 0, b: 0, a: 0}
+    key6: {r: 0.6431373, g: 0, b: 0, a: 0}
+    key7: {r: 0.6431373, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 32768
+    ctime2: 49151
+    ctime3: 65535
+    ctime4: 65535
+    ctime5: 65535
+    ctime6: 65535
+    ctime7: 65535
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2

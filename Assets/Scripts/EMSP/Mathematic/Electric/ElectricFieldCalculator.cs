@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EMSP.Mathematic
 {
-    public class ElectricFieldCalculator : MathematicCalculatorBase
+    public class ElectricFieldCalculator : PointableMathematicCalculatorBase
     {
         #region Entities
         #region Enums
