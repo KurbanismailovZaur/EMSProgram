@@ -563,7 +563,7 @@ namespace EMSP.App
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
-            MathematicManager.Instance.CurrentCalculationMethod.SetPointsToTime(index);
+            MathematicManager.Instance.CurrentCalculationMethod.SetEntitiesToTime(index);
         }
 
         public void CalculationSettingsDialog_Applyed(CalculationSettingsWindow calculationSettingsDialog, CalculationSettingsWindow.Settings settings)

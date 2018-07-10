@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace EMSP.Mathematic.Magnetic
 {
-    public class MagneticTension : MathematicBase
+    public class MagneticTension : PointableMathematicBase
     {
         #region Entities
         #region Enums

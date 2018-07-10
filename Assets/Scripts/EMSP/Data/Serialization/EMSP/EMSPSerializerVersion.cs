@@ -333,11 +333,11 @@ namespace EMSP.Data.Serialization.EMSP
             }
         }
 
-        protected void WriteMathematicPointsInfo(BinaryWriter writer, MathematicBase.PointsInfo pointsInfo)
+        protected void WriteMathematicPointsInfo(BinaryWriter writer, PointableMathematicBase.PointsInfo pointsInfo)
         {
             writer.Write(pointsInfo.PointsSize);
 
-            foreach (MathematicBase.PointInfo pointInfo in pointsInfo.Infos)
+            foreach (PointableMathematicBase.PointInfo pointInfo in pointsInfo.Infos)
             {
                 WriteVector3(writer, pointInfo.Position);
 

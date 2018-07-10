@@ -159,7 +159,7 @@ namespace EMSP.Mathematic
             }
 
             _currentCalculationMethod.AmperageMode = _amperageMode;
-            _currentCalculationMethod.SetPointsToTime(TimeManager.Instance.TimeIndex);
+            _currentCalculationMethod.SetEntitiesToTime(TimeManager.Instance.TimeIndex);
 
             CalculationShowed.Invoke(this, _currentCalculationMethod);
         }
