@@ -38,6 +38,9 @@ namespace EMSP.UI.Menu
         private Button _calculationRemoveElectricFieldButton;
 
         [SerializeField]
+        private Button _calculationRemoveInductionButton;
+
+        [SerializeField]
         private Button _wiringButton;
         #endregion
 
@@ -54,6 +57,8 @@ namespace EMSP.UI.Menu
 
         public Button CalculationRemoveElectricFieldButton { get { return _calculationRemoveElectricFieldButton; } }
 
+        public Button CalculationRemoveInductionButton { get { return _calculationRemoveInductionButton; } }
+
         public Button WiringButton { get { return _wiringButton; } }
         #endregion
 
@@ -67,6 +72,7 @@ namespace EMSP.UI.Menu
             _removeWiringButton.interactable = state;
             _calculationRemoveMagneticTensionInSpaceButton.interactable = state;
             _calculationRemoveElectricFieldButton.interactable = state;
+            _calculationRemoveInductionButton.interactable = state;
             _wiringButton.interactable = state;
         }
         #endregion

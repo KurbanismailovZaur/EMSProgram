@@ -14,6 +14,7 @@ namespace EMSP.UI.Menu.Contexts
         {
             MagneticTensionInSpace,
             ElectricField,
+            Induction,
             Parameters
         }
         #endregion
@@ -56,6 +57,12 @@ namespace EMSP.UI.Menu.Contexts
         public void CalculateElectricFiled()
         {
             Selected.Invoke(this, ActionType.ElectricField);
+        }
+
+
+        public void CalculateInduction()
+        {
+            Selected.Invoke(this, ActionType.Induction);
         }
 
         public void OpenParametersDialog()
