@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EMSP.Mathematic
 {
     [Serializable]
-    public struct CalculatedValueInfo
+    public struct PointableCalculatedValueInfo
     {
         private Vector3 _point;
 
@@ -20,7 +20,7 @@ namespace EMSP.Mathematic
 
         public CalculatedValueInTime[] CalculatedValueInTime { get { return _calculatedValueInTime; } }
 
-        public CalculatedValueInfo(Vector3 point, float precomputedValue, CalculatedValueInTime[] calculatedValueInTime)
+        public PointableCalculatedValueInfo(Vector3 point, float precomputedValue, CalculatedValueInTime[] calculatedValueInTime)
         {
             _point = point;
             _precomputedValue = precomputedValue;

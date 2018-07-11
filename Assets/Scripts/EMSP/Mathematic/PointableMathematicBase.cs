@@ -180,7 +180,7 @@ namespace EMSP.Mathematic
 
             float step = stretchedMaxSide / (rangeLength - 1);
 
-            List<CalculatedValueInfo> calculatedValueInfos = new List<CalculatedValueInfo>((int)Mathf.Pow(rangeLength, 3));
+            List<PointableCalculatedValueInfo> calculatedValueInfos = new List<PointableCalculatedValueInfo>((int)Mathf.Pow(rangeLength, 3));
             //CalculatedValueInfo[] calculatedValuesInfo = new CalculatedValueInfo[(int)Mathf.Pow(rangeLength, 3)];
             //int index = 0;
 
@@ -224,7 +224,7 @@ namespace EMSP.Mathematic
                             calculatedValuesInTime[w] = new CalculatedValueInTime(time, calculatedValue);
                         }
 
-                        calculatedValueInfos.Add(new CalculatedValueInfo(point, precomputedValue, calculatedValuesInTime));
+                        calculatedValueInfos.Add(new PointableCalculatedValueInfo(point, precomputedValue, calculatedValuesInTime));
                         //calculatedValuesInfo[index++] = new CalculatedValueInfo(point, precomputedValue, calculatedValuesInTime);
                     }
                 }
@@ -247,12 +247,12 @@ namespace EMSP.Mathematic
 
             int pointsCount = pointsInfo.Infos.Count;
 
-            List<CalculatedValueInfo> calculatedValuesInfo = new List<CalculatedValueInfo>(pointsCount);
-            for (int i = 0; i < pointsCount; i++) calculatedValuesInfo.Add(new CalculatedValueInfo());
+            List<PointableCalculatedValueInfo> calculatedValuesInfo = new List<PointableCalculatedValueInfo>(pointsCount);
+            for (int i = 0; i < pointsCount; i++) calculatedValuesInfo.Add(new PointableCalculatedValueInfo());
 
             for (int i = 0; i < pointsCount; ++i)
             {
-                calculatedValuesInfo[i] = new CalculatedValueInfo(pointsInfo.Infos[i].Position, pointsInfo.Infos[i].PrecomputedValue, pointsInfo.Infos[i].CalculatedValuesInTime);
+                calculatedValuesInfo[i] = new PointableCalculatedValueInfo(pointsInfo.Infos[i].Position, pointsInfo.Infos[i].PrecomputedValue, pointsInfo.Infos[i].CalculatedValuesInTime);
             }
 
             _maxCalculatedValues = GetMaxCalculatedValues(calculatedValuesInfo);
@@ -264,9 +264,9 @@ namespace EMSP.Mathematic
             CreatePoints(calculatedValuesInfo, maxCalculatedValue);
         }
 
-        private void CreatePoints(List<CalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
+        private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
         {
-            foreach (CalculatedValueInfo mtInfo in calculatedValuesInfo)
+            foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
             {
                 float gradientValue = 0;
 
@@ -288,7 +288,7 @@ namespace EMSP.Mathematic
             CurrentValueFilterRange = _valueFilterRange;
         }
 
-        private MaxCalculatedValues GetMaxCalculatedValues(List<CalculatedValueInfo> calculatedValuesInfo)
+        private MaxCalculatedValues GetMaxCalculatedValues(List<PointableCalculatedValueInfo> calculatedValuesInfo)
         {
             MaxCalculatedValues maxCalculatedValues = new MaxCalculatedValues(0f, 0f);
 

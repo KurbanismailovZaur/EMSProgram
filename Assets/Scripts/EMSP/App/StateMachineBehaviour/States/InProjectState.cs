@@ -81,6 +81,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             MathematicManager.Instance.ElectricField.Calculated.AddListener(ElectricField_Calculated);
             MathematicManager.Instance.ElectricField.Destroyed.AddListener(ElectricField_Destroyed);
+
+            MathematicManager.Instance.Induction.Calculated.AddListener(Induction_Calculated);
+            MathematicManager.Instance.Induction.Destroyed.AddListener(Induction_Destroyed);
         }
 
         public override void OnExit()
@@ -98,6 +101,9 @@ namespace EMSP.App.StateMachineBehaviour.States
 
             MathematicManager.Instance.ElectricField.Calculated.RemoveListener(ElectricField_Calculated);
             MathematicManager.Instance.ElectricField.Destroyed.RemoveListener(ElectricField_Destroyed);
+
+            MathematicManager.Instance.Induction.Calculated.RemoveListener(Induction_Calculated);
+            MathematicManager.Instance.Induction.Destroyed.RemoveListener(Induction_Destroyed);
         }
         #endregion
 
@@ -131,6 +137,7 @@ namespace EMSP.App.StateMachineBehaviour.States
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = true;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = true;
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = true;
+            _calculationsGroupItemButtons.InductionButton.interactable = true;
         }
 
         private void WiringManager_WiringDestroyed(Wiring wiring)
@@ -140,6 +147,8 @@ namespace EMSP.App.StateMachineBehaviour.States
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = false;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = false;
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = false;
+            _calculationsGroupItemButtons.InductionButton.interactable = false;
+
         }
 
         private void MagneticTension_Calculated(MathematicBase mathematicBase)
@@ -166,6 +175,18 @@ namespace EMSP.App.StateMachineBehaviour.States
         {
             _editGroupItemButtons.CalculationRemoveElectricFieldButton.interactable = false;
             _viewGroupItemButtons.ElectricFieldIsVisibleButton.interactable = false;
+        }
+
+        private void Induction_Calculated(MathematicBase mathematicBase)
+        {
+            _editGroupItemButtons.CalculationRemoveInductionButton.interactable = true;
+            _viewGroupItemButtons.InductionIsVisibleButton.interactable = true;
+        }
+
+        private void Induction_Destroyed(MathematicBase mathematicBase)
+        {
+            _editGroupItemButtons.CalculationRemoveInductionButton.interactable = false;
+            _viewGroupItemButtons.InductionIsVisibleButton.interactable = false;
         }
         #endregion
         #endregion

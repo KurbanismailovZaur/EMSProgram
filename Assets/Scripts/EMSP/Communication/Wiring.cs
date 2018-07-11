@@ -123,6 +123,18 @@ namespace EMSP.Communication
             return bounds;
         }
 
+        public Wire GetWireByName(string index)
+        {
+
+            foreach (var wire in _wires)
+            {
+                if (string.CompareOrdinal(wire.Name, index) == 0) return wire;
+            }
+
+            throw new KeyNotFoundException(string.Format("Wire {0} not found.", index));
+
+        }
+
         public bool CheckPointsExist()
         {
             if (_wires.Count == 0)

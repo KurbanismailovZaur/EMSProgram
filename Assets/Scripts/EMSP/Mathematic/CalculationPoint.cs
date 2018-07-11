@@ -20,7 +20,7 @@ namespace EMSP.Mathematic
         #region Classes
         public class Factory
         {
-            public CalculationPoint Create(PointableMathematicBase mathematicBase, PrimitiveType primitiveType, Transform parent, Material material, float size, float gradientValue, CalculatedValueInfo mtInfo)
+            public CalculationPoint Create(PointableMathematicBase mathematicBase, PrimitiveType primitiveType, Transform parent, Material material, float size, float gradientValue, PointableCalculatedValueInfo mtInfo)
             {
                 CalculationPoint magneticTensionPoint = GameObject.CreatePrimitive(primitiveType).AddComponent<CalculationPoint>();
                 magneticTensionPoint.name = "Point";

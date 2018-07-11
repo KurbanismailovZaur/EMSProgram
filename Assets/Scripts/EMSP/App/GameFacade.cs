@@ -455,6 +455,10 @@ namespace EMSP.App
                     Log.WriteOperation("Starting_Calculate_ElectricField");
                     Calculate(CalculationType.ElectricField);
                     break;
+                case CalculationsContextMethods.ActionType.Induction:
+                    Log.WriteOperation("Starting_Calculate_Induction");
+                    Calculate(CalculationType.Induction);
+                    break;
                 case CalculationsContextMethods.ActionType.Parameters:
                     OpenParameters();
                     break;
@@ -503,6 +507,7 @@ namespace EMSP.App
         private void WiringEditorDialog_OnWiringEdited(Wiring wiring)
         {
             WiringManager.Instance.CreateNewWiring(wiring);
+            MathematicManager.Instance.DestroyCalculations(CalculationType.Induction);
         }
 
         #region Magnetic tensions
@@ -558,6 +563,34 @@ namespace EMSP.App
         {
             _tensionFilterSlider.SetMin(range.Min);
             _tensionFilterSlider.SetMax(range.Max);
+        }
+        #endregion
+
+        #region Induction
+        public void Induction_VisibilityChanged(MathematicBase mathematicBase, bool state)
+        {
+            if (state)
+            {
+                //if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.Induction.IsCalculated)
+                //{
+                //    _timeLine.Show();
+                //}
+
+                //_tensionFilterSlider.Show();
+            }
+            else
+            {
+                //_timeLine.Stop();
+                //_timeLine.Hide();
+
+                //_tensionFilterSlider.Hide();
+            }
+        }
+
+        public void Induction_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
+        {
+            //_tensionFilterSlider.SetMin(range.Min);
+            //_tensionFilterSlider.SetMax(range.Max);
         }
         #endregion
 

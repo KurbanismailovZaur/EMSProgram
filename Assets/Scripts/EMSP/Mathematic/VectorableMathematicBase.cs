@@ -36,6 +36,8 @@ namespace EMSP.Mathematic
 
         private MaxCalculatedValues _maxCalculatedValues;
 
+        private Dictionary<string, Dictionary<string, float>> _calculated = new Dictionary<string, Dictionary<string, float>>();
+
         #endregion
 
         #region Events
@@ -85,13 +87,47 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Methods
-      
+
         public void SetEntitiesToTime(int timeIndex)
         {
-          
+
         }
 
-       
+        public void Calculate(Wiring wiring)
+        {
+            foreach (var wire in wiring)
+            {
+                int segmentCount = wire.LocalPoints.Count - 1;
+
+                for (int segmentIndex = 0; segmentIndex < segmentCount; ++segmentIndex)
+                {
+                    string key = string.Format("{0}_{1}", wire.Name, segmentIndex);
+
+                    Data calculatedData = Calculator.Calculate(new Data()
+                    {
+                        { "name", wire.Name },
+                        { "segment", segmentIndex },
+                        { "wiring", wiring },
+                    });
+
+                    _calculated.Add(key, calculatedData.GetValue<Dictionary<string, float>>("result"));
+                }
+            }
+
+            Calculated.Invoke(this);
+        }
+
+        public void DestroyCalculated()
+        {
+            if (!_isCalculated) return;
+
+            _calculated.Clear();
+
+            IsVisible = false;
+            _isCalculated = false;
+
+            Destroyed.Invoke(this);
+        }
         #endregion
 
         #region Indexers

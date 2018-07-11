@@ -1,6 +1,7 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic.Electric;
 using EMSP.Mathematic.Magnetic;
+using EMSP.Mathematic.Induction;
 using EMSP.Timing;
 using EMSP.Utility.Extensions;
 using Numba;
@@ -61,6 +62,9 @@ namespace EMSP.Mathematic
         [SerializeField]
         private ElectricField _electricField;
 
+        [SerializeField]
+        private Induction.Induction _induction;
+
         private ICalculationMethod _currentCalculationMethod;
         #endregion
 
@@ -112,6 +116,8 @@ namespace EMSP.Mathematic
 
         public ElectricField ElectricField { get { return _electricField; } }
 
+        public Induction.Induction Induction { get { return _induction; } }
+
         private InnerCalculationsType CurrentCalculationsType
         {
             get
@@ -139,6 +145,9 @@ namespace EMSP.Mathematic
                 case CalculationType.ElectricField:
                     _electricField.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
+                case CalculationType.Induction:
+                    _induction.Calculate(WiringManager.Instance.Wiring);
+                    break;
             }
         }
 
@@ -155,6 +164,9 @@ namespace EMSP.Mathematic
                     break;
                 case CalculationType.ElectricField:
                     (_currentCalculationMethod = _electricField).IsVisible = true;
+                    break;
+                case CalculationType.Induction:
+                    (_currentCalculationMethod = _induction).IsVisible = true;
                     break;
             }
 
@@ -203,6 +215,9 @@ namespace EMSP.Mathematic
                 case CalculationType.ElectricField:
                     _electricField.IsVisible = false;
                     break;
+                case CalculationType.Induction:
+                    _induction.IsVisible = false;
+                    break;
             }
 
             if ((int)CurrentCalculationsType == (int)calculationType) _currentCalculationMethod = null;
@@ -222,6 +237,9 @@ namespace EMSP.Mathematic
                 case CalculationType.ElectricField:
                     _electricField.DestroyCalculatedPoints();
                     break;
+                case CalculationType.Induction:
+                    _induction.DestroyCalculated();
+                    break;
             }
         }
 
@@ -229,6 +247,7 @@ namespace EMSP.Mathematic
         {
             _magneticTension.DestroyCalculatedPoints();
             _electricField.DestroyCalculatedPoints();
+            _induction.DestroyCalculated();
         }
         #endregion
 

@@ -217,7 +217,7 @@ namespace EMSP.Communication
             for(int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
             {
                 // Adding child GameObject with Collider and EventTrigger
-                CapsuleCollider lineCollider = new GameObject("LineCollider").AddComponent<CapsuleCollider>();
+                CapsuleCollider lineCollider = new GameObject("LineCollider_" + segmentIndex).AddComponent<CapsuleCollider>();
                 lineCollider.transform.parent = _lineRenderer.transform;
                 lineCollider.radius = _lineRenderer.startWidth;
                 lineCollider.direction = 2;
@@ -229,7 +229,11 @@ namespace EMSP.Communication
                 pointerDownEntry.eventID = EventTriggerType.PointerDown;
                 pointerDownEntry.callback.AddListener((eventData) =>
                 {
-                    lineCollider.GetComponentInParent<Wire>().OnWireClickHandler();
+                    int segmentNumber;
+                    if (int.TryParse(lineCollider.gameObject.name.Substring(13), out segmentNumber))
+                        lineCollider.GetComponentInParent<Wire>().OnWireClickHandler(segmentNumber);
+                    else
+                        Debug.LogError(@"Can not parse segment number from " + lineCollider.gameObject.name);
                 });
 
                 triggerEntries.Add(pointerDownEntry);
@@ -271,9 +275,9 @@ namespace EMSP.Communication
         #endregion
 
         #region Events handlers
-        private void OnWireClickHandler()
+        private void OnWireClickHandler(int segmentIndex)
         {
-            Debug.Log(this.Name);
+            Debug.Log(this.Name + "__" + segmentIndex);
         }
         #endregion
         #endregion
