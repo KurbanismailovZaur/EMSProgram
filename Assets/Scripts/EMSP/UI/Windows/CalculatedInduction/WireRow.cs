@@ -42,6 +42,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
         #region Fields
         [SerializeField]
         private Text _nameField;
+
         [SerializeField]
         private Text _valueField;
         #endregion

@@ -216,6 +216,8 @@ namespace EMSP.App
             }
 
             WiringManager.Instance.CreateNewWiring(results[0]);
+
+            MathematicManager.Instance.DestroyCalculations(CalculationType.Induction);
         }
 
         private void ExportMagneticTensionInSpace()

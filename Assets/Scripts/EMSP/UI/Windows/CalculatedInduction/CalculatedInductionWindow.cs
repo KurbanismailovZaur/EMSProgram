@@ -47,14 +47,16 @@ namespace EMSP.UI.Windows.CalculatedInduction
         #endregion
 
         #region Methods
+
+        public override void ShowModal()
+        {
+            ClearWindow();
+            base.ShowModal();
+        }
+
         public void DrawCalculated(Dictionary<string, float> calculated)
         {
-            for(int aliveRowIndex = 0; aliveRowIndex < _rowsParent.childCount; ++aliveRowIndex)
-            {
-                Destroy(_rowsParent.GetChild(aliveRowIndex).gameObject);
-            }
-
-            _rowsParent.DetachChildren();
+            ClearWindow();
 
             foreach (var kvp in calculated)
             {
@@ -65,6 +67,16 @@ namespace EMSP.UI.Windows.CalculatedInduction
         private void CreateWireRow(string name, float value)
         {
             _wireRowFactory.Create(_wireRowPrefab, _rowsParent, name, value);
+        }
+
+        private void ClearWindow()
+        {
+            for (int aliveRowIndex = 0; aliveRowIndex < _rowsParent.childCount; ++aliveRowIndex)
+            {
+                Destroy(_rowsParent.GetChild(aliveRowIndex).gameObject);
+            }
+
+            _rowsParent.DetachChildren();
         }
         #endregion
 
