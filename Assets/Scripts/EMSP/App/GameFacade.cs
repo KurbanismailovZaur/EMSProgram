@@ -24,6 +24,7 @@ using System.IO;
 using System.Threading;
 using EMSP.Processing;
 using EMSP.Logging;
+using EMSP.UI.Windows.CalculatedInduction;
 
 namespace EMSP.App
 {

@@ -1,4 +1,6 @@
 ﻿using EMSP.Communication;
+using EMSP.UI.Windows;
+using EMSP.UI.Windows.CalculatedInduction;
 using EMSP.Utility.Extensions;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,9 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Fields
+
+        [SerializeField]
+        private ModalWindow _calculatedWindow;
 
         private AmperageMode _amperageMode;
 
@@ -65,15 +70,18 @@ namespace EMSP.Mathematic
 
         public bool IsVisible
         {
-            get { return _isCalculated && gameObject.activeSelf; }
+            get { return _isCalculated && _calculatedWindow.IsShowing; }
             set
             {
-                if (gameObject.activeSelf == value || !_isCalculated)
+                if (_calculatedWindow.IsShowing == value || !_isCalculated)
                 {
                     return;
                 }
 
-                gameObject.SetActive(value);
+                if (value)
+                    _calculatedWindow.ShowModal();
+                else
+                    _calculatedWindow.Hide();
 
                 VisibilityChanged.Invoke(this, gameObject.activeSelf);
             }
@@ -114,7 +122,26 @@ namespace EMSP.Mathematic
                 }
             }
 
+            _isCalculated = true;
+
             Calculated.Invoke(this);
+        }
+
+        public void ShowCalculatedFor(string wireName, int segmentNumber)
+        {
+            if (!IsCalculated) return;
+
+            string key = string.Format("{0}_{1}", wireName, segmentNumber);
+
+            switch(Type)
+            {
+                case CalculationType.Induction:
+                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(_calculated[key]);
+                    break;
+                default:
+                    Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
+                    break;
+            }
         }
 
         public void DestroyCalculated()

@@ -22,7 +22,8 @@ namespace EMSP.Mathematic
         {
             None = -1,
             MagneticTension,
-            ElectricField
+            ElectricField,
+            Induction
         }
         #endregion
 

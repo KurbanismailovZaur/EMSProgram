@@ -35,6 +35,7 @@ namespace EMSP.UI.Windows
 
         #region Behaviour
         #region Properties
+        public bool IsShowing { get; private set; }
         #endregion
 
         #region Constructors
@@ -51,6 +52,8 @@ namespace EMSP.UI.Windows
             _canvasGroup.alpha = 1f;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
+
+            IsShowing = true;
         }
 
         public virtual void Hide()
@@ -58,6 +61,8 @@ namespace EMSP.UI.Windows
             _canvasGroup.alpha = 0f;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
+
+            IsShowing = false;
         }
         #endregion
 

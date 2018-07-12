@@ -277,6 +277,7 @@ namespace EMSP.Communication
         #region Events handlers
         private void OnWireClickHandler(int segmentIndex)
         {
+            Mathematic.MathematicManager.Instance.Induction.ShowCalculatedFor(Name, segmentIndex);
             Debug.Log(this.Name + "__" + segmentIndex);
         }
         #endregion
