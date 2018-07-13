@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace EMSP.UI.Windows.CalculatedInduction
 {
@@ -30,6 +31,9 @@ namespace EMSP.UI.Windows.CalculatedInduction
         private WireRow _wireRowPrefab;
 
         [SerializeField]
+        private Text _selectedSegmentNameField;
+
+        [SerializeField]
         private RectTransform _rowsParent;
 
         private WireRow.Factory _wireRowFactory = new WireRow.Factory();
@@ -54,9 +58,11 @@ namespace EMSP.UI.Windows.CalculatedInduction
             base.ShowModal();
         }
 
-        public void DrawCalculated(Dictionary<string, float> calculated)
+        public void DrawCalculated(string wireName, int segmentNumber, Dictionary<string, float> calculated)
         {
             ClearWindow();
+
+            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", wireName, segmentNumber);
 
             foreach (var kvp in calculated)
             {
@@ -71,6 +77,8 @@ namespace EMSP.UI.Windows.CalculatedInduction
 
         private void ClearWindow()
         {
+            _selectedSegmentNameField.text = string.Empty;
+
             for (int aliveRowIndex = 0; aliveRowIndex < _rowsParent.childCount; ++aliveRowIndex)
             {
                 Destroy(_rowsParent.GetChild(aliveRowIndex).gameObject);

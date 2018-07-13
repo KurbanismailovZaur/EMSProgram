@@ -136,7 +136,7 @@ namespace EMSP.Mathematic
             switch(Type)
             {
                 case CalculationType.Induction:
-                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(_calculated[key]);
+                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(wireName, segmentNumber, _calculated[key]);
                     break;
                 default:
                     Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
