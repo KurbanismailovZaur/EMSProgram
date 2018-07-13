@@ -290,10 +290,17 @@ namespace EMSP.App
             MathematicManager.Instance.DestroyCalculations(CalculationType.ElectricField);
         }
 
+        private void RemoveInduction()
+        {
+            MathematicManager.Instance.DestroyCalculations(CalculationType.Induction);
+        }
+
         private void EditWiring()
         {
             _wiringEditorDialog.StartWiringEditing(WiringManager.Instance.Wiring, WiringEditorDialog_OnWiringEdited);
         }
+
+
         #endregion
 
         #region Calculations context methods
@@ -430,6 +437,9 @@ namespace EMSP.App
                     break;
                 case EditContextMethods.ActionType.RemoveElectricField:
                     RemoveElectricFieldPoints();
+                    break;
+                case EditContextMethods.ActionType.RemoveInduction:
+                    RemoveInduction();
                     break;
                 case EditContextMethods.ActionType.EditWiring:
                     EditWiring();

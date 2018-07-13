@@ -83,7 +83,7 @@ namespace EMSP.Mathematic
                 else
                     _calculatedWindow.Hide();
 
-                VisibilityChanged.Invoke(this, gameObject.activeSelf);
+                VisibilityChanged.Invoke(this, _calculatedWindow.IsShowing);
             }
         }
 
