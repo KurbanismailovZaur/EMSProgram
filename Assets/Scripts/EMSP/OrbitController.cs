@@ -182,7 +182,7 @@ namespace EMSP
                 List<RaycastResult> results = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(pointerData, results);
 
-                if (results.TrueForAll(x => x.gameObject.layer == LayerMask.NameToLayer("Gizmos")))
+                if (results.TrueForAll(x => x.gameObject.layer == LayerMask.NameToLayer("Gizmos") || x.gameObject.layer == LayerMask.NameToLayer("CalculatedDataLayer")))
                 {
                     _isStartInViewport = true;
                 }

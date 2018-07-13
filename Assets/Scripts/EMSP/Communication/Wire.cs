@@ -218,6 +218,7 @@ namespace EMSP.Communication
             {
                 // Adding child GameObject with Collider and EventTrigger
                 CapsuleCollider lineCollider = new GameObject("LineCollider_" + segmentIndex).AddComponent<CapsuleCollider>();
+                lineCollider.gameObject.layer = LayerMask.NameToLayer("CalculatedDataLayer");
                 lineCollider.transform.parent = _lineRenderer.transform;
                 lineCollider.radius = _lineRenderer.startWidth;
                 lineCollider.direction = 2;
@@ -225,8 +226,11 @@ namespace EMSP.Communication
                 EventTrigger eventTrigger = lineCollider.gameObject.AddComponent<EventTrigger>();
                 var triggerEntries = new List<EventTrigger.Entry>();
 
-                var pointerDownEntry = new EventTrigger.Entry();
-                pointerDownEntry.eventID = EventTriggerType.PointerDown;
+                var pointerDownEntry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerDown
+                };
+
                 pointerDownEntry.callback.AddListener((eventData) =>
                 {
                     int segmentNumber;
