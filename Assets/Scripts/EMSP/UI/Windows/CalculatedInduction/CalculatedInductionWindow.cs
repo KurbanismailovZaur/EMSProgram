@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMSP.Communication;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,7 +59,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
             base.ShowModal();
         }
 
-        public void DrawCalculated(string wireName, int segmentNumber, Dictionary<string, float> calculated)
+        public void DrawCalculated(string wireName, int segmentNumber, Dictionary<Wire, float> calculated)
         {
             ClearWindow();
 
@@ -70,9 +71,9 @@ namespace EMSP.UI.Windows.CalculatedInduction
             }
         }
 
-        private void CreateWireRow(string name, float value)
+        private void CreateWireRow(Wire wire, float value)
         {
-            _wireRowFactory.Create(_wireRowPrefab, _rowsParent, name, value);
+            _wireRowFactory.Create(_wireRowPrefab, _rowsParent, wire, value);
         }
 
         private void ClearWindow()

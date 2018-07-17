@@ -63,7 +63,9 @@ namespace EMSP.Communication
 
         private LineRenderer _lineRenderer;
 
-        List<Vector3> _localPoints = new List<Vector3>();
+        private List<Vector3> _localPoints = new List<Vector3>();
+
+        private Color _defaultWireColor;
         #endregion
 
         #region Events
@@ -111,6 +113,12 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
+
+        private void Start()
+        {
+            _defaultWireColor = _lineRenderer.sharedMaterial.color;
+        }
+
         public static bool IsCorrectName(string name)
         {
             return name.All(char.IsLetterOrDigit);
@@ -268,6 +276,24 @@ namespace EMSP.Communication
             }
 
             return bounds;
+        }
+
+        public void SetWireHighlight(bool value)
+        {
+            if(!value)
+            {
+                _lineRenderer.material.color = _defaultWireColor;
+            }
+            else
+            {
+                _lineRenderer.material.color = Color.green;
+            }
+        }
+
+        public void GetSegment(int segmentNumber, out Vector3 startPoint, out Vector3 endPoint)
+        {
+            startPoint = transform.TransformPoint(_localPoints[segmentNumber]);
+            endPoint = transform.TransformPoint(_localPoints[segmentNumber + 1]);
         }
         #endregion
 

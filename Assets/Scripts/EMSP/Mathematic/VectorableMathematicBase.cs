@@ -35,13 +35,18 @@ namespace EMSP.Mathematic
         [SerializeField]
         private ModalWindow _calculatedWindow;
 
+        [SerializeField]
+        private Material _highlightMaterial;
+
         private AmperageMode _amperageMode;
 
         private bool _isCalculated;
 
         private MaxCalculatedValues _maxCalculatedValues;
 
-        private Dictionary<string, Dictionary<string, float>> _calculated = new Dictionary<string, Dictionary<string, float>>();
+        private Dictionary<string, Dictionary<Wire, float>> _calculated = new Dictionary<string, Dictionary<Wire, float>>();
+
+        private GameObject _currentSegmentHighlightningGameObject;
 
         #endregion
 
@@ -81,7 +86,10 @@ namespace EMSP.Mathematic
                 if (value)
                     _calculatedWindow.ShowModal();
                 else
+                {
+                    DisableCurrentSegmentHighlightning();
                     _calculatedWindow.Hide();
+                }
 
                 VisibilityChanged.Invoke(this, _calculatedWindow.IsShowing);
             }
@@ -118,7 +126,7 @@ namespace EMSP.Mathematic
                         { "wiring", wiring },
                     });
 
-                    _calculated.Add(key, calculatedData.GetValue<Dictionary<string, float>>("result"));
+                    _calculated.Add(key, calculatedData.GetValue<Dictionary<Wire, float>>("result"));
                 }
             }
 
@@ -142,6 +150,8 @@ namespace EMSP.Mathematic
                     Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
                     break;
             }
+
+            HighLightSelectedSegment(wireName, segmentNumber);
         }
 
         public void DestroyCalculated()
@@ -154,6 +164,42 @@ namespace EMSP.Mathematic
             _isCalculated = false;
 
             Destroyed.Invoke(this);
+        }
+
+        private void HighLightSelectedSegment(string wireName, int segmentNumber)
+        {
+            DisableCurrentSegmentHighlightning();
+
+            Wire selectedWire = WiringManager.Instance.Wiring.GetWireByName(wireName);
+
+            Vector3 startSegmentPoint;
+            Vector3 endSegmentPoint;
+
+            selectedWire.GetSegment(segmentNumber, out startSegmentPoint, out endSegmentPoint);
+
+            // create highlighter
+            float halfMagnitude = (endSegmentPoint - startSegmentPoint).magnitude / 2;
+
+            Vector3 pos = startSegmentPoint + (endSegmentPoint - startSegmentPoint).normalized * halfMagnitude;
+            Quaternion rot = Quaternion.FromToRotation(Vector3.up, endSegmentPoint - startSegmentPoint);
+            Vector3 scl = new Vector3(0.05f, halfMagnitude, 0.05f);
+
+            _currentSegmentHighlightningGameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            _currentSegmentHighlightningGameObject.transform.position = pos;
+            _currentSegmentHighlightningGameObject.transform.rotation = rot;
+            _currentSegmentHighlightningGameObject.transform.localScale = scl;
+
+            _currentSegmentHighlightningGameObject.GetComponent<MeshRenderer>().material = _highlightMaterial;
+
+            Destroy(_currentSegmentHighlightningGameObject.GetComponent<Collider>());
+        }
+
+        private void DisableCurrentSegmentHighlightning()
+        {
+            if (_currentSegmentHighlightningGameObject != null)
+                Destroy(_currentSegmentHighlightningGameObject);
+
+            _currentSegmentHighlightningGameObject = null;
         }
         #endregion
 

@@ -9596,17 +9596,37 @@ Prefab:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1206502679}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 767342402}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1553749587}
+    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: CalculationShowed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1553749587}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: VisibilityChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 800479081}
-    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+      objectReference: {fileID: 835017967}
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: VisibilityChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1553749587}
-    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: CurrentValueFilterRangeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -9626,39 +9646,19 @@ Prefab:
       propertyPath: CurrentValueFilterRangeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1553749587}
-    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: VisibilityChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 835017967}
-    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+      objectReference: {fileID: 800479081}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: VisibilityChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1553749587}
-    - target: {fileID: 114591187936990582, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
         type: 2}
       propertyPath: CurrentValueFilterRangeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1553749587}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1206502679}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 767342402}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: AmperageModeChanged.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 1553749587}
-    - target: {fileID: 114674595718332276, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
-        type: 2}
-      propertyPath: CalculationShowed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1553749587}
     - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,

@@ -194,6 +194,8 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: EMSP.Mathematic.MathematicBase+CurrentValueFilterRangeChangedEvent,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  _calculatedWindow: {fileID: 0}
+  _highlightMaterial: {fileID: 2100000, guid: 1a1a61327c8dae84eb9268042dc944bd, type: 2}
 --- !u!114 &114591187936990582
 MonoBehaviour:
   m_ObjectHideFlags: 1

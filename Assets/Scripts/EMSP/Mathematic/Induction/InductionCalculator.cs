@@ -49,9 +49,9 @@ namespace EMSP.Mathematic.Induction
             return new Data() { { "result", CalculateWiring(targetWireName, targetWireSegment, wiring) } };
         }
 
-        private Dictionary<string, float> CalculateWiring(string targetWireName, int targetWireSegment, Wiring wiring)
+        private Dictionary<Wire, float> CalculateWiring(string targetWireName, int targetWireSegment, Wiring wiring)
         {
-            Dictionary<string, float> result = new Dictionary<string, float>();
+            Dictionary<Wire, float> result = new Dictionary<Wire, float>();
             Wire targetWire = wiring.GetWireByName(targetWireName);
 
             for(int wireIndex = 0; wireIndex < wiring.Count; ++wireIndex)
@@ -60,7 +60,7 @@ namespace EMSP.Mathematic.Induction
                 if (currentWireName == targetWireName)
                     continue;
 
-                result.Add(currentWireName, targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment));
+                result.Add(wiring[wireIndex], targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment));
             }
 
             return result;
