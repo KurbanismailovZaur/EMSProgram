@@ -1,4 +1,5 @@
 ﻿using EMSP.Communication;
+using EMSP.Mathematic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,16 +60,16 @@ namespace EMSP.UI.Windows.CalculatedInduction
             base.ShowModal();
         }
 
-        public void DrawCalculated(string wireName, int segmentNumber, Dictionary<Wire, float> calculated)
+        public void DrawCalculated(string wireName, int segmentNumber, VectorableCalculatedValueInfo calculated)
         {
             ClearWindow();
 
             _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", wireName, segmentNumber);
 
-            foreach (var kvp in calculated)
-            {
-                CreateWireRow(kvp.Key, kvp.Value);
-            }
+            //foreach (var kvp in calculated)
+            //{
+            //    CreateWireRow(kvp.Key, kvp.Value);
+            //}
         }
 
         private void CreateWireRow(Wire wire, float value)

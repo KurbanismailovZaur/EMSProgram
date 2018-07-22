@@ -12,15 +12,15 @@ namespace EMSP.Mathematic
 
         private float _precomputedValue;
 
-        private CalculatedValueInTime[] _calculatedValueInTime;
+        private PointableCalculatedValueInTime[] _calculatedValueInTime;
 
         public Vector3 Point { get { return _point; } }
 
         public float PrecomputedValue { get { return _precomputedValue; } }
 
-        public CalculatedValueInTime[] CalculatedValueInTime { get { return _calculatedValueInTime; } }
+        public PointableCalculatedValueInTime[] CalculatedValueInTime { get { return _calculatedValueInTime; } }
 
-        public PointableCalculatedValueInfo(Vector3 point, float precomputedValue, CalculatedValueInTime[] calculatedValueInTime)
+        public PointableCalculatedValueInfo(Vector3 point, float precomputedValue, PointableCalculatedValueInTime[] calculatedValueInTime)
         {
             _point = point;
             _precomputedValue = precomputedValue;

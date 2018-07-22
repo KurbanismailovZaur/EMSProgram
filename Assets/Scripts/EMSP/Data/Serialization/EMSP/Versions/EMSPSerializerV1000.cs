@@ -173,13 +173,13 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     {
                         var position = ReadVector3(reader);
                         var precomputed = reader.ReadSingle();
-                        List<CalculatedValueInTime> calculatedMagneticTensionInTime = new List<CalculatedValueInTime>();
+                        List<PointableCalculatedValueInTime> calculatedMagneticTensionInTime = new List<PointableCalculatedValueInTime>();
 
 
                         float[] timeSteps = TimeManager.Instance.CalculateSteps(settings.TimeRange.Start, settings.TimeRange.End, settings.TimeStepsCount);
                         for (int j = 0; j < settings.TimeStepsCount; ++j)
                         {
-                            calculatedMagneticTensionInTime.Add(new CalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
+                            calculatedMagneticTensionInTime.Add(new PointableCalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
                         }
 
                         ptsInfo.Add(new MagneticTension.PointInfo(position, precomputed, calculatedMagneticTensionInTime.ToArray()));
@@ -203,13 +203,13 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     {
                         var position = ReadVector3(reader);
                         var precomputed = reader.ReadSingle();
-                        List<CalculatedValueInTime> calculatedElectricFieldInTime = new List<CalculatedValueInTime>();
+                        List<PointableCalculatedValueInTime> calculatedElectricFieldInTime = new List<PointableCalculatedValueInTime>();
 
 
                         float[] timeSteps = TimeManager.Instance.CalculateSteps(settings.TimeRange.Start, settings.TimeRange.End, settings.TimeStepsCount);
                         for (int j = 0; j < settings.TimeStepsCount; ++j)
                         {
-                            calculatedElectricFieldInTime.Add(new CalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
+                            calculatedElectricFieldInTime.Add(new PointableCalculatedValueInTime(timeSteps[j], reader.ReadSingle()));
                         }
 
                         ptsInfo.Add(new ElectricField.PointInfo(position, precomputed, calculatedElectricFieldInTime.ToArray()));

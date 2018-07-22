@@ -44,9 +44,15 @@ namespace EMSP.Mathematic
 
         private MaxCalculatedValues _maxCalculatedValues;
 
-        private Dictionary<string, Dictionary<Wire, float>> _calculated = new Dictionary<string, Dictionary<Wire, float>>();
+        // new 
 
-        private GameObject _currentSegmentHighlightningGameObject;
+        private Dictionary<string, VectorableCalculatedValueInfo> _calculated = new Dictionary<string, VectorableCalculatedValueInfo>();
+
+
+        // old
+        //private Dictionary<string, Dictionary<Wire, float>> _calculated = new Dictionary<string, Dictionary<Wire, float>>();
+
+        //private GameObject _currentSegmentHighlightningGameObject;
 
         #endregion
 
@@ -109,26 +115,73 @@ namespace EMSP.Mathematic
 
         }
 
-        public void Calculate(Wiring wiring)
+        public void Calculate(Wiring wiring, IEnumerable<float> timeSteps)
         {
+            DestroyCalculated();
+
+
+            float maxPrecomputedValue = 0;
+            float maxCalculatedValue = 0;
             foreach (var wire in wiring)
             {
                 int segmentCount = wire.LocalPoints.Count - 1;
+
+
+                float maxPrecomutedSummaryValueOfSegments = 0;
+                float maxCalculatedSummaryValueOfSegments = 0;
 
                 for (int segmentIndex = 0; segmentIndex < segmentCount; ++segmentIndex)
                 {
                     string key = string.Format("{0}_{1}", wire.Name, segmentIndex);
 
-                    Data calculatedData = Calculator.Calculate(new Data()
+
+                    Data precomputedResultData = Calculator.Calculate(new Data()
                     {
+                        { "amperageMode", AmperageMode.Precomputed },
                         { "name", wire.Name },
                         { "segment", segmentIndex },
                         { "wiring", wiring },
+                        { "time", 0f }
                     });
 
-                    _calculated.Add(key, calculatedData.GetValue<Dictionary<Wire, float>>("result"));
+                    Dictionary<Wire, float> precomputedValue = precomputedResultData.GetValue<Dictionary<Wire, float>>("result");
+                    float precomputedSummaryValue = precomputedResultData.GetValue<float>("summary");
+                    if (precomputedSummaryValue > maxPrecomutedSummaryValueOfSegments) maxPrecomutedSummaryValueOfSegments = precomputedSummaryValue;
+
+                    VectorableCalculatedValueInTime[] calculatedValuesInTime = new VectorableCalculatedValueInTime[timeSteps.Count()];
+
+                    float maxSummaryCalculatedValue = 0;
+                    for (int w = 0; w < timeSteps.Count(); w++)
+                    {
+                        float time = timeSteps.ElementAt(w);
+
+                        Data calculatedResultData = Calculator.Calculate(new Data()
+                        {
+                            { "amperageMode", AmperageMode.Computational },
+                            { "name", wire.Name },
+                            { "segment", segmentIndex },
+                            { "wiring", wiring },
+                            { "time", time }
+                        });
+
+                        Dictionary<Wire, float> calculatedValue = calculatedResultData.GetValue<Dictionary<Wire, float>>("result");
+                        float calculatedSummaryValue = calculatedResultData.GetValue<float>("summary");
+                        if (calculatedSummaryValue > maxSummaryCalculatedValue) maxSummaryCalculatedValue = calculatedSummaryValue;
+
+                        calculatedValuesInTime[w] = new VectorableCalculatedValueInTime(time, calculatedValue, calculatedSummaryValue);
+                    }
+                    if (maxSummaryCalculatedValue > maxCalculatedSummaryValueOfSegments) maxCalculatedSummaryValueOfSegments = maxSummaryCalculatedValue;
+
+                    VectorableCalculatedValueInfo segmentValuesInfo = new VectorableCalculatedValueInfo(key, precomputedValue, precomputedSummaryValue, calculatedValuesInTime);
+
+                    _calculated.Add(key, segmentValuesInfo);
                 }
+
+                if (maxPrecomutedSummaryValueOfSegments > maxPrecomputedValue) maxPrecomputedValue = maxPrecomutedSummaryValueOfSegments;
+                if (maxCalculatedSummaryValueOfSegments > maxCalculatedValue) maxCalculatedValue = maxCalculatedSummaryValueOfSegments;
             }
+
+            _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
 
             _isCalculated = true;
 
@@ -141,7 +194,7 @@ namespace EMSP.Mathematic
 
             string key = string.Format("{0}_{1}", wireName, segmentNumber);
 
-            switch(Type)
+            switch (Type)
             {
                 case CalculationType.Induction:
                     ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(wireName, segmentNumber, _calculated[key]);

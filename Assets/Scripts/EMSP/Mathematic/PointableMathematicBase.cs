@@ -30,9 +30,9 @@ namespace EMSP.Mathematic
 
             public readonly float PrecomputedValue;
 
-            public readonly CalculatedValueInTime[] CalculatedValuesInTime;
+            public readonly PointableCalculatedValueInTime[] CalculatedValuesInTime;
 
-            public PointInfo(Vector3 pos, float precomputedMagneticTension, CalculatedValueInTime[] calculatedValuesInTime)
+            public PointInfo(Vector3 pos, float precomputedMagneticTension, PointableCalculatedValueInTime[] calculatedValuesInTime)
             {
                 Position = pos;
                 PrecomputedValue = precomputedMagneticTension;
@@ -205,7 +205,7 @@ namespace EMSP.Mathematic
 
                         float precomputedValue = precomputedResultData.GetValue<float>("result");
 
-                        CalculatedValueInTime[] calculatedValuesInTime = new CalculatedValueInTime[timeSteps.Count()];
+                        PointableCalculatedValueInTime[] calculatedValuesInTime = new PointableCalculatedValueInTime[timeSteps.Count()];
 
                         for (int w = 0; w < timeSteps.Count(); w++)
                         {
@@ -221,7 +221,7 @@ namespace EMSP.Mathematic
 
                             float calculatedValue = calculatedResultData.GetValue<float>("result");
 
-                            calculatedValuesInTime[w] = new CalculatedValueInTime(time, calculatedValue);
+                            calculatedValuesInTime[w] = new PointableCalculatedValueInTime(time, calculatedValue);
                         }
 
                         calculatedValueInfos.Add(new PointableCalculatedValueInfo(point, precomputedValue, calculatedValuesInTime));

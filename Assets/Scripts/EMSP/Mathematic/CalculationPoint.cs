@@ -58,7 +58,7 @@ namespace EMSP.Mathematic
 
         private float _precomputedMagneticTension;
 
-        private CalculatedValueInTime[] _calculatedMagneticTensionsInTime;
+        private PointableCalculatedValueInTime[] _calculatedMagneticTensionsInTime;
 
         private int _currentTimeIndex;
         #endregion
@@ -70,7 +70,7 @@ namespace EMSP.Mathematic
         #region Properties
         public float PrecomputedMagneticTension { get { return _precomputedMagneticTension; } }
 
-        public CalculatedValueInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
+        public PointableCalculatedValueInTime[] CalculatedMagneticTensionsInTime { get { return _calculatedMagneticTensionsInTime; } }
 
         public float CurrentCalculatedMagneticTension { get { return _calculatedMagneticTensionsInTime[_currentTimeIndex].CalculatedValue; } }
         #endregion

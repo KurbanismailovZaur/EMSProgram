@@ -10,7 +10,6 @@ using UnityEngine.EventSystems;
 
 namespace EMSP.Communication
 {
-    [RequireComponent(typeof(LineRenderer))]
     public class Wire : MonoBehaviour, IEnumerable<Vector3>
     {
         #region Entities
@@ -24,6 +23,11 @@ namespace EMSP.Communication
         #endregion
 
         #region Classes
+        public class Segment : MonoBehaviour
+        {
+
+        }
+
         public class Factory
         {
             public Wire Create(string name, float amplitude, float frequency, float amperage)
@@ -34,11 +38,8 @@ namespace EMSP.Communication
                 wire._frequency = frequency;
                 wire._amperage = amperage;
 
-                wire._lineRenderer = wire.GetComponent<LineRenderer>();
-                wire._lineRenderer.widthMultiplier = 0.02f;
-                wire._lineRenderer.numCornerVertices = 4;
-                wire._lineRenderer.numCapVertices = 4;
-                wire._lineRenderer.useWorldSpace = false;
+
+                // create Segments
 
                 return wire;
             }
@@ -214,7 +215,7 @@ namespace EMSP.Communication
         {
             int segmetsCount = _lineRenderer.positionCount - 1;
 
-            for(int i = 0; i < _lineRenderer.transform.childCount; ++i)
+            for (int i = 0; i < _lineRenderer.transform.childCount; ++i)
             {
                 Destroy(_lineRenderer.transform.GetChild(i).gameObject);
             }
@@ -222,7 +223,7 @@ namespace EMSP.Communication
 
             if (segmetsCount < 1) return;
 
-            for(int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
+            for (int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
             {
                 // Adding child GameObject with Collider and EventTrigger
                 CapsuleCollider lineCollider = new GameObject("LineCollider_" + segmentIndex).AddComponent<CapsuleCollider>();
@@ -280,7 +281,7 @@ namespace EMSP.Communication
 
         public void SetWireHighlight(bool value)
         {
-            if(!value)
+            if (!value)
             {
                 _lineRenderer.material.color = _defaultWireColor;
             }
