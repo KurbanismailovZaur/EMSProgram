@@ -147,7 +147,7 @@ namespace EMSP.Mathematic
                     _electricField.Calculate(RangeLength, WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
                 case CalculationType.Induction:
-                    _induction.Calculate(WiringManager.Instance.Wiring);
+                    _induction.Calculate(WiringManager.Instance.Wiring, TimeManager.Instance.Steps);
                     break;
             }
         }

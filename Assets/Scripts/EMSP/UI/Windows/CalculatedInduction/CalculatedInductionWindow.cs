@@ -60,11 +60,11 @@ namespace EMSP.UI.Windows.CalculatedInduction
             base.ShowModal();
         }
 
-        public void DrawCalculated(string wireName, int segmentNumber, VectorableCalculatedValueInfo calculated)
+        public void DrawCalculated(WireSegment segment, VectorableCalculatedValueInfo calculated)
         {
             ClearWindow();
 
-            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", wireName, segmentNumber);
+            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", segment.GeneralWire.Name, segment.ID);
 
             //foreach (var kvp in calculated)
             //{

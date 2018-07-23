@@ -88,14 +88,6 @@ namespace EMSP.Communication
             return wire;
         }
 
-        public void SetWiringMaterial(Material material)
-        {
-            foreach (Wire wire in _wires)
-            {
-                wire.LineMaterial = material;
-            }
-        }
-
         public IEnumerator<Wire> GetEnumerator()
         {
             return _wires.GetEnumerator();

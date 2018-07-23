@@ -82,13 +82,13 @@ namespace EMSP.UI.Windows.CalculatedInduction
         #region Events handlers
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _representableWire.SetWireHighlight(true);
+            //_representableWire.SetWireHighlight(true);
             _backLightImage.color = Color.green;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _representableWire.SetWireHighlight(false);
+            //_representableWire.SetWireHighlight(false);
             _backLightImage.color = _defaultColor;
         }
         #endregion

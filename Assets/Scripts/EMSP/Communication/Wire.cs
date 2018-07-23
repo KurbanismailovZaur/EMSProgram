@@ -23,11 +23,6 @@ namespace EMSP.Communication
         #endregion
 
         #region Classes
-        public class Segment : MonoBehaviour
-        {
-
-        }
-
         public class Factory
         {
             public Wire Create(string name, float amplitude, float frequency, float amperage)
@@ -37,9 +32,6 @@ namespace EMSP.Communication
                 wire._amplitude = amplitude;
                 wire._frequency = frequency;
                 wire._amperage = amperage;
-
-
-                // create Segments
 
                 return wire;
             }
@@ -62,11 +54,9 @@ namespace EMSP.Communication
 
         private float _amperage;
 
-        private LineRenderer _lineRenderer;
-
         private List<Vector3> _localPoints = new List<Vector3>();
 
-        private Color _defaultWireColor;
+        private Dictionary<int, WireSegment> _segments = new Dictionary<int, WireSegment>();
         #endregion
 
         #region Events
@@ -102,11 +92,6 @@ namespace EMSP.Communication
 
         public float Amperage { get { return _amperage; } }
 
-        public Material LineMaterial
-        {
-            get { return _lineRenderer.sharedMaterial; }
-            set { _lineRenderer.sharedMaterial = value; }
-        }
         #endregion
 
         #region Constructors
@@ -114,11 +99,6 @@ namespace EMSP.Communication
         #endregion
 
         #region Methods
-
-        private void Start()
-        {
-            _defaultWireColor = _lineRenderer.sharedMaterial.color;
-        }
 
         public static bool IsCorrectName(string name)
         {
@@ -200,65 +180,35 @@ namespace EMSP.Communication
         private void OnGeometryChanged()
         {
             GeometryChanged.Invoke(this, LocalPoints);
-            UpdateLineRenderer();
+            UpdateSegments();
         }
 
-        private void UpdateLineRenderer()
+        private void UpdateSegments()
         {
-            _lineRenderer.positionCount = _localPoints.Count;
-            _lineRenderer.SetPositions(_localPoints.ToArray());
+            int segmetsCount = _localPoints.Count - 1;
 
-            UpdateLineRendererColliders();
-        }
 
-        private void UpdateLineRendererColliders()
-        {
-            int segmetsCount = _lineRenderer.positionCount - 1;
-
-            for (int i = 0; i < _lineRenderer.transform.childCount; ++i)
+            for (int i = 0; i < _segments.Count; ++i)
             {
-                Destroy(_lineRenderer.transform.GetChild(i).gameObject);
+                Destroy(_segments[i].gameObject);
             }
-            _lineRenderer.transform.DetachChildren();
+            transform.DetachChildren();
+            _segments.Clear();
+            if (segmetsCount < 1)
+                return;
 
-            if (segmetsCount < 1) return;
 
+            var segmentFactory = new WireSegment.Factory(this);
             for (int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
             {
-                // Adding child GameObject with Collider and EventTrigger
-                CapsuleCollider lineCollider = new GameObject("LineCollider_" + segmentIndex).AddComponent<CapsuleCollider>();
-                lineCollider.gameObject.layer = LayerMask.NameToLayer("CalculatedDataLayer");
-                lineCollider.transform.parent = _lineRenderer.transform;
-                lineCollider.radius = _lineRenderer.startWidth;
-                lineCollider.direction = 2;
+                var segment = segmentFactory.Create(
+                    transform.TransformPoint(_localPoints[segmentIndex]),
+                    transform.TransformPoint(_localPoints[segmentIndex + 1]),
+                    segmentIndex
+                    );
+                segment.transform.SetParent(transform, true);
 
-                EventTrigger eventTrigger = lineCollider.gameObject.AddComponent<EventTrigger>();
-                var triggerEntries = new List<EventTrigger.Entry>();
-
-                var pointerDownEntry = new EventTrigger.Entry
-                {
-                    eventID = EventTriggerType.PointerDown
-                };
-
-                pointerDownEntry.callback.AddListener((eventData) =>
-                {
-                    int segmentNumber;
-                    if (int.TryParse(lineCollider.gameObject.name.Substring(13), out segmentNumber))
-                        lineCollider.GetComponentInParent<Wire>().OnWireClickHandler(segmentNumber);
-                    else
-                        Debug.LogError(@"Can not parse segment number from " + lineCollider.gameObject.name);
-                });
-
-                triggerEntries.Add(pointerDownEntry);
-                eventTrigger.triggers = triggerEntries;
-
-                // Set position and rotation for GameObject with Collider
-                Vector3 starttPosition = _lineRenderer.GetPosition(segmentIndex);
-                Vector3 endPosition = _lineRenderer.GetPosition(segmentIndex + 1);
-
-                lineCollider.transform.position = starttPosition + (endPosition - starttPosition) / 2;
-                lineCollider.transform.LookAt(starttPosition);
-                lineCollider.height = (endPosition - starttPosition).magnitude;
+                _segments.Add(segmentIndex, segment);
             }
         }
 
@@ -279,22 +229,9 @@ namespace EMSP.Communication
             return bounds;
         }
 
-        public void SetWireHighlight(bool value)
+        public WireSegment GetSegment(int segmentNumber)
         {
-            if (!value)
-            {
-                _lineRenderer.material.color = _defaultWireColor;
-            }
-            else
-            {
-                _lineRenderer.material.color = Color.green;
-            }
-        }
-
-        public void GetSegment(int segmentNumber, out Vector3 startPoint, out Vector3 endPoint)
-        {
-            startPoint = transform.TransformPoint(_localPoints[segmentNumber]);
-            endPoint = transform.TransformPoint(_localPoints[segmentNumber + 1]);
+            return _segments[segmentNumber];
         }
         #endregion
 
@@ -306,10 +243,6 @@ namespace EMSP.Communication
         #endregion
 
         #region Events handlers
-        private void OnWireClickHandler(int segmentIndex)
-        {
-            Mathematic.MathematicManager.Instance.Induction.ShowCalculatedFor(Name, segmentIndex);
-        }
         #endregion
         #endregion
     }

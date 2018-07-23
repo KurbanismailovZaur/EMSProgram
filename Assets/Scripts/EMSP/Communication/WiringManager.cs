@@ -53,6 +53,8 @@ namespace EMSP.Communication
         #region Properties
         public Wiring Wiring { get { return _wiring; } }
 
+        public Material LineMaterial { get { return _lineMaterial; } }
+
         //public bool IsWiringVisible
         //{
         //    get { return _wires[0].gameObject.activeSelf; }
@@ -94,7 +96,6 @@ namespace EMSP.Communication
             if (!wiring || !wiring.CheckPointsExist()) return;
 
             _wiring = wiring;
-            _wiring.SetWiringMaterial(_lineMaterial);
             _wiring.transform.SetParent(transform, true);
 
             WiringCreated.Invoke(_wiring);

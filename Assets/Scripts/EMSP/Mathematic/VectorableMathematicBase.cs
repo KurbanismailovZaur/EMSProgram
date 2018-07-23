@@ -46,7 +46,7 @@ namespace EMSP.Mathematic
 
         // new 
 
-        private Dictionary<string, VectorableCalculatedValueInfo> _calculated = new Dictionary<string, VectorableCalculatedValueInfo>();
+        private Dictionary<WireSegment, VectorableCalculatedValueInfo> _calculated = new Dictionary<WireSegment, VectorableCalculatedValueInfo>();
 
 
         // old
@@ -132,8 +132,7 @@ namespace EMSP.Mathematic
 
                 for (int segmentIndex = 0; segmentIndex < segmentCount; ++segmentIndex)
                 {
-                    string key = string.Format("{0}_{1}", wire.Name, segmentIndex);
-
+                    WireSegment key = wire.GetSegment(segmentIndex);
 
                     Data precomputedResultData = Calculator.Calculate(new Data()
                     {
@@ -188,23 +187,21 @@ namespace EMSP.Mathematic
             Calculated.Invoke(this);
         }
 
-        public void ShowCalculatedFor(string wireName, int segmentNumber)
+        public void ShowCalculatedFor(WireSegment segment)
         {
             if (!IsCalculated) return;
-
-            string key = string.Format("{0}_{1}", wireName, segmentNumber);
 
             switch (Type)
             {
                 case CalculationType.Induction:
-                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(wireName, segmentNumber, _calculated[key]);
+                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(segment, _calculated[segment]);
                     break;
                 default:
                     Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
                     break;
             }
 
-            HighLightSelectedSegment(wireName, segmentNumber);
+            HighLightSelectedSegment(segment);
         }
 
         public void DestroyCalculated()
@@ -219,40 +216,40 @@ namespace EMSP.Mathematic
             Destroyed.Invoke(this);
         }
 
-        private void HighLightSelectedSegment(string wireName, int segmentNumber)
+        private void HighLightSelectedSegment(WireSegment segment)
         {
-            DisableCurrentSegmentHighlightning();
+            //DisableCurrentSegmentHighlightning();
 
-            Wire selectedWire = WiringManager.Instance.Wiring.GetWireByName(wireName);
+            //Wire selectedWire = WiringManager.Instance.Wiring.GetWireByName(wireName);
 
-            Vector3 startSegmentPoint;
-            Vector3 endSegmentPoint;
+            //Vector3 startSegmentPoint;
+            //Vector3 endSegmentPoint;
 
-            selectedWire.GetSegment(segmentNumber, out startSegmentPoint, out endSegmentPoint);
+            //selectedWire.GetSegment(segmentNumber, out startSegmentPoint, out endSegmentPoint);
 
-            // create highlighter
-            float halfMagnitude = (endSegmentPoint - startSegmentPoint).magnitude / 2;
+            //// create highlighter
+            //float halfMagnitude = (endSegmentPoint - startSegmentPoint).magnitude / 2;
 
-            Vector3 pos = startSegmentPoint + (endSegmentPoint - startSegmentPoint).normalized * halfMagnitude;
-            Quaternion rot = Quaternion.FromToRotation(Vector3.up, endSegmentPoint - startSegmentPoint);
-            Vector3 scl = new Vector3(0.05f, halfMagnitude, 0.05f);
+            //Vector3 pos = startSegmentPoint + (endSegmentPoint - startSegmentPoint).normalized * halfMagnitude;
+            //Quaternion rot = Quaternion.FromToRotation(Vector3.up, endSegmentPoint - startSegmentPoint);
+            //Vector3 scl = new Vector3(0.05f, halfMagnitude, 0.05f);
 
-            _currentSegmentHighlightningGameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            _currentSegmentHighlightningGameObject.transform.position = pos;
-            _currentSegmentHighlightningGameObject.transform.rotation = rot;
-            _currentSegmentHighlightningGameObject.transform.localScale = scl;
+            //_currentSegmentHighlightningGameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            //_currentSegmentHighlightningGameObject.transform.position = pos;
+            //_currentSegmentHighlightningGameObject.transform.rotation = rot;
+            //_currentSegmentHighlightningGameObject.transform.localScale = scl;
 
-            _currentSegmentHighlightningGameObject.GetComponent<MeshRenderer>().material = _highlightMaterial;
+            //_currentSegmentHighlightningGameObject.GetComponent<MeshRenderer>().material = _highlightMaterial;
 
-            Destroy(_currentSegmentHighlightningGameObject.GetComponent<Collider>());
+            //Destroy(_currentSegmentHighlightningGameObject.GetComponent<Collider>());
         }
 
         private void DisableCurrentSegmentHighlightning()
         {
-            if (_currentSegmentHighlightningGameObject != null)
-                Destroy(_currentSegmentHighlightningGameObject);
+            //if (_currentSegmentHighlightningGameObject != null)
+            //    Destroy(_currentSegmentHighlightningGameObject);
 
-            _currentSegmentHighlightningGameObject = null;
+            //_currentSegmentHighlightningGameObject = null;
         }
         #endregion
 
