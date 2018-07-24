@@ -6,5 +6,6 @@ namespace EMSP.Mathematic
 {
     public interface IVectorableCalculationMethod : ICalculationMethod
     {
+        void FilterVectorsByValue(Range range);
     }
 }

@@ -82,7 +82,7 @@ namespace EMSP.Mathematic.Induction
                     continue;
 
 
-                float value = targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment) * (float)Math.Cos(time);
+                float value = targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment) * (float)Math.Cos(time * targetWireSegment);
                 if (value > maxValue) maxValue = value;
 
                 result.Add(wiring[wireIndex], value);

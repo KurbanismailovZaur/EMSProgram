@@ -39,6 +39,8 @@ namespace EMSP.UI.Windows.CalculatedInduction
         private RectTransform _rowsParent;
 
         private WireRow.Factory _wireRowFactory = new WireRow.Factory();
+
+        private List<WireRow> _rows = new List<WireRow>(); 
         #endregion
 
         #region Events
@@ -60,21 +62,22 @@ namespace EMSP.UI.Windows.CalculatedInduction
             base.ShowModal();
         }
 
-        public void DrawCalculated(WireSegment segment, VectorableCalculatedValueInfo calculated)
+        public void DrawCalculated(VectorableCalculatedValueInfo calculated, AmperageMode mode, int currentTimeIndex)// ToDo
         {
             ClearWindow();
 
-            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", segment.GeneralWire.Name, segment.ID);
+            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", calculated.Segment.GeneralWire.Name, calculated.Segment.ID);
 
-            //foreach (var kvp in calculated)
-            //{
-            //    CreateWireRow(kvp.Key, kvp.Value);
-            //}
+            foreach(var kvp in calculated.PrecomputedValue)
+            {
+                _rows.Add(CreateWireRow(kvp, calculated.CalculatedValueInTime, mode, currentTimeIndex));
+
+            }
         }
 
-        private void CreateWireRow(Wire wire, float value)
+        private WireRow CreateWireRow(KeyValuePair<Wire, float> precomputed, VectorableCalculatedValueInTime[] calculated, AmperageMode mode, int currentTimeIndex)
         {
-            _wireRowFactory.Create(_wireRowPrefab, _rowsParent, wire, value);
+            return _wireRowFactory.Create(_wireRowPrefab, _rowsParent, precomputed, calculated, mode, currentTimeIndex);
         }
 
         private void ClearWindow()
@@ -94,7 +97,21 @@ namespace EMSP.UI.Windows.CalculatedInduction
         #endregion
 
         #region Events handlers
+        public void OnTimeStemChanged(int timeIndex)
+        {
+            foreach(var row in _rows)
+            {
+                row.SetTimeStep(timeIndex);
+            }
+        }
 
+        public void OnAmperageModeChanged(AmperageMode mode)
+        {
+            foreach (var row in _rows)
+            {
+                row.SetAmperageMode(mode);
+            }
+        }
         #endregion
         #endregion
     }

@@ -84,6 +84,14 @@ namespace EMSP.Communication
             }
         }
 
+        public ReadOnlyCollection<WireSegment> Segments
+        {
+            get
+            {
+                return _segments.Values.ToList().AsReadOnly();
+            }
+        }
+
         public int Count { get { return _localPoints.Count; } }
 
         public float Amplitude { get { return _amplitude; } }
@@ -232,6 +240,24 @@ namespace EMSP.Communication
         public WireSegment GetSegment(int segmentNumber)
         {
             return _segments[segmentNumber];
+        }
+
+        public void SetWireHighlight(bool value)
+        {
+            if(value)
+            {
+                foreach(var segment in _segments.Values)
+                {
+                    segment.SetHighlight(Color.green);
+                }
+            }
+            else
+            {
+                foreach (var segment in _segments.Values)
+                {
+                    segment.DisableHighlight();
+                }
+            }
         }
         #endregion
 

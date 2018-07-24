@@ -9666,6 +9666,46 @@ Prefab:
       propertyPath: _calculatedWindow
       value: 
       objectReference: {fileID: 1527386692}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.key0.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.key1.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.key2.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.key3.r
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.ctime1
+      value: 32768
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.ctime2
+      value: 49151
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.ctime3
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: _valuesGradient.m_NumColorKeys
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
   m_IsPrefabParent: 0

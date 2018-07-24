@@ -584,26 +584,26 @@ namespace EMSP.App
         {
             if (state)
             {
-                //if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.Induction.IsCalculated)
-                //{
-                //    _timeLine.Show();
-                //}
+                if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.Induction.IsCalculated)
+                {
+                    _timeLine.Show();
+                }
 
-                //_tensionFilterSlider.Show();
+                _tensionFilterSlider.Show();
             }
             else
             {
-                //_timeLine.Stop();
-                //_timeLine.Hide();
+                _timeLine.Stop();
+                _timeLine.Hide();
 
-                //_tensionFilterSlider.Hide();
+                _tensionFilterSlider.Hide();
             }
         }
 
         public void Induction_CurrentTensionFilterRangeChanged(MathematicBase mathematicBase, Range range)
         {
-            //_tensionFilterSlider.SetMin(range.Min);
-            //_tensionFilterSlider.SetMax(range.Max);
+            _tensionFilterSlider.SetMin(range.Min);
+            _tensionFilterSlider.SetMax(range.Max);
         }
         #endregion
 
@@ -622,7 +622,12 @@ namespace EMSP.App
 
         public void FilterRangeSlider_OnValueChanged(RangeSlider rangeSlider, Range range)
         {
-            ((IPointableCalculationMethod)MathematicManager.Instance.CurrentCalculationMethod).FilterPointsByValue(range);
+            if (MathematicManager.Instance.CurrentCalculationMethod is IPointableCalculationMethod)
+                ((IPointableCalculationMethod)MathematicManager.Instance.CurrentCalculationMethod).FilterPointsByValue(range);
+            else if (MathematicManager.Instance.CurrentCalculationMethod is IVectorableCalculationMethod)
+                ((IVectorableCalculationMethod)MathematicManager.Instance.CurrentCalculationMethod).FilterVectorsByValue(range);
+            else
+                Debug.LogError("FilterRangeSlider_OnValueChanged. Unauthorized Type");
         }
 
         public void MathematicManager_AmperageModeChanged(MathematicManager mathematicManager, AmperageMode amperageMode)

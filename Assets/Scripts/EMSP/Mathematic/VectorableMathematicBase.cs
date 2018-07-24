@@ -35,25 +35,24 @@ namespace EMSP.Mathematic
         [SerializeField]
         private ModalWindow _calculatedWindow;
 
-        [SerializeField]
-        private Material _highlightMaterial;
-
         private AmperageMode _amperageMode;
 
         private bool _isCalculated;
 
         private MaxCalculatedValues _maxCalculatedValues;
 
-        // new 
-
         private Dictionary<WireSegment, VectorableCalculatedValueInfo> _calculated = new Dictionary<WireSegment, VectorableCalculatedValueInfo>();
 
+        private WireSegment _selectedSegment;
 
-        // old
-        //private Dictionary<string, Dictionary<Wire, float>> _calculated = new Dictionary<string, Dictionary<Wire, float>>();
+        private int _currentTimeIndex;
 
-        //private GameObject _currentSegmentHighlightningGameObject;
+        [SerializeField]
+        private Gradient _valuesGradient;
 
+        private Range _valueFilterRange;
+
+        private Range _currentValueFilterRange;
         #endregion
 
         #region Events
@@ -74,6 +73,11 @@ namespace EMSP.Mathematic
                 }
 
                 _amperageMode = value;
+
+                ((CalculatedInductionWindow)_calculatedWindow).OnAmperageModeChanged(_amperageMode);
+
+                UpdateSegmentsHighlight();
+                // filter selected segments
             }
         }
 
@@ -103,6 +107,22 @@ namespace EMSP.Mathematic
 
         public bool IsCalculated { get { return _isCalculated; } }
 
+        public Range CurrentValueFilterRange
+        {
+            get { return _currentValueFilterRange; }
+            set
+            {
+                if (_currentValueFilterRange == value)
+                {
+                    return;
+                }
+
+                _currentValueFilterRange = value;
+
+                CurrentValueFilterRangeChanged.Invoke(this, _currentValueFilterRange);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -111,6 +131,17 @@ namespace EMSP.Mathematic
         #region Methods
 
         public void SetEntitiesToTime(int timeIndex)
+        {
+            if (_selectedSegment == null) return;
+
+            _currentTimeIndex = timeIndex;
+
+            ((CalculatedInductionWindow)_calculatedWindow).OnTimeStemChanged(_currentTimeIndex);
+
+            UpdateSegmentsHighlight();
+        }
+
+        public void FilterVectorsByValue(Range range)
         {
 
         }
@@ -182,8 +213,12 @@ namespace EMSP.Mathematic
 
             _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
 
-            _isCalculated = true;
+            _valueFilterRange = new Range(0f, _maxCalculatedValues.Max);
+            CurrentValueFilterRange = _valueFilterRange;
 
+            CalculateAndSetSegmentsColorsByTime();
+
+            _isCalculated = true;
             Calculated.Invoke(this);
         }
 
@@ -194,7 +229,7 @@ namespace EMSP.Mathematic
             switch (Type)
             {
                 case CalculationType.Induction:
-                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(segment, _calculated[segment]);
+                    ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(_calculated[segment], _amperageMode, _currentTimeIndex);
                     break;
                 default:
                     Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
@@ -216,40 +251,55 @@ namespace EMSP.Mathematic
             Destroyed.Invoke(this);
         }
 
+        private void CalculateAndSetSegmentsColorsByTime()
+        {
+            foreach(var calculatedInfo in _calculated)
+            {
+                float precomputedGradientValue = calculatedInfo.Value.PrecomputedSummaryValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f);
+                Dictionary<int, float> calculatedGradientValues = new Dictionary<int, float>();
+
+                int timeIndex = 0;
+                foreach(var valueInTime in calculatedInfo.Value.CalculatedValueInTime)
+                {
+                    calculatedGradientValues.Add(timeIndex, valueInTime.SummaryCalculatedValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f));
+                    ++timeIndex;
+                }
+
+                Dictionary<int, Color> colorsByTime = new Dictionary<int, Color>();
+
+                colorsByTime.Add(-1, _valuesGradient.Evaluate(precomputedGradientValue));
+                foreach(var gradientInfo in calculatedGradientValues)
+                {
+                    colorsByTime.Add(gradientInfo.Key, _valuesGradient.Evaluate(gradientInfo.Value));
+                }
+
+                calculatedInfo.Key.FillGradientColors(colorsByTime);
+            }
+        }
+
         private void HighLightSelectedSegment(WireSegment segment)
         {
-            //DisableCurrentSegmentHighlightning();
+            DisableCurrentSegmentHighlightning();
 
-            //Wire selectedWire = WiringManager.Instance.Wiring.GetWireByName(wireName);
-
-            //Vector3 startSegmentPoint;
-            //Vector3 endSegmentPoint;
-
-            //selectedWire.GetSegment(segmentNumber, out startSegmentPoint, out endSegmentPoint);
-
-            //// create highlighter
-            //float halfMagnitude = (endSegmentPoint - startSegmentPoint).magnitude / 2;
-
-            //Vector3 pos = startSegmentPoint + (endSegmentPoint - startSegmentPoint).normalized * halfMagnitude;
-            //Quaternion rot = Quaternion.FromToRotation(Vector3.up, endSegmentPoint - startSegmentPoint);
-            //Vector3 scl = new Vector3(0.05f, halfMagnitude, 0.05f);
-
-            //_currentSegmentHighlightningGameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            //_currentSegmentHighlightningGameObject.transform.position = pos;
-            //_currentSegmentHighlightningGameObject.transform.rotation = rot;
-            //_currentSegmentHighlightningGameObject.transform.localScale = scl;
-
-            //_currentSegmentHighlightningGameObject.GetComponent<MeshRenderer>().material = _highlightMaterial;
-
-            //Destroy(_currentSegmentHighlightningGameObject.GetComponent<Collider>());
+            _selectedSegment = segment;
+            UpdateSegmentsHighlight();
         }
 
         private void DisableCurrentSegmentHighlightning()
         {
-            //if (_currentSegmentHighlightningGameObject != null)
-            //    Destroy(_currentSegmentHighlightningGameObject);
+            if (_selectedSegment == null) return;
+            foreach (var segment in _selectedSegment.GeneralWire.Segments)
+            {
+                segment.DisableHighlight();
+            }
+        }
 
-            //_currentSegmentHighlightningGameObject = null;
+        private void UpdateSegmentsHighlight()
+        {
+            foreach (var segment in _selectedSegment.GeneralWire.Segments)
+            {
+                segment.SetHighlight(_amperageMode, _currentTimeIndex);
+            }
         }
         #endregion
 

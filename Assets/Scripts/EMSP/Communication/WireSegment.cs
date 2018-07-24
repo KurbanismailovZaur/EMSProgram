@@ -1,4 +1,5 @@
-﻿using EMSP.Utility;
+﻿using EMSP.Mathematic;
+using EMSP.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,16 +37,14 @@ namespace EMSP.Communication
 
             public WireSegment Create(Vector3 startPoint, Vector3 endPoint, int segmentNumber)
             {
-                // Create and initialize
+                // Create
                 WireSegment segment = new GameObject("WireSegment_" + segmentNumber).AddComponent<WireSegment>();
-                segment._id = segmentNumber;
-                segment._generalWire = _generalWire;
 
                 // Transform and Collider
                 CapsuleCollider collider = segment.GetComponent<CapsuleCollider>();
-                segment.gameObject.layer = LayerMask.NameToLayer("CalculatedDataLayer");
                 segment.transform.position = startPoint + (endPoint - startPoint) / 2;
                 segment.transform.LookAt(startPoint);
+                segment.gameObject.layer = LayerMask.NameToLayer("CalculatedDataLayer");
                 collider.height = (endPoint - startPoint).magnitude;
                 collider.radius = _segmentWidth;
                 collider.direction = 2;
@@ -78,6 +77,13 @@ namespace EMSP.Communication
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPositions(new Vector3[] { startPoint, endPoint });
 
+                //Initialize
+                segment._id = segmentNumber;
+                segment._generalWire = _generalWire;
+                segment._line = lineRenderer;
+                segment._defaultColor = lineRenderer.sharedMaterial.color;
+
+
                 return segment;
             }
         }
@@ -90,6 +96,11 @@ namespace EMSP.Communication
         #region Fields
         private int _id;
         private Wire _generalWire;
+
+        private LineRenderer _line;
+        private Color _defaultColor;
+
+        private Dictionary<int, Color> _colorsByTime = new Dictionary<int, Color>(); // <timeIndex, color>; timeIndex = -1 - precomputed color
         #endregion
 
         #region Events
@@ -104,10 +115,39 @@ namespace EMSP.Communication
         #endregion
 
         #region Constructors
-
+        private WireSegment() { }
         #endregion
 
         #region Methods
+
+        public void SetHighlight(AmperageMode mode, int currentTimeStep)
+        {
+            if (mode == AmperageMode.Precomputed)
+            {
+                _line.material.color = _colorsByTime[-1];
+            }
+            else if (mode == AmperageMode.Computational)
+            {
+                _line.material.color = _colorsByTime[currentTimeStep];
+            }
+            else
+                Debug.LogError("Unexpected AmperageMode");
+        }
+
+        public void SetHighlight(Color color)
+        {
+            _line.material.color = color;
+        }
+
+        public void DisableHighlight()
+        {
+            _line.material.color = _defaultColor;
+        }
+
+        public void FillGradientColors(Dictionary<int, Color> colorsByTime)
+        {
+            _colorsByTime = colorsByTime;
+        }
 
         #endregion
 

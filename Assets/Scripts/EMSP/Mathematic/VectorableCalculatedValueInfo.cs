@@ -9,7 +9,7 @@ namespace EMSP.Mathematic
     [Serializable]
     public struct VectorableCalculatedValueInfo
     {
-        private WireSegment _segmentKey;
+        private WireSegment _segment;
 
         private Dictionary<Wire, float> _precomputedValue;
 
@@ -18,7 +18,7 @@ namespace EMSP.Mathematic
         private VectorableCalculatedValueInTime[] _calculatedValueInTime;
 
 
-        public WireSegment SegmentKey { get { return _segmentKey; } }
+        public WireSegment Segment { get { return _segment; } }
 
         public Dictionary<Wire, float> PrecomputedValue { get { return _precomputedValue; } }
 
@@ -28,7 +28,7 @@ namespace EMSP.Mathematic
 
         public VectorableCalculatedValueInfo(WireSegment segmentKey, Dictionary<Wire, float> precomputedValue, float precomputedSummaryValue, VectorableCalculatedValueInTime[] calculatedValueInTime)
         {
-            _segmentKey = segmentKey;
+            _segment = segmentKey;
             _precomputedValue = precomputedValue;
             _precomputedSummaryValue = precomputedSummaryValue;
             _calculatedValueInTime = calculatedValueInTime;
