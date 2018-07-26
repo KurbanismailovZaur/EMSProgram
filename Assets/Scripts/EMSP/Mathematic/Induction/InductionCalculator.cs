@@ -71,9 +71,9 @@ namespace EMSP.Mathematic.Induction
         private Dictionary<Wire, float> CalculateWiring(string targetWireName, int targetWireSegment, Wiring wiring, float time, out float summaryValue)
         {
             Dictionary<Wire, float> result = new Dictionary<Wire, float>();
-            Wire targetWire = wiring.GetWireByName(targetWireName);
+            summaryValue = 0;
 
-            float maxValue = 0;
+            Wire targetWire = wiring.GetWireByName(targetWireName);
 
             for (int wireIndex = 0; wireIndex < wiring.Count; ++wireIndex)
             {
@@ -82,22 +82,21 @@ namespace EMSP.Mathematic.Induction
                     continue;
 
 
-                float value = targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment) * (float)Math.Cos(time * targetWireSegment);
-                if (value > maxValue) maxValue = value;
+                float value = targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment) * (float)Math.Cos(time * 10);
 
+                summaryValue += value;
                 result.Add(wiring[wireIndex], value);
             }
 
-            summaryValue = maxValue;
             return result;
         }
 
         private Dictionary<Wire, float> PrecomputeCalculateWiring(string targetWireName, int targetWireSegment, Wiring wiring, out float summaryValue)
         {
             Dictionary<Wire, float> result = new Dictionary<Wire, float>();
+            summaryValue = 0;
             Wire targetWire = wiring.GetWireByName(targetWireName);
 
-            float maxValue = 0;
 
             for (int wireIndex = 0; wireIndex < wiring.Count; ++wireIndex)
             {
@@ -106,13 +105,12 @@ namespace EMSP.Mathematic.Induction
                     continue;
 
 
-                float value = targetWire.Amperage * (wiring[wireIndex].Amplitude + targetWireSegment);
-                if (value > maxValue) maxValue = value;
+                float value = targetWire.Amperage + wiring[wireIndex].Amplitude * targetWireSegment;
 
+                summaryValue += value;
                 result.Add(wiring[wireIndex], value);
             }
 
-            summaryValue = maxValue;
             return result;
         }
         #endregion

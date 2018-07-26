@@ -46,7 +46,7 @@ namespace EMSP.Communication
                 segment.transform.LookAt(startPoint);
                 segment.gameObject.layer = LayerMask.NameToLayer("CalculatedDataLayer");
                 collider.height = (endPoint - startPoint).magnitude;
-                collider.radius = _segmentWidth;
+                collider.radius = _segmentWidth * 2; //multiple by 2 for more clickable colliders
                 collider.direction = 2;
 
                 // EventTrigger

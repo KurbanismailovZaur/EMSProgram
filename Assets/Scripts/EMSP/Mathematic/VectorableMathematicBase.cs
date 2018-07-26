@@ -296,6 +296,8 @@ namespace EMSP.Mathematic
 
         private void UpdateSegmentsHighlight()
         {
+            if (_selectedSegment == null) return;
+
             foreach (var segment in _selectedSegment.GeneralWire.Segments)
             {
                 segment.SetHighlight(_amperageMode, _currentTimeIndex);

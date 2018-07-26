@@ -115,6 +115,8 @@ namespace EMSP.UI.Windows.CalculatedInduction
 
         public void SetAmperageMode(AmperageMode mode)
         {
+            if (_valueField == null) return;
+
             if (mode == AmperageMode.Precomputed)
             {
                 _valueField.text = _precomputedValue.ToString();
