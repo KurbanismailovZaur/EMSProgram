@@ -25,6 +25,7 @@ using System.Threading;
 using EMSP.Processing;
 using EMSP.Logging;
 using EMSP.UI.Windows.CalculatedInduction;
+using EMSP.Data.XLS;
 
 namespace EMSP.App
 {
@@ -63,10 +64,10 @@ namespace EMSP.App
         [SerializeField]
         private OrbitController _orbitController;
 
+        private WiringDataWriter _wiringDataWriter = new WiringDataWriter();
+
         [SerializeField]
         private WiringEditorWindow _wiringEditorDialog;
-
-        private Exporter _exporter = new Exporter();
 
         [SerializeField]
         private TimeLine _timeLine;
@@ -229,7 +230,7 @@ namespace EMSP.App
                 return;
             }
 
-            _exporter.ExportMagneticTensionInSpace(path);
+            _wiringDataWriter.ExportMagneticTensionInSpace(path, MathematicManager.Instance.MagneticTension.CalculatedPoints);
         }
 
         private void ExportWiring()
@@ -242,6 +243,15 @@ namespace EMSP.App
             }
 
             WiringManager.Instance.SaveWiring(path);
+        }
+
+        private void ExportVertices()
+        {
+            string path = StandaloneFileBrowser.SaveFilePanel("Сохранить вершины", Application.dataPath, "Вершины", "xls");
+
+            if (string.IsNullOrEmpty(path)) return;
+
+            _wiringDataWriter.ExportModelVertices(path, ModelManager.Instance.Model);
         }
 
         private void GenerateVerticesBasedOnOBJ()
@@ -408,6 +418,10 @@ namespace EMSP.App
                 case FileContextMethods.ActionType.ExportWiring:
                     Log.WriteOperation("Starting_ExportWiring");
                     ExportWiring();
+                    break;
+                case FileContextMethods.ActionType.ExportVertices:
+                    Log.WriteOperation("Starting_ExportVertices");
+                    ExportVertices();
                     break;
                 case FileContextMethods.ActionType.GenerateVerticesBasedOnOBJ:
                     Log.WriteOperation("Starting_GenerateVerticesBasedOnOBJ");

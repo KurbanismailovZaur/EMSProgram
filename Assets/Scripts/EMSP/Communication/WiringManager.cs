@@ -105,7 +105,7 @@ namespace EMSP.Communication
         {
             if (!_wiring || !_wiring.CheckPointsExist()) return;
 
-            _wiringDataWriter.WriteWiring(pathForWriting, _wiring);
+            _wiringDataWriter.ExportWiring(pathForWriting, _wiring);
         }
 
         public void DestroyWiring()
