@@ -284,7 +284,7 @@ namespace EnhancedHierarchy {
 
             if(isPrefab) {
                 var selection = Selection.instanceIDs;
-                var prefab = PrefabUtility.GetPrefabParent(go);
+                var prefab = PrefabUtility.GetCorrespondingObjectFromSource(go);
 
                 Selection.activeGameObject = go;
                 EditorApplication.ExecuteMenuItem("GameObject/Apply Changes To Prefab");
