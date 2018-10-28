@@ -16,6 +16,8 @@ namespace EMSP.Future
 
         public MathWire(Wire wire)
         {
+            Wire = wire;
+
             nodes_count = wire.LocalPoints.Count - 1;
 
             nodes = new Vector3[wire.LocalPoints.Count];
@@ -37,10 +39,26 @@ namespace EMSP.Future
                 length_segments[i] = Vector3.Distance(wire.LocalPoints[i], wire.LocalPoints[i + 1]);
             }
         }
+
+        public Wire Wire { get; private set; }
     }
 
     public class Math2
     {
+        public struct ResultInfo
+        {
+            public Wire WireA { get; set; }
+
+            public Wire WireB { get; set; }
+
+            public float Value { get; set; }
+
+            public void Add(float value)
+            {
+                Value += value;
+            }
+        }
+
         private int Factorial(int number)
         {
             if (number <= 1) return 1;
@@ -53,7 +71,7 @@ namespace EMSP.Future
             return Mathf.Sqrt(a * a + b * b);
         }
 
-        public float[] Calculate(Wiring wiring)
+        public ResultInfo[] Calculate(Wiring wiring)
         {
             // Проверка на количество проводов.
             if (wiring.Count < 2) throw new Exception("Проводов не может быть меньше 2х");
@@ -64,7 +82,7 @@ namespace EMSP.Future
             int count_m = Factorial(wiring.Count) / (Factorial(2) * Factorial(wiring.Count - 2));
 
             // Взаимная индуктивность проводов.
-            float[] M = new float[count_m];
+            ResultInfo[] M = new ResultInfo[count_m];
 
             // Цикл по проводам в проводке (для сравнения со следующим).
             for (int index_compare = 0; index_compare < wiring.Count - 1; index_compare++)
@@ -131,11 +149,14 @@ namespace EMSP.Future
                                             d = segment.Value;
                                         }
 
-                                    M[ind_m] += NU / 4f * Mathf.PI * ((length_segment_compare + length_segment_current + d)
+                                    M[ind_m].Add(NU / 4f * Mathf.PI * ((length_segment_compare + length_segment_current + d)
                                         * Mathf.Log(length_segment_compare + length_segment_current + d) + d * Mathf.Log(d)
                                         - (length_segment_compare + d) * Mathf.Log(length_segment_compare + d)
                                         - (length_segment_current + d) * Mathf.Log(length_segment_current + d)
-                                        * cos_segment);
+                                        * cos_segment));
+
+                                    M[ind_m].WireA = wire_compare.Wire;
+                                    M[ind_m].WireB = wire_current.Wire;
                                 }
                                 else
                                 {
@@ -171,13 +192,16 @@ namespace EMSP.Future
                                     float gm = length_segment_current + d;
                                     float dt = d;
                                     
-                                    M[ind_m] += NU / (4 * Mathf.PI)
+                                    M[ind_m].Add(NU / (4 * Mathf.PI)
                                          * (af * Mathf.Log(af + Hypot(af, h))
                                          - bt * Mathf.Log(bt + Hypot(bt, h))
                                          - gm * Mathf.Log(gm + Hypot(gm, h))
                                          + dt * Mathf.Log(dt + Hypot(dt, h))
                                          - Hypot(af, h) + Hypot(bt, h)
-                                         + Hypot(gm, h) - Hypot(dt, h)) * cos_segment;
+                                         + Hypot(gm, h) - Hypot(dt, h)) * cos_segment);
+
+                                    M[ind_m].WireA = wire_compare.Wire;
+                                    M[ind_m].WireB = wire_current.Wire;
                                 }
                             }
                             else
@@ -285,12 +309,15 @@ namespace EMSP.Future
                                 else
                                     AM = 0;
 
-                                M[ind_m] += (float)(2f * NU / 4f * Mathf.PI * cos_segment
+                                M[ind_m].Add((float)(2f * NU / 4f * Mathf.PI * cos_segment
                                     * (x2 * Math.Tanh(length_segment_current / (pp_segments["B1B2"] + pp_segments["B1A2"]))
                                     + y2 * Math.Tanh(length_segment_compare / (pp_segments["B1B2"] + pp_segments["A1B2"]))
                                     - x1 * Math.Tanh(length_segment_current / (pp_segments["A1A2"] + pp_segments["A1B2"]))
                                     - y1 * Math.Tanh(length_segment_compare / (pp_segments["A1A2"] + pp_segments["B1A2"]))
-                                    + h / Mathf.Sin(fi) * AM));
+                                    + h / Mathf.Sin(fi) * AM)));
+
+                                M[ind_m].WireA = wire_compare.Wire;
+                                M[ind_m].WireB = wire_current.Wire;
                             }
                         }
                     }

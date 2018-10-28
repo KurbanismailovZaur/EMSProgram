@@ -22,7 +22,9 @@ namespace Namespace
 
             for (int i = 0; i < results.Length; i++)
             {
-                Debug.Log("M[" + i + "] = " + results[i]);
+                Debug.Log("M[" + i + "] = " + results[i].Value);
+                Debug.Log("Wire A: " + results[i].WireA.Name);
+                Debug.Log("Wire B: " + results[i].WireB.Name);
             }
         }
 	}
