@@ -172,6 +172,8 @@ namespace EMSP.Data.OBJ
                 string materialName = null;
                 List<int> materialVerticesIndexes = new List<int>();
 
+                bool faceWasUsed = false;
+
                 while (!sr.EndOfStream)
                 {
                     if (cancellationExpression != null && cancellationExpression()) return null;
@@ -180,6 +182,19 @@ namespace EMSP.Data.OBJ
 
                     if (line.StartsWith("v "))
                     {
+                        if (faceWasUsed)
+                        {
+                            if (!materialVertexesPacks.ContainsKey(materialName))
+                                materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+                            else
+                                materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+
+                            //vertices.Clear();
+                            materialName = null;
+                            materialVerticesIndexes.Clear();
+                            faceWasUsed = false;
+                        }
+
                         string vertexString = line.Substring(2);
                         vertices.Add(GetVector3FromObjString(vertexString));
                     }
@@ -196,6 +211,8 @@ namespace EMSP.Data.OBJ
                     }
                     else if (line.StartsWith("f "))
                     {
+                        faceWasUsed = true;
+
                         string[] indexes = line.Substring(2).Split(' ');
 
                         for (int i = 0; i < indexes.Length; i++)
@@ -208,6 +225,8 @@ namespace EMSP.Data.OBJ
 
                 if (!materialVertexesPacks.ContainsKey(materialName))
                     materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+                else
+                    materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
             }
 
             return materialVertexesPacks;
