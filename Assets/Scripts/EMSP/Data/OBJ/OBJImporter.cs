@@ -187,7 +187,9 @@ namespace EMSP.Data.OBJ
                     {
                         if (materialName != null)
                             materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
-
+                        else
+                            materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+                        
                         materialName = line.Substring(7);
                         materialVerticesIndexes.Clear();
                     }
