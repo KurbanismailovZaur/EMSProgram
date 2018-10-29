@@ -186,10 +186,11 @@ namespace EMSP.Data.OBJ
                     else if (line.StartsWith("usemtl "))
                     {
                         if (materialName != null)
-                            materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
-                        else
-                            materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
-                        
+                            if (!materialVertexesPacks.ContainsKey(materialName))
+                                materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+                            else
+                                materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+
                         materialName = line.Substring(7);
                         materialVerticesIndexes.Clear();
                     }
