@@ -1,4 +1,5 @@
 ﻿using EMSP.Communication;
+using EMSP.Data.OBJ;
 using EMSP.Mathematic;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -176,54 +177,42 @@ namespace EMSP.Data.XLS
             }
         }
 
-        public void ExportModelVertices(string path, Model model)
+        public void ExportVerticesFromOBJ(string from, string path)
         {
-            MeshRenderer[] renderers = model.GetComponentsInChildren<MeshRenderer>();
-
-            if (renderers.Length == 0) return;
+            OBJImporter importer = new OBJImporter();
+            var materialVertexPacks = importer.GetVerticesInfoFromOBJ(from);
 
             using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 HSSFWorkbook workbook = new HSSFWorkbook();
-
+                
                 ISheet sheet = CreateSheetForVertices(workbook, "0");
 
-                List<Material> materials = new List<Material>();
+                int materialIndex = 0;
+                int nextRowIndex = 1;
+                int nextSheetIndex = 1;
 
-                int rowIndex = 1;
-                int listIndex = 1;
-
-                foreach (var renderer in renderers)
+                foreach (var matVertexPair in materialVertexPacks)
                 {
-                    Material[] rendererMaterials = renderer.sharedMaterials;
-                    Mesh mesh = renderer.GetComponent<MeshFilter>().sharedMesh;
-                    Vector3[] vertices = mesh.vertices;
+                    var vertices = matVertexPair.Value;
 
-                    for (int i = 0; i < rendererMaterials.Length; i++)
+                    for (int i = 0; i < vertices.Count; i++)
                     {
-                        int[] triangles = mesh.GetTriangles(i);
+                        IRow row = sheet.CreateRow(nextRowIndex);
 
-                        for (int j = 0; j < triangles.Length; j++)
+                        row.CreateCell(0, CellType.Numeric).SetCellValue(RoundWithPrecision(vertices[i].x));
+                        row.CreateCell(1, CellType.Numeric).SetCellValue(RoundWithPrecision(vertices[i].y));
+                        row.CreateCell(2, CellType.Numeric).SetCellValue(RoundWithPrecision(vertices[i].z));
+                        row.CreateCell(3, CellType.Numeric).SetCellValue(materialIndex);
+
+                        if (++nextRowIndex == 60000)
                         {
-                            Vector3 vertex = renderer.transform.localToWorldMatrix.MultiplyPoint3x4(vertices[triangles[j]]);
-
-                            IRow row = sheet.CreateRow(rowIndex);
-
-                            row.CreateCell(0, CellType.Numeric).SetCellValue(RoundWithPrecision(vertex.x));
-                            row.CreateCell(1, CellType.Numeric).SetCellValue(RoundWithPrecision(vertex.y));
-                            row.CreateCell(2, CellType.Numeric).SetCellValue(RoundWithPrecision(vertex.z));
-
-                            if (!materials.Contains(rendererMaterials[i])) materials.Add(rendererMaterials[i]);
-
-                            row.CreateCell(3, CellType.Numeric).SetCellValue(materials.IndexOf(rendererMaterials[i]));
-
-                            if (++rowIndex == 60000)
-                            {
-                                sheet = CreateSheetForVertices(workbook, listIndex++.ToString());
-                                rowIndex = 1;
-                            };
-                        }
+                            sheet = CreateSheetForVertices(workbook, nextSheetIndex++.ToString());
+                            nextRowIndex = 1;
+                        };
                     }
+
+                    materialIndex += 1;
                 }
 
                 workbook.Write(stream);

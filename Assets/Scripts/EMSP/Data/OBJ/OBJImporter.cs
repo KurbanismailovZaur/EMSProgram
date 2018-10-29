@@ -1,4 +1,7 @@
-﻿using Numba.Geometry;
+﻿using EMSP.Logging;
+using Numba.Geometry;
+using OrbCreationExtensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -153,6 +156,92 @@ namespace EMSP.Data.OBJ
             materials = _materials.ToArray();
 
             return modelObject;
+        }
+
+        public Dictionary<string, List<Vector3>> GetVerticesInfoFromOBJ(string pathToOBJ, Func<bool> cancellationExpression = null)
+        {
+            if (Log.IsInitialized)
+                Log.WriteOperation("Started_OBJImporter_GetVerticesInfoFromOBJ");
+
+            Dictionary<string, List<Vector3>> materialVertexesPacks = new Dictionary<string, List<Vector3>>();
+
+            using (StreamReader sr = new StreamReader(pathToOBJ))
+            {
+                List<Vector3> vertices = new List<Vector3>();
+
+                string materialName = null;
+                List<int> materialVerticesIndexes = new List<int>();
+
+                while (!sr.EndOfStream)
+                {
+                    if (cancellationExpression != null && cancellationExpression()) return null;
+
+                    string line = sr.ReadLine();
+
+                    if (line.StartsWith("v "))
+                    {
+                        string vertexString = line.Substring(2);
+                        vertices.Add(GetVector3FromObjString(vertexString));
+                    }
+                    else if (line.StartsWith("usemtl "))
+                    {
+                        if (materialName != null)
+                            materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+
+                        materialName = line.Substring(7);
+                        materialVerticesIndexes.Clear();
+                    }
+                    else if (line.StartsWith("f "))
+                    {
+                        string[] indexes = line.Substring(2).Split(' ');
+
+                        for (int i = 0; i < indexes.Length; i++)
+                        {
+                            int index = GetFirstNumber(indexes[i]);
+                            if (!materialVerticesIndexes.Contains(index)) materialVerticesIndexes.Add(index);
+                        }
+                    }
+                }
+
+                if (!materialVertexesPacks.ContainsKey(materialName))
+                    materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+            }
+
+            return materialVertexesPacks;
+        }
+
+        private int GetFirstNumber(string str)
+        {
+            int i = 0;
+            while (char.IsNumber(str[i])) { ++i; };
+
+            return int.Parse(str.Substring(0, i));
+        }
+
+        private Vector3 GetVector3FromObjString(string str)
+        {
+            Vector3 vec = new Vector3(0, 0, 0);
+            int i = 0;
+            for (int elem = 0; elem < 3; elem++)
+            {
+                int e = str.IndexOf(' ', i);
+                if (e < 0) e = str.Length;
+                vec[elem] = str.Substring(i, e - i).MakeFloat();
+                i = str.EndOfCharRepetition(e);
+            }
+            return vec;
+        }
+
+        private List<Vector3> IndexesToVertices(List<Vector3> vertices, List<int> indexes)
+        {
+            List<Vector3> indexesVertices = new List<Vector3>(indexes.Count);
+
+            for (int i = 0; i < indexes.Count; i++)
+            {
+                indexesVertices.Add(vertices[indexes[i] - 1]);
+            }
+
+            return indexesVertices;
         }
         #endregion
 

@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using OrbCreationExtensions;
 using EMSP.Data.Serialization.EMSV.Exceptions;
 using EMSP.Logging;
+using EMSP.Data.OBJ;
 
 namespace EMSP.Data.Serialization.EMSV.Versions
 {
@@ -136,52 +137,8 @@ namespace EMSP.Data.Serialization.EMSV.Versions
 
         private Dictionary<string, List<Vector3>> GetDataFromOBJ(string pathToOBJ)
         {
-            Log.WriteOperation("Started_EMSVSerializer_GetDataFromOBJ");
-
-            Dictionary<string, List<Vector3>> materialVertexesPacks = new Dictionary<string, List<Vector3>>();
-
-            using (StreamReader sr = new StreamReader(pathToOBJ))
-            {
-                List<Vector3> tempList = new List<Vector3>();
-
-                while (!sr.EndOfStream)
-                {
-                    if (_isCanceled) return null;
-
-                    string line = sr.ReadLine();
-
-                    if (line.StartsWith("usemtl"))
-                    {
-                        string matName = line.Substring(7);
-
-                        if (!materialVertexesPacks.ContainsKey(matName)) materialVertexesPacks.Add(matName, new List<Vector3>());
-
-                        materialVertexesPacks[matName].AddRange(tempList);
-                        tempList.Clear();
-                    }
-                    else if (line.StartsWith("v"))
-                    {
-                        string vertexString = line.Substring(2);
-                        tempList.Add(GetVector3FromObjString(vertexString));
-                    }
-                }
-            }
-
-            return materialVertexesPacks;
-        }
-
-        private Vector3 GetVector3FromObjString(string str)
-        {
-            Vector3 vec = new Vector3(0, 0, 0);
-            int i = 0;
-            for (int elem = 0; elem < 3; elem++)
-            {
-                int e = str.IndexOf(' ', i);
-                if (e < 0) e = str.Length;
-                vec[elem] = str.Substring(i, e - i).MakeFloat();
-                i = str.EndOfCharRepetition(e);
-            }
-            return vec;
+            OBJImporter importer = new OBJImporter();
+            return importer.GetVerticesInfoFromOBJ(pathToOBJ, () => _isCanceled);
         }
 
         public override Dictionary<string, List<Vector3>> Deserialize(Stream stream)

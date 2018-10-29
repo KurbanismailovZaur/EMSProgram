@@ -245,13 +245,20 @@ namespace EMSP.App
             WiringManager.Instance.SaveWiring(path);
         }
 
-        private void ExportVertices()
+        public void ExportVerticesFromOBJ()
         {
-            string path = StandaloneFileBrowser.SaveFilePanel("Сохранить вершины", Application.dataPath, "Вершины", "xls");
+            string[] results = StandaloneFileBrowser.OpenFilePanel("Выберите OBJ", Application.dataPath, GameSettings.Instance.ModelExtensionFilter, false);
+
+            if (results.Length == 0)
+            {
+                return;
+            }
+
+            string path = StandaloneFileBrowser.SaveFilePanel("Укажите файл для сохранения результата", Application.dataPath, "Вершины", "xls");
 
             if (string.IsNullOrEmpty(path)) return;
 
-            _wiringDataWriter.ExportModelVertices(path, ModelManager.Instance.Model);
+            _wiringDataWriter.ExportVerticesFromOBJ(results[0], path);
         }
 
         private void GenerateVerticesBasedOnOBJ()
@@ -421,7 +428,7 @@ namespace EMSP.App
                     break;
                 case FileContextMethods.ActionType.ExportVertices:
                     Log.WriteOperation("Starting_ExportVertices");
-                    ExportVertices();
+                    ExportVerticesFromOBJ();
                     break;
                 case FileContextMethods.ActionType.GenerateVerticesBasedOnOBJ:
                     Log.WriteOperation("Starting_GenerateVerticesBasedOnOBJ");

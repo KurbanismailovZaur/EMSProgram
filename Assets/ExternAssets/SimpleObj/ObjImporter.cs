@@ -845,7 +845,7 @@ public class ObjImporter
         return vec;
     }
 
-    private static List<int[]> GetFaceIndexesFromObjString(string str)
+    public static List<int[]> GetFaceIndexesFromObjString(string str)
     {
         List<int[]> corners = new List<int[]>();
         int i = 0;

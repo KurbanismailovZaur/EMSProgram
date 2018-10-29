@@ -39,6 +39,8 @@ namespace EMSP.Logging
 
         #region Behaviour
         #region Properties
+        public static bool IsInitialized { get { return _isInitialized; } }
+
 #if UNITY_EDITOR
         private static string PathToFile { get { return Path.Combine(Path.Combine(Path.GetDirectoryName(Application.dataPath), "Others"), _filename); } }
 #elif UNITY_STANDALONE
