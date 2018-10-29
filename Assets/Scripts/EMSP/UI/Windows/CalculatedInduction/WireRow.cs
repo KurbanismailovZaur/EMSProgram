@@ -34,17 +34,24 @@ namespace EMSP.UI.Windows.CalculatedInduction
                 wireRow._representableWire = precomputed.Key;
                 wireRow._precomputedValue = precomputed.Value;
 
+                //for (int timeIndex = 0; timeIndex < calculated.Length; ++ timeIndex)
+                //{
+                //    foreach (var kvp in calculated[timeIndex].CalculatedValue)
+                //    {
+                //        if (kvp.Key == wireRow._representableWire)
+                //        {
+                //            wireRow._calculatedValues.Add(timeIndex, kvp.Value);
+                //        }
+                //    }
+                //}
 
-                for (int timeIndex = 0; timeIndex < calculated.Length; ++ timeIndex)
+
+                for (int timeIndex = 0; timeIndex < Timing.TimeManager.Instance.StepsCount; ++timeIndex)
                 {
-                    foreach(var kvp in calculated[timeIndex].CalculatedValue)
-                    {
-                        if(kvp.Key == wireRow._representableWire)
-                        {
-                            wireRow._calculatedValues.Add(timeIndex, kvp.Value);
-                        }
-                    }
+                    wireRow._calculatedValues.Add(timeIndex, precomputed.Value);
                 }
+
+
 
                 if (mode == AmperageMode.Precomputed)
                 {

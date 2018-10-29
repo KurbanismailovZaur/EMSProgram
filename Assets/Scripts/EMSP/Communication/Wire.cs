@@ -37,6 +37,30 @@ namespace EMSP.Communication
             }
         }
 
+        public class WireSegmentMath
+        {
+            public readonly Vector3 PointA;
+            public readonly Vector3 PointB;
+            public readonly Vector3 Vector;
+            public readonly float Lenght;
+
+            public WireSegmentMath(Vector3 a, Vector3 b)
+            {
+                PointA = a;
+                PointB = b;
+
+                //Vector3 vector = new Vector3();
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    vector[i] = b[i] - a[i];
+                //}
+
+                Vector = b - a;
+                Lenght = Vector3.Distance(a, b);
+            }
+
+        }
+
         [Serializable]
         public class GeometryChangedEvent : UnityEvent<Wire, ReadOnlyCollection<Vector3>> { }
         #endregion
@@ -56,7 +80,9 @@ namespace EMSP.Communication
 
         private List<Vector3> _localPoints = new List<Vector3>();
 
-        private Dictionary<int, WireSegment> _segments = new Dictionary<int, WireSegment>();
+        private List<WireSegmentMath> _segmentsMath = new List<WireSegmentMath>();
+
+        private Dictionary<int, WireSegmentVisual> _segmentsVisual = new Dictionary<int, WireSegmentVisual>();
         #endregion
 
         #region Events
@@ -84,13 +110,15 @@ namespace EMSP.Communication
             }
         }
 
-        public ReadOnlyCollection<WireSegment> Segments
+        public ReadOnlyCollection<WireSegmentVisual> SegmentsVisual
         {
             get
             {
-                return _segments.Values.ToList().AsReadOnly();
+                return _segmentsVisual.Values.ToList().AsReadOnly();
             }
         }
+
+        public List<WireSegmentMath> SegmentsMath { get { return _segmentsMath; } }
 
         public int Count { get { return _localPoints.Count; } }
 
@@ -196,27 +224,31 @@ namespace EMSP.Communication
             int segmetsCount = _localPoints.Count - 1;
 
 
-            for (int i = 0; i < _segments.Count; ++i)
+            for (int i = 0; i < _segmentsVisual.Count; ++i)
             {
-                Destroy(_segments[i].gameObject);
+                Destroy(_segmentsVisual[i].gameObject);
             }
             transform.DetachChildren();
-            _segments.Clear();
+            _segmentsVisual.Clear();
+            _segmentsMath.Clear();
+
             if (segmetsCount < 1)
                 return;
 
 
-            var segmentFactory = new WireSegment.Factory(this);
+            var segmentFactory = new WireSegmentVisual.Factory(this);
             for (int segmentIndex = 0; segmentIndex < segmetsCount; ++segmentIndex)
             {
-                var segment = segmentFactory.Create(
+                var segmentVisual = segmentFactory.Create(
                     transform.TransformPoint(_localPoints[segmentIndex]),
                     transform.TransformPoint(_localPoints[segmentIndex + 1]),
                     segmentIndex
                     );
-                segment.transform.SetParent(transform, true);
+                segmentVisual.transform.SetParent(transform, true);
+                _segmentsVisual.Add(segmentIndex, segmentVisual);
 
-                _segments.Add(segmentIndex, segment);
+                var segmentMath = new WireSegmentMath(_localPoints[segmentIndex], _localPoints[segmentIndex + 1]);
+                _segmentsMath.Add(segmentMath);
             }
         }
 
@@ -237,23 +269,23 @@ namespace EMSP.Communication
             return bounds;
         }
 
-        public WireSegment GetSegment(int segmentNumber)
+        public WireSegmentVisual GetVisualSegment(int segmentNumber)
         {
-            return _segments[segmentNumber];
+            return _segmentsVisual[segmentNumber];
         }
 
         public void SetWireHighlight(bool value)
         {
             if(value)
             {
-                foreach(var segment in _segments.Values)
+                foreach(var segment in _segmentsVisual.Values)
                 {
                     segment.SetHighlight(Color.green);
                 }
             }
             else
             {
-                foreach (var segment in _segments.Values)
+                foreach (var segment in _segmentsVisual.Values)
                 {
                     segment.DisableHighlight();
                 }
@@ -265,6 +297,16 @@ namespace EMSP.Communication
         public Vector3 this[int index]
         {
             get { return _localPoints[index]; }
+        }
+
+        public static bool operator == (Wire a, Wire b)
+        {
+            return a.Name == b.Name;
+        }
+
+        public static bool operator !=(Wire a, Wire b)
+        {
+            return a.Name != b.Name;
         }
         #endregion
 

@@ -13,19 +13,19 @@ namespace EMSP.Mathematic
 
         private Dictionary<Wire, float> _calculatedValue;
 
-        private float _summaryCalculatedValue;
+        private float _maxCalculatedValue;
 
         public float Time { get { return _time; } }
 
-        public float SummaryCalculatedValue { get { return _summaryCalculatedValue; } }
+        public float MaxCalculatedValue { get { return _maxCalculatedValue; } }
 
         public Dictionary<Wire, float> CalculatedValue { get { return _calculatedValue; } }
 
-        public VectorableCalculatedValueInTime(float time, Dictionary<Wire, float> calculatedValue, float summaryCalculatedValue)
+        public VectorableCalculatedValueInTime(float time, Dictionary<Wire, float> calculatedValue, float maxCalculatedValue)
         {
             _time = time;
             _calculatedValue = calculatedValue;
-            _summaryCalculatedValue = summaryCalculatedValue;
+            _maxCalculatedValue = maxCalculatedValue;
         }
     }
 }

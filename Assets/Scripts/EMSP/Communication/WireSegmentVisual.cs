@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 namespace EMSP.Communication
 {
     [RequireComponent(typeof(CapsuleCollider))]
-    public class WireSegment : MonoBehaviour
+    public class WireSegmentVisual : MonoBehaviour
     {
         #region Entities
         #region Enums
@@ -35,10 +35,10 @@ namespace EMSP.Communication
                 _generalWire = generaltWire;
             }
 
-            public WireSegment Create(Vector3 startPoint, Vector3 endPoint, int segmentNumber)
+            public WireSegmentVisual Create(Vector3 startPoint, Vector3 endPoint, int segmentNumber)
             {
                 // Create
-                WireSegment segment = new GameObject("WireSegment_" + segmentNumber).AddComponent<WireSegment>();
+                WireSegmentVisual segment = new GameObject("WireSegment_" + segmentNumber).AddComponent<WireSegmentVisual>();
 
                 // Transform and Collider
                 CapsuleCollider collider = segment.GetComponent<CapsuleCollider>();
@@ -115,23 +115,25 @@ namespace EMSP.Communication
         #endregion
 
         #region Constructors
-        private WireSegment() { }
+        private WireSegmentVisual() { }
         #endregion
 
         #region Methods
 
         public void SetHighlight(AmperageMode mode, int currentTimeStep)
         {
-            if (mode == AmperageMode.Precomputed)
-            {
-                _line.material.color = _colorsByTime[-1];
-            }
-            else if (mode == AmperageMode.Computational)
-            {
-                _line.material.color = _colorsByTime[currentTimeStep];
-            }
-            else
-                Debug.LogError("Unexpected AmperageMode");
+            //if (mode == AmperageMode.Precomputed)
+            //{
+            //    _line.material.color = _colorsByTime[-1];
+            //}
+            //else if (mode == AmperageMode.Computational)
+            //{
+            //    _line.material.color = _colorsByTime[currentTimeStep];
+            //}
+            //else
+            //    Debug.LogError("Unexpected AmperageMode");
+
+             _line.material.color = _colorsByTime[-1];
         }
 
         public void SetHighlight(Color color)

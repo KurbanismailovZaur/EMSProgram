@@ -607,7 +607,7 @@ namespace EMSP.App
             {
                 if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.Induction.IsCalculated)
                 {
-                    _timeLine.Show();
+                    //_timeLine.Show();
                 }
 
                 _tensionFilterSlider.Show();

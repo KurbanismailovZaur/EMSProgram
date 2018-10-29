@@ -41,9 +41,9 @@ namespace EMSP.Mathematic
 
         private MaxCalculatedValues _maxCalculatedValues;
 
-        private Dictionary<WireSegment, VectorableCalculatedValueInfo> _calculated = new Dictionary<WireSegment, VectorableCalculatedValueInfo>();
+        private Dictionary<WireSegmentVisual, VectorableCalculatedValueInfo> _calculated = new Dictionary<WireSegmentVisual, VectorableCalculatedValueInfo>();
 
-        private WireSegment _selectedSegment;
+        private WireSegmentVisual _selectedSegment;
 
         private int _currentTimeIndex;
 
@@ -153,6 +153,9 @@ namespace EMSP.Mathematic
 
             float maxPrecomputedValue = 0;
             float maxCalculatedValue = 0;
+
+            #region old_mockup
+            /*
             foreach (var wire in wiring)
             {
                 int segmentCount = wire.LocalPoints.Count - 1;
@@ -210,7 +213,91 @@ namespace EMSP.Mathematic
                 if (maxPrecomutedSummaryValueOfSegments > maxPrecomputedValue) maxPrecomputedValue = maxPrecomutedSummaryValueOfSegments;
                 if (maxCalculatedSummaryValueOfSegments > maxCalculatedValue) maxCalculatedValue = maxCalculatedSummaryValueOfSegments;
             }
+            */
+            #endregion
 
+            Data ResultData = Calculator.Calculate(new Data()
+            {
+                { "wiring", wiring },
+            });
+
+            Induction.InductionCalculator.InductionResultCalculation[] result = ResultData.GetValue<Induction.InductionCalculator.InductionResultCalculation[]>("result");
+
+
+            foreach(var wirePair in result)
+            {
+                Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
+                Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
+
+                float maxForA = wirePair.Value;
+                float maxForB = wirePair.Value;
+
+                dictForWireA.Add(wirePair.WireB, wirePair.Value);
+                dictForWireB.Add(wirePair.WireA, wirePair.Value);
+
+
+                foreach (var wp in result)
+                {
+                    if (wp == wirePair) continue;
+
+                    if (wirePair.WireA == wp.WireA)
+                    {
+                        if(!dictForWireA.ContainsKey(wp.WireB))
+                            dictForWireA.Add(wp.WireB, wp.Value);
+
+                        if (wp.Value > maxForA) maxForA = wp.Value;
+                    }
+
+                    if (wirePair.WireA == wp.WireB)
+                    {
+                        if (!dictForWireA.ContainsKey(wp.WireA))
+                            dictForWireA.Add(wp.WireA, wp.Value);
+
+                        if (wp.Value > maxForA) maxForA = wp.Value;
+                    }
+
+
+                    if (wirePair.WireB == wp.WireA)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireB))
+                            dictForWireB.Add(wp.WireB, wp.Value);
+
+                        if (wp.Value > maxForB) maxForB = wp.Value;
+                    }
+
+                    if (wirePair.WireB == wp.WireB)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireA))
+                            dictForWireB.Add(wp.WireA, wp.Value);
+
+                        if (wp.Value > maxForB) maxForB = wp.Value;
+                    }
+                }
+
+
+
+
+                
+                foreach (var segment in wirePair.WireA.SegmentsVisual)
+                {
+                    if(!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireA, maxForA, null));
+                }
+
+                foreach (var segment in wirePair.WireB.SegmentsVisual)
+                {
+                    if (!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireB, maxForB, null));
+                }
+            }
+
+
+
+
+
+            maxPrecomputedValue = maxCalculatedValue = ResultData.GetValue<float>("maxValue");
+
+            // always need
             _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
 
             _valueFilterRange = new Range(0f, _maxCalculatedValues.Max);
@@ -222,7 +309,7 @@ namespace EMSP.Mathematic
             Calculated.Invoke(this);
         }
 
-        public void ShowCalculatedFor(WireSegment segment)
+        public void ShowCalculatedFor(WireSegmentVisual segment)
         {
             if (!IsCalculated) return;
 
@@ -232,7 +319,7 @@ namespace EMSP.Mathematic
                     ((CalculatedInductionWindow)_calculatedWindow).DrawCalculated(_calculated[segment], _amperageMode, _currentTimeIndex);
                     break;
                 default:
-                    Debug.LogError("Unexpeted CalculationType = " + Type.ToString());
+                    Debug.LogError("Unexpected CalculationType = " + Type.ToString());
                     break;
             }
 
@@ -253,22 +340,28 @@ namespace EMSP.Mathematic
 
         private void CalculateAndSetSegmentsColorsByTime()
         {
-            foreach(var calculatedInfo in _calculated)
+            foreach (var calculatedInfo in _calculated)
             {
-                float precomputedGradientValue = calculatedInfo.Value.PrecomputedSummaryValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f);
+                float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f);
                 Dictionary<int, float> calculatedGradientValues = new Dictionary<int, float>();
 
-                int timeIndex = 0;
-                foreach(var valueInTime in calculatedInfo.Value.CalculatedValueInTime)
+                //int timeIndex = 0;
+                //foreach (var valueInTime in calculatedInfo.Value.CalculatedValueInTime)
+                //{
+                //    calculatedGradientValues.Add(timeIndex, valueInTime.MaxCalculatedValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f));
+                //    ++timeIndex;
+                //}
+
+                for (int timeIndex = 0; timeIndex < Timing.TimeManager.Instance.StepsCount; ++timeIndex)
                 {
-                    calculatedGradientValues.Add(timeIndex, valueInTime.SummaryCalculatedValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f));
-                    ++timeIndex;
+                    calculatedGradientValues.Add(timeIndex, precomputedGradientValue);
                 }
+
 
                 Dictionary<int, Color> colorsByTime = new Dictionary<int, Color>();
 
                 colorsByTime.Add(-1, _valuesGradient.Evaluate(precomputedGradientValue));
-                foreach(var gradientInfo in calculatedGradientValues)
+                foreach (var gradientInfo in calculatedGradientValues)
                 {
                     colorsByTime.Add(gradientInfo.Key, _valuesGradient.Evaluate(gradientInfo.Value));
                 }
@@ -277,7 +370,7 @@ namespace EMSP.Mathematic
             }
         }
 
-        private void HighLightSelectedSegment(WireSegment segment)
+        private void HighLightSelectedSegment(WireSegmentVisual segment)
         {
             DisableCurrentSegmentHighlightning();
 
@@ -288,7 +381,7 @@ namespace EMSP.Mathematic
         private void DisableCurrentSegmentHighlightning()
         {
             if (_selectedSegment == null) return;
-            foreach (var segment in _selectedSegment.GeneralWire.Segments)
+            foreach (var segment in _selectedSegment.GeneralWire.SegmentsVisual)
             {
                 segment.DisableHighlight();
             }
@@ -298,7 +391,7 @@ namespace EMSP.Mathematic
         {
             if (_selectedSegment == null) return;
 
-            foreach (var segment in _selectedSegment.GeneralWire.Segments)
+            foreach (var segment in _selectedSegment.GeneralWire.SegmentsVisual)
             {
                 segment.SetHighlight(_amperageMode, _currentTimeIndex);
             }

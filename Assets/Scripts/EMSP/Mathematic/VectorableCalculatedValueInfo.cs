@@ -9,28 +9,28 @@ namespace EMSP.Mathematic
     [Serializable]
     public struct VectorableCalculatedValueInfo
     {
-        private WireSegment _segment;
+        private WireSegmentVisual _segment;
 
         private Dictionary<Wire, float> _precomputedValue;
 
-        private float _precomputedSummaryValue;
+        private float _precomputedMaxValue;
 
         private VectorableCalculatedValueInTime[] _calculatedValueInTime;
 
 
-        public WireSegment Segment { get { return _segment; } }
+        public WireSegmentVisual Segment { get { return _segment; } }
 
         public Dictionary<Wire, float> PrecomputedValue { get { return _precomputedValue; } }
 
-        public float PrecomputedSummaryValue { get { return _precomputedSummaryValue; } }
+        public float PrecomputedMaxValue { get { return _precomputedMaxValue; } }
 
         public VectorableCalculatedValueInTime[] CalculatedValueInTime { get { return _calculatedValueInTime; } }
 
-        public VectorableCalculatedValueInfo(WireSegment segmentKey, Dictionary<Wire, float> precomputedValue, float precomputedSummaryValue, VectorableCalculatedValueInTime[] calculatedValueInTime)
+        public VectorableCalculatedValueInfo(WireSegmentVisual segmentKey, Dictionary<Wire, float> precomputedValue, float precomputedMaxValue, VectorableCalculatedValueInTime[] calculatedValueInTime)
         {
             _segment = segmentKey;
             _precomputedValue = precomputedValue;
-            _precomputedSummaryValue = precomputedSummaryValue;
+            _precomputedMaxValue = precomputedMaxValue;
             _calculatedValueInTime = calculatedValueInTime;
         }
     }
