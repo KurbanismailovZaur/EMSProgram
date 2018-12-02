@@ -114,6 +114,11 @@ namespace EMSP.Logging
 
         private static void WriteLineWithSquareBrackets(object obj)
         {
+            if (!Log.IsInitialized)
+            {
+                return;
+            }
+
             _writer.WriteLine(WrapInSquareBrackets(obj));
         }
 
