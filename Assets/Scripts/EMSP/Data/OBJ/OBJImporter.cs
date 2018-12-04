@@ -184,10 +184,7 @@ namespace EMSP.Data.OBJ
                     {
                         if (faceWasUsed)
                         {
-                            if (!materialVertexesPacks.ContainsKey(materialName))
-                                materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
-                            else
-                                materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+                            AddVerticesToPack(materialVertexesPacks, materialName, IndexesToGeometryCenterVertices(vertices, materialVerticesIndexes));
 
                             //vertices.Clear();
                             materialName = null;
@@ -201,10 +198,7 @@ namespace EMSP.Data.OBJ
                     else if (line.StartsWith("usemtl "))
                     {
                         if (materialName != null)
-                            if (!materialVertexesPacks.ContainsKey(materialName))
-                                materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
-                            else
-                                materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+                            AddVerticesToPack(materialVertexesPacks, materialName, IndexesToGeometryCenterVertices(vertices, materialVerticesIndexes));
 
                         materialName = line.Substring(7);
                         materialVerticesIndexes.Clear();
@@ -218,18 +212,27 @@ namespace EMSP.Data.OBJ
                         for (int i = 0; i < indexes.Length; i++)
                         {
                             int index = GetFirstNumber(indexes[i]);
-                            if (!materialVerticesIndexes.Contains(index)) materialVerticesIndexes.Add(index);
+                            materialVerticesIndexes.Add(index);
+                            //if (!materialVerticesIndexes.Contains(index)) materialVerticesIndexes.Add(index);
                         }
                     }
                 }
 
                 if (!materialVertexesPacks.ContainsKey(materialName))
-                    materialVertexesPacks.Add(materialName, IndexesToVertices(vertices, materialVerticesIndexes));
+                    materialVertexesPacks.Add(materialName, IndexesToGeometryCenterVertices(vertices, materialVerticesIndexes));
                 else
-                    materialVertexesPacks[materialName].AddRange(IndexesToVertices(vertices, materialVerticesIndexes));
+                    materialVertexesPacks[materialName].AddRange(IndexesToGeometryCenterVertices(vertices, materialVerticesIndexes));
             }
 
             return materialVertexesPacks;
+        }
+
+        private void AddVerticesToPack(Dictionary<string, List<Vector3>> materialVertexesPacks, string materialName, List<Vector3> vertices)
+        {
+            if (!materialVertexesPacks.ContainsKey(materialName))
+                materialVertexesPacks.Add(materialName, vertices);
+            else
+                materialVertexesPacks[materialName].AddRange(vertices);
         }
 
         private int GetFirstNumber(string str)
@@ -254,13 +257,13 @@ namespace EMSP.Data.OBJ
             return vec;
         }
 
-        private List<Vector3> IndexesToVertices(List<Vector3> vertices, List<int> indexes)
+        private List<Vector3> IndexesToGeometryCenterVertices(List<Vector3> vertices, List<int> indexes)
         {
             List<Vector3> indexesVertices = new List<Vector3>(indexes.Count);
 
-            for (int i = 0; i < indexes.Count; i++)
+            for (int i = 0; i < indexes.Count; i += 3)
             {
-                indexesVertices.Add(vertices[indexes[i] - 1]);
+                indexesVertices.Add((vertices[indexes[i] - 1] + vertices[indexes[i + 1] - 1] + vertices[indexes[i + 2] - 1]) / 3f);
             }
 
             return indexesVertices;

@@ -108,10 +108,10 @@ namespace EMSP.Future
                             // Вычисление длин отрезков между проводами.
                             Dictionary<string, float> pp_segments = new Dictionary<string, float>
                             {
-                                {"A1A2", (float)Math.Round(Vector3.Distance(wire_compare.nodes[n_compare], wire_current.nodes[n_current]), 3)},
-                                {"B1A2", (float)Math.Round(Vector3.Distance(wire_compare.nodes[n_compare + 1], wire_current.nodes[n_current]), 3)},
-                                {"A1B2", (float)Math.Round(Vector3.Distance(wire_compare.nodes[n_compare], wire_current.nodes[n_current + 1]), 3)},
-                                {"B1B2", (float)Math.Round(Vector3.Distance(wire_compare.nodes[n_compare + 1], wire_current.nodes[n_current + 1]), 3)},
+                                {"A1A2", Vector3.Distance(wire_compare.nodes[n_compare], wire_current.nodes[n_current])},
+                                {"B1A2", Vector3.Distance(wire_compare.nodes[n_compare + 1], wire_current.nodes[n_current])},
+                                {"A1B2", Vector3.Distance(wire_compare.nodes[n_compare], wire_current.nodes[n_current + 1])},
+                                {"B1B2", Vector3.Distance(wire_compare.nodes[n_compare + 1], wire_current.nodes[n_current + 1])},
                             };
 
                             // Вычисление косинуса угла между отрезками.
@@ -235,39 +235,106 @@ namespace EMSP.Future
                                 float a1by = node_compare.y + t1 * bpl_current;
                                 float a1bz = node_compare.z + t1 * cpl_current;
 
+                                int xy = 0, xz = 0, yz = 0;
+
+                                if (p1y * p2x - p2y * p1x != 0)
+                                    xy = 100;
+
+                                if (p1z * p2x - p2z * p1x != 0)
+                                    xz = 10;
+
+                                if (p1z * p2y - p2z * p1y != 0)
+                                    yz = 1;
+
+                                int xyz = xy + xz + yz;
+
                                 // Находим координаты точки о2
                                 float o2x = 0;
                                 float o2y = 0;
                                 float o2z = 0;
 
-                                if (p1y * p2x - p2y * p1x == 0)
+                                #region старый вариант
+                                //if (p1y * p2x - p2y * p1x == 0)
+                                //{
+                                //    o2x = (a1bx * p1z * p2x - node_current.x * p2z * p1x - a1bz * p1x * p2x
+                                //        + node_current.z * p1x * p2x) / (p1z * p2x - p2z * p1x);
+
+                                //    o2y = (a1by * p1z * p2y - node_current.y * p2z * p1y - a1bz * p1y * p2y
+                                //        + node_current.z * p1y * p2y) / (p1z * p2y - p2z * p1y);
+
+                                //    o2z = (a1bz * p1y * p2z - node_current.z * p2y * p1z - a1by * p1z * p2z
+                                //        + node_current.y * p1z * p2z) / (p1y * p2z - p2y * p1z);
+                                //}
+                                //else
+                                //{
+                                //    o2x = (a1bx * p1y * p2x - node_current.x * p2y * p1x - a1by * p1x * p2x
+                                //        + node_current.y * p1x * p2x) / (p1y * p2x - p2y * p1x);
+
+                                //    o2y = (a1by * p1x * p2y - node_current.y * p2x * p1y - a1bx * p1y * p2y
+                                //        + node_current.x * p1y * p2y) / (p1x * p2y - p2x * p1y);
+
+                                //    if (p1y * p2z - p2y * p1z == 0)
+                                //    {
+                                //        o2z = (a1bz * p1x * p2z - node_current.z * p2x * p1z - a1bx * p1z * p2z
+                                //        + node_current.x * p1z * p2z) / (p1x * p2z - p2x * p1z);
+                                //    }
+                                //    else
+                                //    {
+                                //        o2z = (a1bz * p1y * p2z - node_current.z * p2y * p1z - a1by * p1z * p2z
+                                //        + node_current.y * p1z * p2z) / (p1y * p2z - p2y * p1z);
+                                //    }
+                                //}
+                                #endregion
+
+                                if (xyz >= 100)
                                 {
-                                    o2x = (a1bx * p1z * p2x - node_current.x * p2z * p1x - a1bz * p1x * p2x
-                                        + node_current.z * p1x * p2x) / (p1z * p2x - p2z * p1x);
+                                    o2x = (a1bx * p1y * p2x - node_current.x * p2y * p1x - a1by * p1x * p2x + node_current.y * p1x * p2x) / (p1y * p2x - p2y * p1x);
 
-                                    o2y = (a1by * p1z * p2y - node_current.y * p2z * p1y - a1bz * p1y * p2y
-                                        + node_current.z * p1y * p2y) / (p1z * p2y - p2z * p1y);
-
-                                    o2z = (a1bz * p1y * p2z - node_current.z * p2y * p1z - a1by * p1z * p2z
-                                        + node_current.y * p1z * p2z) / (p1y * p2z - p2y * p1z);
-                                }
-                                else
-                                {
-                                    o2x = (a1bx * p1y * p2x - node_current.x * p2y * p1x - a1by * p1x * p2x
-                                        + node_current.y * p1x * p2x) / (p1y * p2x - p2y * p1x);
-
-                                    o2y = (a1by * p1x * p2y - node_current.y * p2x * p1y - a1bx * p1y * p2y
-                                        + node_current.x * p1y * p2y) / (p1x * p2y - p2x * p1y);
-
-                                    if (p1y * p2z - p2y * p1z == 0)
+                                    if (p1x == 0)
                                     {
-                                        o2z = (a1bz * p1x * p2z - node_current.z * p2x * p1z - a1bx * p1z * p2z
-                                        + node_current.x * p1z * p2z) / (p1x * p2z - p2x * p1z);
+                                        float ty = (o2x - node_current.x) / p2x;
+                                        o2y = p2y * ty + node_current.y;
+                                        o2z = p2z * ty + node_current.z;
                                     }
                                     else
                                     {
-                                        o2z = (a1bz * p1y * p2z - node_current.z * p2y * p1z - a1by * p1z * p2z
-                                        + node_current.y * p1z * p2z) / (p1y * p2z - p2y * p1z);
+                                        float tn = (o2x - a1bx) / p1x;
+                                        o2y = p1y * tn + a1by;
+                                        o2z = p1z * tn + a1bz;
+                                    }
+                                }
+                                else if (xyz >= 10)
+                                {
+                                    o2z = (a1bz * p1x * p2z - node_current.z * p2x * p1z - a1bx * p1z * p2z + node_current.x * p1z * p2z) / (p1x * p2z - p2x * p1z);
+
+                                    if (p1z == 0)
+                                    {
+                                        float ty = (o2z - node_current.z) / p2z;
+                                        o2x = p2x * ty + node_current.x;
+                                        o2y = p2y * ty + node_current.y;
+                                    }
+                                    else
+                                    {
+                                        float tn = (o2z - a1bz) / p1z;
+                                        o2x = p1x * tn + a1bx;
+                                        o2y = p1y * tn + a1by;
+                                    }
+                                }
+                                else if (xyz >= 1)
+                                {
+                                    o2y = (a1by * p1z * p2y - node_current.y * p2z * p1y - a1bz * p1y * p2y + node_current.z * p1y * p2y) / (p1z * p2y - p2z * p1y);
+
+                                    if (p1y == 0)
+                                    {
+                                        float ty = (o2y - node_current.y) / p2y;
+                                        o2x = p2x * ty + node_current.x;
+                                        o2z = p2z * ty + node_current.z;
+                                    }
+                                    else
+                                    {
+                                        float tn = (o2y - a1by) / p1y;
+                                        o2x = p1x * tn + a1bx;
+                                        o2z = p1z * tn + a1bz;
                                     }
                                 }
 
