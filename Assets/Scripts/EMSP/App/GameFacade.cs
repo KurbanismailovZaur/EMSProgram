@@ -603,11 +603,12 @@ namespace EMSP.App
         #region Induction
         public void Induction_VisibilityChanged(MathematicBase mathematicBase, bool state)
         {
+            MathematicManager.Instance.AmperageMode = AmperageMode.Precomputed;
             if (state)
             {
                 if (MathematicManager.Instance.AmperageMode == AmperageMode.Computational && MathematicManager.Instance.Induction.IsCalculated)
                 {
-                    //_timeLine.Show();
+                    _timeLine.Show();
                 }
 
                 _tensionFilterSlider.Show();
