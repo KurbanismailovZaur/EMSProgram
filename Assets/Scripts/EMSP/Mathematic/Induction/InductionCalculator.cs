@@ -251,6 +251,8 @@ namespace EMSP.Mathematic.Induction
                                         - (length_segment_current + d) * Mathf.Log(length_segment_current + d)
                                         * cos_segment);
 
+                                    if (resultValue < 0) resultValue *= -1;
+
                                     M[ind_m].Add(resultValue);
 
                                     M[ind_m].WireA = wire_compare;
@@ -301,6 +303,9 @@ namespace EMSP.Mathematic.Induction
                                          + dt * Mathf.Log(dt + Hypot(dt, h))
                                          - Hypot(af, h) + Hypot(bt, h)
                                          + Hypot(gm, h) - Hypot(dt, h)) * cos_segment;
+
+                                    if (resultValue < 0) resultValue *= -1;
+
 
                                     M[ind_m].Add(resultValue);
 
@@ -489,6 +494,9 @@ namespace EMSP.Mathematic.Induction
                                     - x1 * Math.Tanh(length_segment_current / (pp_segments["A1A2"] + pp_segments["A1B2"]))
                                     - y1 * Math.Tanh(length_segment_compare / (pp_segments["A1A2"] + pp_segments["B1A2"]))
                                     + h / Mathf.Sin(fi) * AM));
+
+                                if (resultValue < 0) resultValue *= -1;
+
 
                                 M[ind_m].Add(resultValue);
 
