@@ -59,7 +59,7 @@ namespace EMSP.UI
         {
             get
             {
-                if(_maxValue == -1)
+                if (_maxValue == -1)
                     _maxValue = _rectTransform.parent.GetComponent<RectTransform>().rect.height;
 
                 return _maxValue;
@@ -91,26 +91,42 @@ namespace EMSP.UI
 
         public void ValidateAndSetNewYPosition(float yPosition, float handleDistance = -1)
         {
-            if (float.IsNaN(yPosition)) return;
-
-            float distance = (handleDistance == -1) ? _rangeSlider.MinHandlesDistance : handleDistance;
-
-            if (IsMin)
+            if (float.IsNaN(yPosition))
             {
-                if (yPosition < 0)
+                if (IsMin)
+                {
                     yPosition = 0;
-                else if (yPosition > MaxValue - distance)
-                    yPosition = MaxValue - distance;
+                }
+                else
+                {
+                    yPosition = _rangeSlider.MinHandlesDistance;
+                }
+
+                _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
             }
             else
             {
-                if (yPosition > MaxValue)
-                    yPosition = MaxValue;
-                else if (yPosition < distance)
-                    yPosition = distance;
+
+                float distance = (handleDistance == -1) ? _rangeSlider.MinHandlesDistance : handleDistance;
+
+                if (IsMin)
+                {
+                    if (yPosition < 0)
+                        yPosition = 0;
+                    else if (yPosition > MaxValue - distance)
+                        yPosition = MaxValue - distance;
+                }
+                else
+                {
+                    if (yPosition > MaxValue)
+                        yPosition = MaxValue;
+                    else if (yPosition < distance)
+                        yPosition = distance;
+                }
+
+                _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
             }
 
-            _rectTransform.anchoredPosition3D = new Vector3(_rectTransform.anchoredPosition3D.x, yPosition, _rectTransform.anchoredPosition3D.z);
             _rectTransform.ForceUpdateRectTransforms();
         }
         #endregion

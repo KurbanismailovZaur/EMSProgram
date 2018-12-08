@@ -188,8 +188,17 @@ namespace EMSP.UI
         {
             _valuesCount = _maxRangeValue - _minRangeValue;
             if (_minRangeLenght > _valuesCount) _minRangeLenght = _valuesCount;
-            _valuesPerPixel = _valuesCount / ((RectTransform)_handleMin.transform.parent).rect.height;
-            _minHandlesDistance = ((_minRangeLenght / (_valuesCount / 100)) / 100) * ((RectTransform)_handleMin.transform.parent).rect.height;
+
+            if (_valuesCount == 0)
+            {
+                _valuesPerPixel = 0;
+                _minHandlesDistance = 0;
+            }
+            else
+            {
+                _valuesPerPixel = _valuesCount / ((RectTransform)_handleMin.transform.parent).rect.height;
+                _minHandlesDistance = ((_minRangeLenght / (_valuesCount / 100)) / 100) * ((RectTransform)_handleMin.transform.parent).rect.height;
+            }
         }
 
         [ContextMenu("Update values")]

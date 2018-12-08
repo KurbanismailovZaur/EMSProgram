@@ -30,7 +30,7 @@ namespace EMSP.Mathematic.Induction
                 Value += value;
             }
 
-            public static bool operator == (InductionResultCalculation a, InductionResultCalculation b)
+            public static bool operator ==(InductionResultCalculation a, InductionResultCalculation b)
             {
                 if (a.WireA == b.WireA && a.WireB == b.WireB)
                     return true;
@@ -38,7 +38,7 @@ namespace EMSP.Mathematic.Induction
                     return false;
             }
 
-            public static bool operator != (InductionResultCalculation a, InductionResultCalculation b)
+            public static bool operator !=(InductionResultCalculation a, InductionResultCalculation b)
             {
                 if (a.WireA != b.WireA || a.WireB != b.WireB)
                     return true;
@@ -100,10 +100,12 @@ namespace EMSP.Mathematic.Induction
             */
             #endregion
 
+            float minValue;
             float maxValue;
             return new Data()
             {
-                { "result", Calculate(settings.GetValue<Wiring>("wiring"), out maxValue) },
+                { "result", Calculate(settings.GetValue<Wiring>("wiring"),out minValue, out maxValue) },
+                { "minValue", minValue },
                 { "maxValue", maxValue }
             };
 
@@ -162,13 +164,14 @@ namespace EMSP.Mathematic.Induction
 
 
 
-        private InductionResultCalculation[] Calculate(Wiring wiring, out float maxValue)
+        private InductionResultCalculation[] Calculate(Wiring wiring, out float minValue, out float maxValue)
         {
             // Проверка на количество проводов.
             if (wiring.Count < 2) throw new Exception("Проводов не может быть меньше 2х");
 
             float NU = 4f * Mathf.PI * Mathf.Pow(10, -7);
 
+            minValue = float.MaxValue;
             maxValue = float.MinValue;
             int ind_m = 0;
             int count_m = Factorial(wiring.Count) / (Factorial(2) * Factorial(wiring.Count - 2));
@@ -253,6 +256,7 @@ namespace EMSP.Mathematic.Induction
                                     M[ind_m].WireA = wire_compare;
                                     M[ind_m].WireB = wire_current;
 
+                                    if (resultValue < minValue) minValue = resultValue;
                                     if (resultValue > maxValue) maxValue = resultValue;
                                 }
                                 else
@@ -303,6 +307,7 @@ namespace EMSP.Mathematic.Induction
                                     M[ind_m].WireA = wire_compare;
                                     M[ind_m].WireB = wire_current;
 
+                                    if (resultValue < minValue) minValue = resultValue;
                                     if (resultValue > maxValue) maxValue = resultValue;
                                 }
                             }
@@ -490,6 +495,7 @@ namespace EMSP.Mathematic.Induction
                                 M[ind_m].WireA = wire_compare;
                                 M[ind_m].WireB = wire_current;
 
+                                if (resultValue < minValue) minValue = resultValue;
                                 if (resultValue > maxValue) maxValue = resultValue;
                             }
                         }

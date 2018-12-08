@@ -40,6 +40,7 @@ namespace EMSP.Mathematic
         private bool _isCalculated;
 
         private MaxCalculatedValues _maxCalculatedValues;
+        private float _minCalculatedValue;
 
         private Dictionary<WireSegmentVisual, VectorableCalculatedValueInfo> _calculated = new Dictionary<WireSegmentVisual, VectorableCalculatedValueInfo>();
 
@@ -151,7 +152,9 @@ namespace EMSP.Mathematic
             DestroyCalculated();
 
 
+            float minPrecomputedValue = 0;
             float maxPrecomputedValue = 0;
+            float minCalculatedValue = 0;
             float maxCalculatedValue = 0;
 
             #region old_mockup
@@ -295,12 +298,16 @@ namespace EMSP.Mathematic
 
 
 
+            minPrecomputedValue = minCalculatedValue = ResultData.GetValue<float>("minValue"); //?
             maxPrecomputedValue = maxCalculatedValue = ResultData.GetValue<float>("maxValue");
 
             // always need
             _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
+            _minCalculatedValue = minPrecomputedValue; //?
 
             _valueFilterRange = new Range(0f, _maxCalculatedValues.Max);
+            //_valueFilterRange = new Range(minPrecomputedValue, maxPrecomputedValue);
+
             CurrentValueFilterRange = _valueFilterRange;
 
             CalculateAndSetSegmentsColorsByTime();
@@ -342,7 +349,8 @@ namespace EMSP.Mathematic
         {
             foreach (var calculatedInfo in _calculated)
             {
-                float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(0f, _maxCalculatedValues.Max, 0f, 1f);
+                float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(0, _maxCalculatedValues.Max, 0f, 1f);
+                //float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(_minCalculatedValue, _maxCalculatedValues.Max, 0f, 1f);
                 Dictionary<int, float> calculatedGradientValues = new Dictionary<int, float>();
 
                 //int timeIndex = 0;
