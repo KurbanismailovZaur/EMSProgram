@@ -36,6 +36,9 @@ namespace EMSP.UI.Windows.CalculatedInduction
         private Text _selectedSegmentNameField;
 
         [SerializeField]
+        private Button _clearWindow;
+
+        [SerializeField]
         private RectTransform _rowsParent;
 
         private WireRow.Factory _wireRowFactory = new WireRow.Factory();
@@ -66,7 +69,8 @@ namespace EMSP.UI.Windows.CalculatedInduction
         {
             ClearWindow();
 
-            _selectedSegmentNameField.text = string.Format("Провод {0} сегмент {1}", calculated.Segment.GeneralWire.Name, calculated.Segment.ID);
+            _selectedSegmentNameField.text = string.Format("Провод {0}", calculated.Segment.GeneralWire.Name);
+            _clearWindow.interactable = true;
 
             foreach(var kvp in calculated.PrecomputedValue)
             {
@@ -80,7 +84,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
             return _wireRowFactory.Create(_wireRowPrefab, _rowsParent, precomputed, calculated, mode, currentTimeIndex);
         }
 
-        private void ClearWindow()
+        public void ClearWindow()
         {
             _selectedSegmentNameField.text = string.Empty;
 

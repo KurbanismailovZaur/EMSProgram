@@ -461,6 +461,11 @@ namespace EMSP.Mathematic
         #endregion
 
         #region Events handlers
+        public void InductionCalculatedWindow_OnUnselectCurrentWire()
+        {
+            DisableCurrentSegmentHighlightning(true);
+            ((CalculatedInductionWindow)_calculatedWindow).ClearWindow();
+        }
         #endregion
         #endregion
     }
