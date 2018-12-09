@@ -220,9 +220,9 @@ namespace EMSP.Mathematic.Induction
                             float p1x = wire_compare.SegmentsMath[n_compare].Vector.x;
                             float p1y = wire_compare.SegmentsMath[n_compare].Vector.y;
                             float p1z = wire_compare.SegmentsMath[n_compare].Vector.z;
-                            float p2x = wire_current.SegmentsMath[n_current].Vector.x;
-                            float p2y = wire_current.SegmentsMath[n_current].Vector.y;
-                            float p2z = wire_current.SegmentsMath[n_current].Vector.z;
+                            float p2x = wire_current.SegmentsMath[n_compare].Vector.x;
+                            float p2y = wire_current.SegmentsMath[n_compare].Vector.y;
+                            float p2z = wire_current.SegmentsMath[n_compare].Vector.z;
 
                             // Если два отрезка параллельны либо соосны
                             if (cos_segment == 1 || cos_segment == -1)
