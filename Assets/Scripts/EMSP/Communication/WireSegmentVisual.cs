@@ -101,6 +101,10 @@ namespace EMSP.Communication
         private Color _defaultColor;
 
         private Dictionary<int, Color> _colorsByTime = new Dictionary<int, Color>(); // <timeIndex, color>; timeIndex = -1 - precomputed color
+
+        private bool _colorChangedByClick = false;
+        private bool _colorChangedByFilter = false;
+
         #endregion
 
         #region Events
@@ -120,7 +124,7 @@ namespace EMSP.Communication
 
         #region Methods
 
-        public void SetHighlight(AmperageMode mode, int currentTimeStep)
+        public void SetColorByInductionValue(AmperageMode mode, int currentTimeStep)
         {
             //if (mode == AmperageMode.Precomputed)
             //{
@@ -133,17 +137,53 @@ namespace EMSP.Communication
             //else
             //    Debug.LogError("Unexpected AmperageMode");
 
-             _line.material.color = _colorsByTime[-1];
+            _line.material.color = _colorsByTime[-1];
         }
 
-        public void SetHighlight(Color color)
+        public void SetHighlight(Color color, bool fromClick = false, bool fromFilter = false)
         {
+            if(fromFilter)
+            {
+                _colorChangedByFilter = true;
+                if (_colorChangedByClick) return;
+            }
+            else if(fromClick)
+            {
+                _colorChangedByClick = true;
+            }
+
+
+
             _line.material.color = color;
         }
 
-        public void DisableHighlight()
+        public void DisableHighlight(bool fromClick = false, bool fromFilter = false)
         {
-            _line.material.color = _defaultColor;
+            if(fromClick)
+            {
+                if(fromFilter)
+                {
+                    _colorChangedByClick = false;
+                    _colorChangedByFilter = false;
+                    _line.material.color = _defaultColor;
+                    return;
+                }
+
+                _colorChangedByClick = false;
+                if (_colorChangedByFilter)
+                {
+                    _line.material.color = MathematicManager.Instance.Induction.TransparentColor;
+                    return;
+                }
+            }
+            else if(fromFilter)
+            {
+                _colorChangedByFilter = false;
+                if (_colorChangedByClick) return;
+            }
+
+
+            _line.material.color = _colorsByTime[-1];
         }
 
         public void FillGradientColors(Dictionary<int, Color> colorsByTime)

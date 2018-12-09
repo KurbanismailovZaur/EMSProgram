@@ -32,6 +32,8 @@ namespace EMSP.Mathematic
 
         #region Fields
 
+        public Color TransparentColor;
+
         [SerializeField]
         private ModalWindow _calculatedWindow;
 
@@ -77,7 +79,7 @@ namespace EMSP.Mathematic
 
                 ((CalculatedInductionWindow)_calculatedWindow).OnAmperageModeChanged(_amperageMode);
 
-                UpdateSegmentsHighlight();
+                UpdateSegmentsColor();
                 // filter selected segments
             }
         }
@@ -95,10 +97,13 @@ namespace EMSP.Mathematic
                 }
 
                 if (value)
+                {
                     _calculatedWindow.ShowModal();
+                    FilterVectorsByValue(_valueFilterRange);
+                }
                 else
                 {
-                    DisableCurrentSegmentHighlightning();
+                    SetDefaultColorForAllSegments();
                     _calculatedWindow.Hide();
                 }
 
@@ -139,12 +144,25 @@ namespace EMSP.Mathematic
 
             ((CalculatedInductionWindow)_calculatedWindow).OnTimeStemChanged(_currentTimeIndex);
 
-            UpdateSegmentsHighlight();
+            UpdateSegmentsColor();
         }
 
         public void FilterVectorsByValue(Range range)
         {
+            foreach(var kvp in _calculated)
+            {
+                var val = kvp.Value.SummaryPrecomputedValue;
+                if (val > range.Max || val < range.Min)
+                {
+                    kvp.Key.SetHighlight(TransparentColor, false, true);
+                }
+                else
+                {
+                    kvp.Key.DisableHighlight(false, true);
+                }
+            }
 
+            CurrentValueFilterRange = range.Clamp(_valueFilterRange);
         }
 
         public void Calculate(Wiring wiring, IEnumerable<float> timeSteps)
@@ -226,7 +244,7 @@ namespace EMSP.Mathematic
 
             Induction.InductionCalculator.InductionResultCalculation[] result = ResultData.GetValue<Induction.InductionCalculator.InductionResultCalculation[]>("result");
 
-
+            // для каждого провода создаём список влияющих на него проводов
             foreach(var wirePair in result)
             {
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
@@ -280,7 +298,7 @@ namespace EMSP.Mathematic
 
 
 
-                
+                // для кадого сегмента провода записываем одинаковые значения - список влияющих проводов
                 foreach (var segment in wirePair.WireA.SegmentsVisual)
                 {
                     if(!_calculated.ContainsKey(segment))
@@ -298,8 +316,17 @@ namespace EMSP.Mathematic
 
 
 
-            minPrecomputedValue = minCalculatedValue = ResultData.GetValue<float>("minValue"); //?
-            maxPrecomputedValue = maxCalculatedValue = ResultData.GetValue<float>("maxValue");
+            //minPrecomputedValue = minCalculatedValue = ResultData.GetValue<float>("minValue"); //?
+            //maxPrecomputedValue = maxCalculatedValue = ResultData.GetValue<float>("maxValue");
+
+            foreach(var calcInfo in _calculated.Values)
+            {
+                var val = calcInfo.SummaryPrecomputedValue;
+                if (val < minPrecomputedValue) minPrecomputedValue = val;
+                if (val > maxPrecomputedValue) maxPrecomputedValue = val;
+            }
+            minCalculatedValue = minPrecomputedValue;
+            maxCalculatedValue = maxPrecomputedValue;
 
             // always need
             _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
@@ -311,6 +338,11 @@ namespace EMSP.Mathematic
             CurrentValueFilterRange = _valueFilterRange;
 
             CalculateAndSetSegmentsColorsByTime();
+
+
+
+            FilterVectorsByValue(CurrentValueFilterRange);
+
 
             _isCalculated = true;
             Calculated.Invoke(this);
@@ -349,7 +381,7 @@ namespace EMSP.Mathematic
         {
             foreach (var calculatedInfo in _calculated)
             {
-                float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(0, _maxCalculatedValues.Max, 0f, 1f);
+                float precomputedGradientValue = calculatedInfo.Value.SummaryPrecomputedValue.Remap(0, _maxCalculatedValues.Max, 0f, 1f);
                 //float precomputedGradientValue = calculatedInfo.Value.PrecomputedMaxValue.Remap(_minCalculatedValue, _maxCalculatedValues.Max, 0f, 1f);
                 Dictionary<int, float> calculatedGradientValues = new Dictionary<int, float>();
 
@@ -380,28 +412,47 @@ namespace EMSP.Mathematic
 
         private void HighLightSelectedSegment(WireSegmentVisual segment)
         {
-            DisableCurrentSegmentHighlightning();
+            DisableCurrentSegmentHighlightning(true);
+            FilterVectorsByValue(CurrentValueFilterRange);
 
             _selectedSegment = segment;
-            UpdateSegmentsHighlight();
+            HiglightWireBySelectedSegment(Color.blue);
         }
 
-        private void DisableCurrentSegmentHighlightning()
+        private void DisableCurrentSegmentHighlightning(bool fromClick)
         {
             if (_selectedSegment == null) return;
             foreach (var segment in _selectedSegment.GeneralWire.SegmentsVisual)
             {
-                segment.DisableHighlight();
+                segment.DisableHighlight(fromClick, false);
             }
         }
 
-        private void UpdateSegmentsHighlight()
+        private void UpdateSegmentsColor()
         {
             if (_selectedSegment == null) return;
 
             foreach (var segment in _selectedSegment.GeneralWire.SegmentsVisual)
             {
-                segment.SetHighlight(_amperageMode, _currentTimeIndex);
+                segment.SetColorByInductionValue(_amperageMode, _currentTimeIndex);
+            }
+        }
+
+        private void HiglightWireBySelectedSegment(Color color)
+        {
+            if (_selectedSegment == null) return;
+
+            foreach (var segment in _selectedSegment.GeneralWire.SegmentsVisual)
+            {
+                segment.SetHighlight(color, true);
+            }
+        }
+
+        private void SetDefaultColorForAllSegments()
+        {
+            foreach(var segment in _calculated.Keys)
+            {
+                segment.DisableHighlight(true, true);
             }
         }
         #endregion

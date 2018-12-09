@@ -9579,6 +9579,26 @@ Prefab:
       propertyPath: _valuesGradient.m_NumColorKeys
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: TransparentColor.r
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: TransparentColor.g
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: TransparentColor.b
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114365737947487060, guid: 7a7796ba9c71f7e4f92cd354134a71f3,
+        type: 2}
+      propertyPath: TransparentColor.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a7796ba9c71f7e4f92cd354134a71f3, type: 2}
   m_IsPrefabAsset: 0

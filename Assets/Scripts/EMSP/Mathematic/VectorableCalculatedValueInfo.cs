@@ -22,6 +22,8 @@ namespace EMSP.Mathematic
 
         public Dictionary<Wire, float> PrecomputedValue { get { return _precomputedValue; } }
 
+        public float SummaryPrecomputedValue { get; private set; }
+
         public float PrecomputedMaxValue { get { return _precomputedMaxValue; } }
 
         public VectorableCalculatedValueInTime[] CalculatedValueInTime { get { return _calculatedValueInTime; } }
@@ -32,6 +34,12 @@ namespace EMSP.Mathematic
             _precomputedValue = precomputedValue;
             _precomputedMaxValue = precomputedMaxValue;
             _calculatedValueInTime = calculatedValueInTime;
+
+            SummaryPrecomputedValue = 0;
+            foreach (var value in precomputedValue.Values)
+            {
+                SummaryPrecomputedValue += value;
+            }
         }
     }
 }

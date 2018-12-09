@@ -280,14 +280,14 @@ namespace EMSP.Communication
             {
                 foreach(var segment in _segmentsVisual.Values)
                 {
-                    segment.SetHighlight(Color.green);
+                    segment.SetHighlight(Color.green, true);
                 }
             }
             else
             {
                 foreach (var segment in _segmentsVisual.Values)
                 {
-                    segment.DisableHighlight();
+                    segment.DisableHighlight(true);
                 }
             }
         }
