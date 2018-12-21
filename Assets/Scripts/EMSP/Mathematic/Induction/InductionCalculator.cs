@@ -220,9 +220,9 @@ namespace EMSP.Mathematic.Induction
                             float p1x = wire_compare.SegmentsMath[n_compare].Vector.x;
                             float p1y = wire_compare.SegmentsMath[n_compare].Vector.y;
                             float p1z = wire_compare.SegmentsMath[n_compare].Vector.z;
-                            float p2x = wire_current.SegmentsMath[n_compare].Vector.x;
-                            float p2y = wire_current.SegmentsMath[n_compare].Vector.y;
-                            float p2z = wire_current.SegmentsMath[n_compare].Vector.z;
+                            float p2x = wire_current.SegmentsMath[n_current].Vector.x;
+                            float p2y = wire_current.SegmentsMath[n_current].Vector.y;
+                            float p2z = wire_current.SegmentsMath[n_current].Vector.z;
 
                             // Если два отрезка параллельны либо соосны
                             if (cos_segment == 1 || cos_segment == -1)
@@ -250,6 +250,9 @@ namespace EMSP.Mathematic.Induction
                                         - (length_segment_compare + d) * Mathf.Log(length_segment_compare + d)
                                         - (length_segment_current + d) * Mathf.Log(length_segment_current + d)
                                         * cos_segment);
+
+                                    if (float.IsNaN(resultValue)) resultValue = 0;
+                                    if (resultValue < 0) resultValue *= -1;
 
                                     M[ind_m].Add(resultValue);
 
@@ -301,6 +304,9 @@ namespace EMSP.Mathematic.Induction
                                          + dt * Mathf.Log(dt + Hypot(dt, h))
                                          - Hypot(af, h) + Hypot(bt, h)
                                          + Hypot(gm, h) - Hypot(dt, h)) * cos_segment;
+
+                                    if (float.IsNaN(resultValue)) resultValue = 0;
+                                    if (resultValue < 0) resultValue *= -1;
 
                                     M[ind_m].Add(resultValue);
 
@@ -489,6 +495,9 @@ namespace EMSP.Mathematic.Induction
                                     - x1 * Math.Tanh(length_segment_current / (pp_segments["A1A2"] + pp_segments["A1B2"]))
                                     - y1 * Math.Tanh(length_segment_compare / (pp_segments["A1A2"] + pp_segments["B1A2"]))
                                     + h / Mathf.Sin(fi) * AM));
+
+                                if (float.IsNaN(resultValue)) resultValue = 0;
+                                if (resultValue < 0) resultValue *= -1;
 
                                 M[ind_m].Add(resultValue);
 

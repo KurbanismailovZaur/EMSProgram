@@ -43,7 +43,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
 
         private WireRow.Factory _wireRowFactory = new WireRow.Factory();
 
-        private List<WireRow> _rows = new List<WireRow>(); 
+        private List<WireRow> _rows = new List<WireRow>();
         #endregion
 
         #region Events
@@ -72,7 +72,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
             _selectedSegmentNameField.text = string.Format("Провод {0}", calculated.Segment.GeneralWire.Name);
             _clearWindow.interactable = true;
 
-            foreach(var kvp in calculated.PrecomputedValue)
+            foreach (var kvp in calculated.PrecomputedValue)
             {
                 _rows.Add(CreateWireRow(kvp, calculated.CalculatedValueInTime, mode, currentTimeIndex));
 
@@ -95,6 +95,44 @@ namespace EMSP.UI.Windows.CalculatedInduction
 
             _rowsParent.DetachChildren();
         }
+
+
+        float _clickDuration = 0.035f;
+
+        bool _hasMouseDown = false;
+        float _timer = -2;
+
+        private void Update()
+        {
+            if (IsShowing)
+            {
+                if (_timer > -1) _timer -= Time.deltaTime;
+
+                if (_hasMouseDown)
+                {
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        if(_timer >= 0)
+                        {
+                            _clearWindow.onClick.Invoke();
+                            _clearWindow.interactable = false;
+                        }
+                        else
+                        {
+                            _hasMouseDown = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        _hasMouseDown = true;
+                        _timer = _clickDuration;
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Indexers
@@ -103,7 +141,7 @@ namespace EMSP.UI.Windows.CalculatedInduction
         #region Events handlers
         public void OnTimeStemChanged(int timeIndex)
         {
-            foreach(var row in _rows)
+            foreach (var row in _rows)
             {
                 row.SetTimeStep(timeIndex);
             }

@@ -249,6 +249,8 @@ namespace EMSP.Mathematic
             _magneticTension.DestroyCalculatedPoints();
             _electricField.DestroyCalculatedPoints();
             _induction.DestroyCalculated();
+
+            _currentCalculationMethod = null;
         }
         #endregion
 
