@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace EMSP.UI.Windows.CalculatedInduction
@@ -44,6 +45,14 @@ namespace EMSP.UI.Windows.CalculatedInduction
         private WireRow.Factory _wireRowFactory = new WireRow.Factory();
 
         private List<WireRow> _rows = new List<WireRow>();
+
+
+        private float _clickDuration = 0.35f;
+        private bool _hasMouseDown = false;
+        private float _timer = -2;
+        private PointerEventData _pointerData;
+        private Vector3 _previousMouseScreenPosition;
+
         #endregion
 
         #region Events
@@ -61,8 +70,17 @@ namespace EMSP.UI.Windows.CalculatedInduction
 
         public override void ShowModal()
         {
+            _pointerData = new PointerEventData(EventSystem.current);
+            _previousMouseScreenPosition = Input.mousePosition;
+
             ClearWindow();
             base.ShowModal();
+        }
+
+        public override void Hide()
+        {
+            _pointerData = null;
+            base.Hide();
         }
 
         public void DrawCalculated(VectorableCalculatedValueInfo calculated, AmperageMode mode, int currentTimeIndex)// ToDo
@@ -96,31 +114,38 @@ namespace EMSP.UI.Windows.CalculatedInduction
             _rowsParent.DetachChildren();
         }
 
-
-        float _clickDuration = 0.035f;
-
-        bool _hasMouseDown = false;
-        float _timer = -2;
-
         private void Update()
         {
             if (IsShowing)
             {
+                _pointerData.position = Input.mousePosition;
+                _pointerData.delta = Input.mousePosition - _previousMouseScreenPosition;
+                _previousMouseScreenPosition = Input.mousePosition;
+
                 if (_timer > -1) _timer -= Time.deltaTime;
 
                 if (_hasMouseDown)
                 {
                     if (Input.GetMouseButtonUp(0))
                     {
-                        if(_timer >= 0)
+                        if (_timer >= 0)
                         {
-                            _clearWindow.onClick.Invoke();
-                            _clearWindow.interactable = false;
+                            var results = new List<RaycastResult>();
+                            EventSystem.current.RaycastAll(_pointerData, results);
+
+                            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            RaycastHit hit;
+                            if (!Physics.Raycast(ray, out hit))
+                            {
+                                if (results.Count == 0 && _pointerData.delta.magnitude < 1)
+                                {
+                                    _clearWindow.onClick.Invoke();
+                                    _clearWindow.interactable = false;
+                                }
+                            }
                         }
-                        else
-                        {
-                            _hasMouseDown = false;
-                        }
+
+                        _hasMouseDown = false;
                     }
                 }
                 else
