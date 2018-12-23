@@ -91,6 +91,8 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasElectricField)
                 {
+                    writer.Write(serializableProjectBatch.ElectricFieldPointsInfo.Infos.Count);
+
                     WriteMathematicPointsInfo(writer, serializableProjectBatch.ElectricFieldPointsInfo);
                 }
                 #endregion
@@ -205,9 +207,10 @@ namespace EMSP.Data.Serialization.EMSP.Versions
 
                 if (hasElectricField)
                 {
+                    int pointsCount = reader.ReadInt32();//  (int)Mathf.Pow(settings.RangeLength, 3);
+
                     float pointSize = reader.ReadSingle();
 
-                    int pointsCount = (int)Mathf.Pow(settings.RangeLength, 3);
                     List<ElectricField.PointInfo> ptsInfo = new List<ElectricField.PointInfo>();
 
                     for (int i = 0; i < pointsCount; ++i)

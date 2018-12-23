@@ -442,6 +442,7 @@ namespace EMSP.Mathematic
         public void ShowCalculatedFor(WireSegmentVisual segment)
         {
             if (!IsCalculated) return;
+            if (!_calculatedWindow.IsShowing) return;
 
             switch (Type)
             {

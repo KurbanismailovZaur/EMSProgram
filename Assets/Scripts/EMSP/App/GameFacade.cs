@@ -664,6 +664,8 @@ namespace EMSP.App
 
             if (amperageMode == AmperageMode.Computational) _timeLine.Show();
             else _timeLine.StopAndHide();
+
+            UpdateTensionSlider(true);
         }
 
         public void MathematicManager_CalculationShowed(MathematicManager mathematicManager, ICalculationMethod calculationMethod)

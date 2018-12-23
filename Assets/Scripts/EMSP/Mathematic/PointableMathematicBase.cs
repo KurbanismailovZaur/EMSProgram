@@ -232,7 +232,7 @@ namespace EMSP.Mathematic
 
             _maxCalculatedValues = GetMaxCalculatedValues(calculatedValueInfos);
 
-            float maxCalculatedValue = _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
+            float maxCalculatedValue = _maxCalculatedValues.Max;// _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
             _pointsSize = step + (step * _pointSizeStretchPercent);
 
@@ -257,7 +257,7 @@ namespace EMSP.Mathematic
 
             _maxCalculatedValues = GetMaxCalculatedValues(calculatedValuesInfo);
 
-            float maxCalculatedValue = _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
+            float maxCalculatedValue = _maxCalculatedValues.Max;//  _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
             _pointsSize = pointsInfo.PointsSize;
 
