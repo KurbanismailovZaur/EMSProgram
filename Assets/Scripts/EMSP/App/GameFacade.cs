@@ -631,6 +631,8 @@ namespace EMSP.App
 
         public void TimeManager_TimeIndexChanged(TimeManager timeManager, int index)
         {
+            if (MathematicManager.Instance.CurrentCalculationMethod == null) return;
+
             MathematicManager.Instance.CurrentCalculationMethod.SetEntitiesToTime(index);
         }
 

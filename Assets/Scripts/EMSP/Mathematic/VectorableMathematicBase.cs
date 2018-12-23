@@ -345,6 +345,9 @@ namespace EMSP.Mathematic
 
         public void Restore(Induction.InductionCalculator.InductionResultCalculation[] result)
         {
+            _serializibleData = result;
+            if (result == null) return;
+
             float maxPrecomputedValue = 0;
             float maxCalculatedValue = 0;
 
@@ -433,7 +436,6 @@ namespace EMSP.Mathematic
 
 
             _isCalculated = true;
-            _serializibleData = result;
             Calculated.Invoke(this);
         }
 
