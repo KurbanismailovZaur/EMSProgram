@@ -94,6 +94,16 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                     WriteMathematicPointsInfo(writer, serializableProjectBatch.ElectricFieldPointsInfo);
                 }
                 #endregion
+
+                #region Induction
+                bool hasInduction = serializableProjectBatch.InductionResults != null;
+                writer.Write(hasInduction);
+
+                if (hasInduction)
+                {
+                    WriteInductionResults(writer, serializableProjectBatch.InductionResults);
+                }
+                #endregion
             }
 
             byte[] emspData = File.ReadAllBytes(TemporaryFileName);
@@ -111,6 +121,7 @@ namespace EMSP.Data.Serialization.EMSP.Versions
             Wiring wiring = null;
             MagneticTension.PointsInfo mtPointsInfo = null;
             ElectricField.PointsInfo efPointsInfo = null;
+            Mathematic.Induction.InductionCalculator.InductionResultCalculation[] inductionRes = null;
 
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -219,7 +230,24 @@ namespace EMSP.Data.Serialization.EMSP.Versions
                 }
                 #endregion
 
-                return new SerializableProjectBatch(settings, modelGameObject, wiring, mtPointsInfo, efPointsInfo);
+                #region Induction
+                bool hasInduction = reader.ReadBoolean();
+
+                if (hasInduction)
+                {
+                    int count = reader.ReadInt32();
+                    inductionRes = new Mathematic.Induction.InductionCalculator.InductionResultCalculation[count];
+
+                    for (int i = 0; i < count; ++i)
+                    {
+                        inductionRes[i].WireA = wiring.GetWireByName(ReadStringAsUnicode(reader));
+                        inductionRes[i].WireB = wiring.GetWireByName(ReadStringAsUnicode(reader));
+                        inductionRes[i].Value = reader.ReadSingle();             
+                    }
+                }
+                #endregion
+
+                return new SerializableProjectBatch(settings, modelGameObject, wiring, mtPointsInfo, efPointsInfo, inductionRes);
             }
         }
         #endregion

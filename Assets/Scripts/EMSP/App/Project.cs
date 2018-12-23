@@ -84,7 +84,12 @@ namespace EMSP.App
         private void Save()
         {
             EMSPSerializerVersion.SerializableProjectSettings serializableSettings = new EMSPSerializerVersion.SerializableProjectSettings(MathematicManager.Instance.RangeLength, TimeManager.Instance.TimeRange, TimeManager.Instance.StepsCount);
-            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, ModelManager.Instance.Model, WiringManager.Instance.Wiring, MathematicManager.Instance.MagneticTension.GetPointsInfo(), MathematicManager.Instance.ElectricField.GetPointsInfo());
+            EMSPSerializerVersion.SerializableProjectBatch serializableProjectBatch = new EMSPSerializerVersion.SerializableProjectBatch(serializableSettings, 
+                ModelManager.Instance.Model, 
+                WiringManager.Instance.Wiring, 
+                MathematicManager.Instance.MagneticTension.GetPointsInfo(), 
+                MathematicManager.Instance.ElectricField.GetPointsInfo(), 
+                MathematicManager.Instance.Induction.GetSerializibleData());
 
             _serializer.Serialize(_path, serializableProjectBatch);
 
@@ -111,6 +116,7 @@ namespace EMSP.App
 
             MathematicManager.Instance.MagneticTension.Restore(serializableProjectBatch.MagneticTensionPointsInfo);
             MathematicManager.Instance.ElectricField.Restore(serializableProjectBatch.ElectricFieldPointsInfo);
+            MathematicManager.Instance.Induction.Restore(serializableProjectBatch.InductionResults);
 
             _isChanged = false;
         }

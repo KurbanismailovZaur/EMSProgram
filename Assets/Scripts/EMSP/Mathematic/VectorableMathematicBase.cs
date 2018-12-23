@@ -129,12 +129,18 @@ namespace EMSP.Mathematic
             }
         }
 
+        private Induction.InductionCalculator.InductionResultCalculation[] _serializibleData;
+
         #endregion
 
         #region Constructors
         #endregion
 
         #region Methods
+        public Induction.InductionCalculator.InductionResultCalculation[] GetSerializibleData()
+        {
+            return _serializibleData;
+        }
 
         public void SetEntitiesToTime(int timeIndex)
         {
@@ -170,9 +176,7 @@ namespace EMSP.Mathematic
             DestroyCalculated();
 
 
-            float minPrecomputedValue = 0;
             float maxPrecomputedValue = 0;
-            float minCalculatedValue = 0;
             float maxCalculatedValue = 0;
 
             #region old_mockup
@@ -243,9 +247,10 @@ namespace EMSP.Mathematic
             });
 
             Induction.InductionCalculator.InductionResultCalculation[] result = ResultData.GetValue<Induction.InductionCalculator.InductionResultCalculation[]>("result");
+            _serializibleData = result;
 
             // для каждого провода создаём список влияющих на него проводов
-            foreach(var wirePair in result)
+            foreach (var wirePair in result)
             {
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
                 Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
@@ -313,27 +318,17 @@ namespace EMSP.Mathematic
             }
 
 
-
-
-
-            //minPrecomputedValue = minCalculatedValue = ResultData.GetValue<float>("minValue"); //?
-            //maxPrecomputedValue = maxCalculatedValue = ResultData.GetValue<float>("maxValue");
-
             foreach(var calcInfo in _calculated.Values)
             {
                 var val = calcInfo.SummaryPrecomputedValue;
-                if (val < minPrecomputedValue) minPrecomputedValue = val;
                 if (val > maxPrecomputedValue) maxPrecomputedValue = val;
             }
-            minCalculatedValue = minPrecomputedValue;
             maxCalculatedValue = maxPrecomputedValue;
 
             // always need
             _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
-            _minCalculatedValue = minPrecomputedValue; //?
 
             _valueFilterRange = new Range(0f, _maxCalculatedValues.Max);
-            //_valueFilterRange = new Range(minPrecomputedValue, maxPrecomputedValue);
 
             CurrentValueFilterRange = _valueFilterRange;
 
@@ -345,6 +340,100 @@ namespace EMSP.Mathematic
 
 
             _isCalculated = true;
+            Calculated.Invoke(this);
+        }
+
+        public void Restore(Induction.InductionCalculator.InductionResultCalculation[] result)
+        {
+            float maxPrecomputedValue = 0;
+            float maxCalculatedValue = 0;
+
+            foreach (var wirePair in result)
+            {
+                Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
+                Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
+
+                float maxForA = wirePair.Value;
+                float maxForB = wirePair.Value;
+
+                dictForWireA.Add(wirePair.WireB, wirePair.Value);
+                dictForWireB.Add(wirePair.WireA, wirePair.Value);
+
+
+                foreach (var wp in result)
+                {
+                    if (wp == wirePair) continue;
+
+                    if (wirePair.WireA == wp.WireA)
+                    {
+                        if (!dictForWireA.ContainsKey(wp.WireB))
+                            dictForWireA.Add(wp.WireB, wp.Value);
+
+                        if (wp.Value > maxForA) maxForA = wp.Value;
+                    }
+
+                    if (wirePair.WireA == wp.WireB)
+                    {
+                        if (!dictForWireA.ContainsKey(wp.WireA))
+                            dictForWireA.Add(wp.WireA, wp.Value);
+
+                        if (wp.Value > maxForA) maxForA = wp.Value;
+                    }
+
+
+                    if (wirePair.WireB == wp.WireA)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireB))
+                            dictForWireB.Add(wp.WireB, wp.Value);
+
+                        if (wp.Value > maxForB) maxForB = wp.Value;
+                    }
+
+                    if (wirePair.WireB == wp.WireB)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireA))
+                            dictForWireB.Add(wp.WireA, wp.Value);
+
+                        if (wp.Value > maxForB) maxForB = wp.Value;
+                    }
+                }
+
+
+
+
+                // для кадого сегмента провода записываем одинаковые значения - список влияющих проводов
+                foreach (var segment in wirePair.WireA.SegmentsVisual)
+                {
+                    if (!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireA, maxForA, null));
+                }
+
+                foreach (var segment in wirePair.WireB.SegmentsVisual)
+                {
+                    if (!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireB, maxForB, null));
+                }
+            }
+
+            foreach (var calcInfo in _calculated.Values)
+            {
+                var val = calcInfo.SummaryPrecomputedValue;
+                if (val > maxPrecomputedValue) maxPrecomputedValue = val;
+            }
+            maxCalculatedValue = maxPrecomputedValue;
+
+            // always need
+            _maxCalculatedValues = new MaxCalculatedValues(maxCalculatedValue, maxPrecomputedValue);
+
+            _valueFilterRange = new Range(0f, _maxCalculatedValues.Max);
+
+            CurrentValueFilterRange = _valueFilterRange;
+
+            CalculateAndSetSegmentsColorsByTime();
+
+
+            _isCalculated = true;
+            _serializibleData = result;
             Calculated.Invoke(this);
         }
 
@@ -370,6 +459,7 @@ namespace EMSP.Mathematic
             if (!_isCalculated) return;
 
             _calculated.Clear();
+            _serializibleData = null;
 
             IsVisible = false;
             _isCalculated = false;

@@ -1,6 +1,7 @@
 ﻿using EMSP.Communication;
 using EMSP.Mathematic;
 using EMSP.Mathematic.Electric;
+using EMSP.Mathematic.Induction;
 using EMSP.Mathematic.Magnetic;
 using System;
 using System.Collections;
@@ -52,16 +53,18 @@ namespace EMSP.Data.Serialization.EMSP
 
             public readonly MagneticTension.PointsInfo MagneticTensionPointsInfo;
             public readonly ElectricField.PointsInfo ElectricFieldPointsInfo;
+            public readonly InductionCalculator.InductionResultCalculation[] InductionResults;
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo) : this(settings, model != null ? model.gameObject : null, wiring, mtPointsInfo, efPointsInfo) { }
+            public SerializableProjectBatch(SerializableProjectSettings settings, Model model, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo, InductionCalculator.InductionResultCalculation[] inductionResults) : this(settings, model != null ? model.gameObject : null, wiring, mtPointsInfo, efPointsInfo, inductionResults) { }
 
-            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo)
+            public SerializableProjectBatch(SerializableProjectSettings settings, GameObject modelGameObject, Wiring wiring, MagneticTension.PointsInfo mtPointsInfo, ElectricField.PointsInfo efPointsInfo, InductionCalculator.InductionResultCalculation[] inductionResults)
             {
                 ProjectSettings = settings;
                 ModelGameObject = modelGameObject;
                 Wiring = wiring;
                 MagneticTensionPointsInfo = mtPointsInfo;
                 ElectricFieldPointsInfo = efPointsInfo;
+                InductionResults = inductionResults;
             }
         }
         #endregion
@@ -347,6 +350,20 @@ namespace EMSP.Data.Serialization.EMSP
                 {
                     writer.Write(pointInfo.CalculatedValuesInTime[i].CalculatedValue);
                 }
+            }
+        }
+
+        protected void WriteInductionResults(BinaryWriter writer, InductionCalculator.InductionResultCalculation[] inductionResults)
+        {
+            int count = inductionResults.Length;
+
+            writer.Write(count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                WriteStringAsUnicode(writer, inductionResults[i].WireA.Name);
+                WriteStringAsUnicode(writer, inductionResults[i].WireB.Name);
+                writer.Write(inductionResults[i].Value);
             }
         }
 
