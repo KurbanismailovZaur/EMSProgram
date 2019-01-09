@@ -192,7 +192,7 @@ namespace EMSP.Mathematic
                     {
                         Vector3 point = wiringBounds.center - (new Vector3(stretchedMaxSide, stretchedMaxSide, stretchedMaxSide) / 2f) + (new Vector3(i, j, k) * step);
 
-                        if (((PointableMathematicCalculatorBase)Calculator).CheckIntersection(wiring, point)) continue; 
+                        if (((PointableMathematicCalculatorBase)Calculator).CheckIntersection(wiring, point)) continue;
 
                         //float precomputedValue = Calculator.CalculateWithPrecomputedAmperage(wiring, point);
                         Data precomputedResultData = Calculator.Calculate(new Data()
@@ -266,7 +266,22 @@ namespace EMSP.Mathematic
 
         private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
         {
+            // <--Log10
+            List<PointableCalculatedValueInfo> Log10calculatedValuesInfo = new List<PointableCalculatedValueInfo>();
+
             foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
+            {
+                List<PointableCalculatedValueInTime> Log10CalculatedValue = new List<PointableCalculatedValueInTime>();
+                foreach(var item in mtInfo.CalculatedValueInTime)
+                {
+                    Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, (float)Math.Log10(item.CalculatedValue)));
+                }
+
+                Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, (float)Math.Log10(mtInfo.PrecomputedValue), Log10CalculatedValue.ToArray()));
+            }
+            // -->Log10
+
+            foreach (PointableCalculatedValueInfo mtInfo in Log10calculatedValuesInfo)
             {
                 float gradientValue = 0;
 
