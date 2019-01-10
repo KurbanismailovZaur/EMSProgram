@@ -230,7 +230,7 @@ namespace EMSP.Mathematic
                 }
             }
 
-            _maxCalculatedValues = GetMaxCalculatedValues(calculatedValueInfos);
+            _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValueInfos);
 
             float maxCalculatedValue = _maxCalculatedValues.Max;// _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
@@ -255,7 +255,7 @@ namespace EMSP.Mathematic
                 calculatedValuesInfo[i] = new PointableCalculatedValueInfo(pointsInfo.Infos[i].Position, pointsInfo.Infos[i].PrecomputedValue, pointsInfo.Infos[i].CalculatedValuesInTime);
             }
 
-            _maxCalculatedValues = GetMaxCalculatedValues(calculatedValuesInfo);
+            _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValuesInfo);
 
             float maxCalculatedValue = _maxCalculatedValues.Max;//  _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
@@ -267,19 +267,23 @@ namespace EMSP.Mathematic
         private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
         {
             // <--Log10
-            float Log10maxCalculatedValue = (float)Math.Log10(maxCalculatedValue);
+            float Log10maxCalculatedValue = maxCalculatedValue;
 
             List<PointableCalculatedValueInfo> Log10calculatedValuesInfo = new List<PointableCalculatedValueInfo>();
 
             foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
             {
                 List<PointableCalculatedValueInTime> Log10CalculatedValue = new List<PointableCalculatedValueInTime>();
-                foreach(var item in mtInfo.CalculatedValueInTime)
+                foreach (var item in mtInfo.CalculatedValueInTime)
                 {
-                    Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, (float)Math.Log10(item.CalculatedValue)));
+                    var nW = (float)Math.Log10(item.CalculatedValue);
+                    if (nW < 0) nW = 0;
+                    Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
                 }
 
-                Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, (float)Math.Log10(mtInfo.PrecomputedValue), Log10CalculatedValue.ToArray()));
+                var pnW = (float)Math.Log10(mtInfo.PrecomputedValue);
+                if (pnW < 0) pnW = 0;
+                Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point,pnW , Log10CalculatedValue.ToArray()));
             }
             // -->Log10
 
@@ -316,6 +320,28 @@ namespace EMSP.Mathematic
                 for (int j = 0; j < calculatedValuesInfo[i].CalculatedValueInTime.Length; j++)
                 {
                     maxCalculatedValues.Calculated = Math.Max(maxCalculatedValues.Calculated, calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue);
+                }
+            }
+
+            return maxCalculatedValues;
+        }
+
+        private MaxCalculatedValues GetMaxLog10CalculatedValues(List<PointableCalculatedValueInfo> calculatedValuesInfo)
+        {
+            MaxCalculatedValues maxCalculatedValues = new MaxCalculatedValues(0f, 0f);
+
+            for (int i = 0; i < calculatedValuesInfo.Count; i++)
+            {
+                var val = Math.Max((float)Math.Log10(maxCalculatedValues.Precomputed), (float)Math.Log10(calculatedValuesInfo[i].PrecomputedValue));
+                if (float.IsNaN(val) || val < 0) val = 0;
+                maxCalculatedValues.Precomputed = val;
+
+                for (int j = 0; j < calculatedValuesInfo[i].CalculatedValueInTime.Length; j++)
+                {
+                    var val1 = Math.Max((float)Math.Log10(maxCalculatedValues.Calculated), (float)Math.Log10(calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue));
+                    if (float.IsNaN(val1) || val1 < 0) val1 = 0;
+
+                    maxCalculatedValues.Calculated = val1;
                 }
             }
 
