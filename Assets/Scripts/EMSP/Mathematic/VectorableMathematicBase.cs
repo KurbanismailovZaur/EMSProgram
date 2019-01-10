@@ -252,26 +252,33 @@ namespace EMSP.Mathematic
             // для каждого провода создаём список влияющих на него проводов
             foreach (var wirePair in result)
             {
+                var Log10Value = (float)Math.Log10(wirePair.Value);
+                if (Log10Value < 0 || float.IsNaN(Log10Value)) Log10Value = 0;
+
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
                 Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
 
-                float maxForA = wirePair.Value;
-                float maxForB = wirePair.Value;
+                float maxForA = Log10Value;
+                float maxForB = Log10Value;
 
-                dictForWireA.Add(wirePair.WireB, wirePair.Value);
-                dictForWireB.Add(wirePair.WireA, wirePair.Value);
+                dictForWireA.Add(wirePair.WireB, Log10Value);
+                dictForWireB.Add(wirePair.WireA, Log10Value);
 
 
                 foreach (var wp in result)
                 {
                     if (wp == wirePair) continue;
 
+                    var Log10Val = (float)Math.Log10(wp.Value);
+                    if (Log10Val < 0 || float.IsNaN(Log10Val)) Log10Val = 0;
+
+
                     if (wirePair.WireA == wp.WireA)
                     {
                         if(!dictForWireA.ContainsKey(wp.WireB))
                             dictForWireA.Add(wp.WireB, wp.Value);
 
-                        if (wp.Value > maxForA) maxForA = wp.Value;
+                        if (Log10Val > maxForA) maxForA = Log10Val;
                     }
 
                     if (wirePair.WireA == wp.WireB)
@@ -279,7 +286,7 @@ namespace EMSP.Mathematic
                         if (!dictForWireA.ContainsKey(wp.WireA))
                             dictForWireA.Add(wp.WireA, wp.Value);
 
-                        if (wp.Value > maxForA) maxForA = wp.Value;
+                        if (Log10Val > maxForA) maxForA = Log10Val;
                     }
 
 
@@ -288,7 +295,7 @@ namespace EMSP.Mathematic
                         if (!dictForWireB.ContainsKey(wp.WireB))
                             dictForWireB.Add(wp.WireB, wp.Value);
 
-                        if (wp.Value > maxForB) maxForB = wp.Value;
+                        if (Log10Val > maxForB) maxForB = Log10Val;
                     }
 
                     if (wirePair.WireB == wp.WireB)
@@ -296,7 +303,7 @@ namespace EMSP.Mathematic
                         if (!dictForWireB.ContainsKey(wp.WireA))
                             dictForWireB.Add(wp.WireA, wp.Value);
 
-                        if (wp.Value > maxForB) maxForB = wp.Value;
+                        if (Log10Val > maxForB) maxForB = Log10Val;
                     }
                 }
 
@@ -351,6 +358,7 @@ namespace EMSP.Mathematic
             float maxPrecomputedValue = 0;
             float maxCalculatedValue = 0;
 
+            /* Original
             foreach (var wirePair in result)
             {
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
@@ -398,6 +406,81 @@ namespace EMSP.Mathematic
                             dictForWireB.Add(wp.WireA, wp.Value);
 
                         if (wp.Value > maxForB) maxForB = wp.Value;
+                    }
+                }
+
+
+
+
+                // для кадого сегмента провода записываем одинаковые значения - список влияющих проводов
+                foreach (var segment in wirePair.WireA.SegmentsVisual)
+                {
+                    if (!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireA, maxForA, null));
+                }
+
+                foreach (var segment in wirePair.WireB.SegmentsVisual)
+                {
+                    if (!_calculated.ContainsKey(segment))
+                        _calculated.Add(segment, new VectorableCalculatedValueInfo(segment, dictForWireB, maxForB, null));
+                }
+            }
+            */
+
+            foreach (var wirePair in result)
+            {
+                var Log10Value = (float)Math.Log10(wirePair.Value);
+                if (Log10Value < 0 || float.IsNaN(Log10Value)) Log10Value = 0;
+
+                Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
+                Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
+
+                float maxForA = Log10Value;
+                float maxForB = Log10Value;
+
+                dictForWireA.Add(wirePair.WireB, Log10Value);
+                dictForWireB.Add(wirePair.WireA, Log10Value);
+
+
+                foreach (var wp in result)
+                {
+                    if (wp == wirePair) continue;
+
+                    var Log10Val = (float)Math.Log10(wp.Value);
+                    if (Log10Val < 0 || float.IsNaN(Log10Val)) Log10Val = 0;
+
+
+                    if (wirePair.WireA == wp.WireA)
+                    {
+                        if (!dictForWireA.ContainsKey(wp.WireB))
+                            dictForWireA.Add(wp.WireB, wp.Value);
+
+                        if (Log10Val > maxForA) maxForA = Log10Val;
+                    }
+
+                    if (wirePair.WireA == wp.WireB)
+                    {
+                        if (!dictForWireA.ContainsKey(wp.WireA))
+                            dictForWireA.Add(wp.WireA, wp.Value);
+
+                        if (Log10Val > maxForA) maxForA = Log10Val;
+                    }
+
+
+                    if (wirePair.WireB == wp.WireA)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireB))
+                            dictForWireB.Add(wp.WireB, wp.Value);
+
+                        if (Log10Val > maxForB) maxForB = Log10Val;
+                    }
+
+                    if (wirePair.WireB == wp.WireB)
+                    {
+                        if (!dictForWireB.ContainsKey(wp.WireA))
+                            dictForWireB.Add(wp.WireA, wp.Value);
+
+                        if (Log10Val > maxForB) maxForB = Log10Val;
                     }
                 }
 
