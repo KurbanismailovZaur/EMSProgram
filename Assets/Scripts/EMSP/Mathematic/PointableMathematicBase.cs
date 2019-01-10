@@ -267,6 +267,8 @@ namespace EMSP.Mathematic
         private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
         {
             // <--Log10
+            float Log10maxCalculatedValue = (float)Math.Log10(maxCalculatedValue);
+
             List<PointableCalculatedValueInfo> Log10calculatedValuesInfo = new List<PointableCalculatedValueInfo>();
 
             foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
@@ -285,11 +287,11 @@ namespace EMSP.Mathematic
             {
                 float gradientValue = 0;
 
-                if (maxCalculatedValue != 0f)
+                if (Log10maxCalculatedValue != 0f)
                 {
                     float calculatedValue = _amperageMode == AmperageMode.Computational ? mtInfo.CalculatedValueInTime[0].CalculatedValue : mtInfo.PrecomputedValue;
 
-                    gradientValue = calculatedValue.Remap(0f, maxCalculatedValue, 0f, 1f);
+                    gradientValue = calculatedValue.Remap(0f, Log10maxCalculatedValue, 0f, 1f);
                 }
 
                 CalculationPoint calculatedPoint = _calculationPointFactory.Create(this, (PrimitiveType)(int)_meshType, transform, _pointMaterial, _pointsSize, gradientValue, mtInfo);
@@ -299,7 +301,7 @@ namespace EMSP.Mathematic
             _isCalculated = true;
             Calculated.Invoke(this);
 
-            _valueFilterRange = new Range(0f, maxCalculatedValue);
+            _valueFilterRange = new Range(0f, Log10maxCalculatedValue);
             CurrentValueFilterRange = _valueFilterRange;
         }
 
