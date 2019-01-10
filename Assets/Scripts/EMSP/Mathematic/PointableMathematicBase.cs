@@ -274,14 +274,30 @@ namespace EMSP.Mathematic
                 List<PointableCalculatedValueInTime> Log10CalculatedValue = new List<PointableCalculatedValueInTime>();
                 foreach (var item in mtInfo.CalculatedValueInTime)
                 {
-                    var nW = (float)Math.Log10(item.CalculatedValue);
-                    if (nW < 0) nW = 0;
-                    Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
+                    if (item.CalculatedValue == 0)
+                    {
+                        Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, 0));
+                    }
+                    else
+                    {
+                        var nW = (float)Math.Log10(Math.Abs(item.CalculatedValue));
+                        if (nW < 0)
+                            nW *= -1;
+                        Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
+                    }
                 }
 
-                var pnW = (float)Math.Log10(mtInfo.PrecomputedValue);
-                if (pnW < 0) pnW = 0;
-                Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point,pnW , Log10CalculatedValue.ToArray()));
+                if (mtInfo.PrecomputedValue == 0)
+                {
+                    Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, 0, Log10CalculatedValue.ToArray()));
+                }
+                else
+                {
+                    var pnW = (float)Math.Log10(Math.Abs(mtInfo.PrecomputedValue));
+                    if (pnW < 0)
+                        pnW *= -1;
+                    Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, pnW, Log10CalculatedValue.ToArray()));
+                }
             }
             // -->Log10
 
@@ -330,14 +346,21 @@ namespace EMSP.Mathematic
 
             for (int i = 0; i < calculatedValuesInfo.Count; i++)
             {
-                var val = Math.Max((float)Math.Log10(maxCalculatedValues.Precomputed), (float)Math.Log10(calculatedValuesInfo[i].PrecomputedValue));
-                if (float.IsNaN(val) || val < 0) val = 0;
+                var val = Math.Max((float)Math.Log10(Math.Abs(maxCalculatedValues.Precomputed)), (float)Math.Log10(Math.Abs(calculatedValuesInfo[i].PrecomputedValue)));
+                if (float.IsNaN(val) || float.IsInfinity(val))
+                    val = 0;
+                if (val < 0)
+                    val *= -1;
+
                 maxCalculatedValues.Precomputed = val;
 
                 for (int j = 0; j < calculatedValuesInfo[i].CalculatedValueInTime.Length; j++)
                 {
-                    var val1 = Math.Max((float)Math.Log10(maxCalculatedValues.Calculated), (float)Math.Log10(calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue));
-                    if (float.IsNaN(val1) || val1 < 0) val1 = 0;
+                    var val1 = Math.Max((float)Math.Log10(Math.Abs(maxCalculatedValues.Calculated)), (float)Math.Log10(Math.Abs(calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue)));
+                    if (float.IsNaN(val1) || float.IsInfinity(val1))
+                        val1 = 0;
+                    if (val1 < 0)
+                        val1 *= -1;
 
                     maxCalculatedValues.Calculated = val1;
                 }

@@ -253,7 +253,8 @@ namespace EMSP.Mathematic
             foreach (var wirePair in result)
             {
                 var Log10Value = (float)Math.Log10(wirePair.Value);
-                if (Log10Value < 0 || float.IsNaN(Log10Value)) Log10Value = 0;
+                if (Log10Value < 0 || float.IsNaN(Log10Value))
+                    Log10Value = 0;
 
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
                 Dictionary<Wire, float> dictForWireB = new Dictionary<Wire, float>();
@@ -270,7 +271,8 @@ namespace EMSP.Mathematic
                     if (wp == wirePair) continue;
 
                     var Log10Val = (float)Math.Log10(wp.Value);
-                    if (Log10Val < 0 || float.IsNaN(Log10Val)) Log10Val = 0;
+                    if (Log10Val < 0 || float.IsNaN(Log10Val))
+                        Log10Val = 0;
 
 
                     if (wirePair.WireA == wp.WireA)
