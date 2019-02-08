@@ -230,13 +230,13 @@ namespace EMSP.Mathematic
                 }
             }
 
-            _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValueInfos);
+            //_maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValueInfos);
 
-            float maxCalculatedValue = _maxCalculatedValues.Max;// _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
+            //float maxCalculatedValue = _maxCalculatedValues.Max;// _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
             _pointsSize = step + (step * _pointSizeStretchPercent);
 
-            CreatePoints(calculatedValueInfos, maxCalculatedValue);
+            CreatePoints(calculatedValueInfos);
         }
 
         public void Restore(PointsInfo pointsInfo)
@@ -255,53 +255,67 @@ namespace EMSP.Mathematic
                 calculatedValuesInfo[i] = new PointableCalculatedValueInfo(pointsInfo.Infos[i].Position, pointsInfo.Infos[i].PrecomputedValue, pointsInfo.Infos[i].CalculatedValuesInTime);
             }
 
-            _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValuesInfo);
+           
+            // _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValuesInfo);
 
-            float maxCalculatedValue = _maxCalculatedValues.Max;//  _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
+            //float maxCalculatedValue = _maxCalculatedValues.Max;//  _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;
 
             _pointsSize = pointsInfo.PointsSize;
 
-            CreatePoints(calculatedValuesInfo, maxCalculatedValue);
+            CreatePoints(calculatedValuesInfo, true);
         }
 
-        private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, float maxCalculatedValue)
+        private void CreatePoints(List<PointableCalculatedValueInfo> calculatedValuesInfo, bool alreadyLog10 = false)
         {
             // <--Log10
-            List<PointableCalculatedValueInfo> Log10calculatedValuesInfo = new List<PointableCalculatedValueInfo>();
+            List<PointableCalculatedValueInfo> FinalCalculatedValuesInfo = new List<PointableCalculatedValueInfo>();
 
-            foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
+            if (alreadyLog10)
             {
-                List<PointableCalculatedValueInTime> Log10CalculatedValue = new List<PointableCalculatedValueInTime>();
-                foreach (var item in mtInfo.CalculatedValueInTime)
+                FinalCalculatedValuesInfo = calculatedValuesInfo;
+            }
+            else
+            {
+
+                foreach (PointableCalculatedValueInfo mtInfo in calculatedValuesInfo)
                 {
-                    if (item.CalculatedValue == 0)
+                    List<PointableCalculatedValueInTime> Log10CalculatedValue = new List<PointableCalculatedValueInTime>();
+                    foreach (var item in mtInfo.CalculatedValueInTime)
                     {
-                        Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, 0));
+                        if (item.CalculatedValue == 0)
+                        {
+                            Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, 0));
+                        }
+                        else
+                        {
+                            var nW = (float)Math.Log10(Math.Abs(item.CalculatedValue));
+                            if (nW < 0)
+                                nW *= -1;
+                            Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
+                        }
+                    }
+
+                    if (mtInfo.PrecomputedValue == 0)
+                    {
+                        FinalCalculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, 0, Log10CalculatedValue.ToArray()));
                     }
                     else
                     {
-                        var nW = (float)Math.Log10(Math.Abs(item.CalculatedValue));
-                        if (nW < 0)
-                            nW *= -1;
-                        Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
+                        var pnW = (float)Math.Log10(Math.Abs(mtInfo.PrecomputedValue));
+                        if (pnW < 0)
+                            pnW *= -1;
+                        FinalCalculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, pnW, Log10CalculatedValue.ToArray()));
                     }
                 }
 
-                if (mtInfo.PrecomputedValue == 0)
-                {
-                    Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, 0, Log10CalculatedValue.ToArray()));
-                }
-                else
-                {
-                    var pnW = (float)Math.Log10(Math.Abs(mtInfo.PrecomputedValue));
-                    if (pnW < 0)
-                        pnW *= -1;
-                    Log10calculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, pnW, Log10CalculatedValue.ToArray()));
-                }
             }
             // -->Log10
 
-            foreach (PointableCalculatedValueInfo mtInfo in Log10calculatedValuesInfo)
+            _maxCalculatedValues = GetMaxCalculatedValues(FinalCalculatedValuesInfo);
+            float maxCalculatedValue = _maxCalculatedValues.Max;
+
+
+            foreach (PointableCalculatedValueInfo mtInfo in FinalCalculatedValuesInfo)
             {
                 float gradientValue = 0;
 
