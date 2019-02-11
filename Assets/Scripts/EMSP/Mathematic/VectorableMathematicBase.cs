@@ -252,7 +252,7 @@ namespace EMSP.Mathematic
             // для каждого провода создаём список влияющих на него проводов
             foreach (var wirePair in result)
             {
-                var Log10Value = (float)Math.Log10(wirePair.Value);
+                var Log10Value = (float)Math.Log(wirePair.Value, 2);
                 if (Log10Value < 0 || float.IsNaN(Log10Value))
                     Log10Value = 0;
 
@@ -270,7 +270,7 @@ namespace EMSP.Mathematic
                 {
                     if (wp == wirePair) continue;
 
-                    var Log10Val = (float)Math.Log10(wp.Value);
+                    var Log10Val = (float)Math.Log(wp.Value, 2);
                     if (Log10Val < 0 || float.IsNaN(Log10Val))
                         Log10Val = 0;
 
@@ -431,7 +431,7 @@ namespace EMSP.Mathematic
 
             foreach (var wirePair in result)
             {
-                var Log10Value = (float)Math.Log10(wirePair.Value);
+                var Log10Value = (float)Math.Log(wirePair.Value, 2);
                 if (Log10Value < 0 || float.IsNaN(Log10Value)) Log10Value = 0;
 
                 Dictionary<Wire, float> dictForWireA = new Dictionary<Wire, float>();
