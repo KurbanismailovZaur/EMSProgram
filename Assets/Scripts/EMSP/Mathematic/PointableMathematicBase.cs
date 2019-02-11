@@ -288,7 +288,7 @@ namespace EMSP.Mathematic
                         }
                         else
                         {
-                            var nW = (float)Math.Log10(Math.Abs(item.CalculatedValue));
+                            var nW = (float)Math.Log(Math.Abs(item.CalculatedValue), 2);
                             if (nW < 0)
                                 nW *= -1;
                             Log10CalculatedValue.Add(new PointableCalculatedValueInTime(item.Time, nW));
@@ -301,7 +301,7 @@ namespace EMSP.Mathematic
                     }
                     else
                     {
-                        var pnW = (float)Math.Log10(Math.Abs(mtInfo.PrecomputedValue));
+                        var pnW = (float)Math.Log(Math.Abs(mtInfo.PrecomputedValue), 2);
                         if (pnW < 0)
                             pnW *= -1;
                         FinalCalculatedValuesInfo.Add(new PointableCalculatedValueInfo(mtInfo.Point, pnW, Log10CalculatedValue.ToArray()));
@@ -360,7 +360,7 @@ namespace EMSP.Mathematic
 
             for (int i = 0; i < calculatedValuesInfo.Count; i++)
             {
-                var val = Math.Max((float)Math.Log10(Math.Abs(maxCalculatedValues.Precomputed)), (float)Math.Log10(Math.Abs(calculatedValuesInfo[i].PrecomputedValue)));
+                var val = Math.Max((float)Math.Log(Math.Abs(maxCalculatedValues.Precomputed), 2), (float)Math.Log(Math.Abs(calculatedValuesInfo[i].PrecomputedValue), 2));
                 if (float.IsNaN(val) || float.IsInfinity(val))
                     val = 0;
                 if (val < 0)
@@ -370,7 +370,7 @@ namespace EMSP.Mathematic
 
                 for (int j = 0; j < calculatedValuesInfo[i].CalculatedValueInTime.Length; j++)
                 {
-                    var val1 = Math.Max((float)Math.Log10(Math.Abs(maxCalculatedValues.Calculated)), (float)Math.Log10(Math.Abs(calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue)));
+                    var val1 = Math.Max((float)Math.Log(Math.Abs(maxCalculatedValues.Calculated), 2), (float)Math.Log(Math.Abs(calculatedValuesInfo[i].CalculatedValueInTime[j].CalculatedValue), 2));
                     if (float.IsNaN(val1) || float.IsInfinity(val1))
                         val1 = 0;
                     if (val1 < 0)

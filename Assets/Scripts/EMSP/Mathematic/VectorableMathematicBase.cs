@@ -448,7 +448,7 @@ namespace EMSP.Mathematic
                 {
                     if (wp == wirePair) continue;
 
-                    var Log10Val = (float)Math.Log10(wp.Value);
+                    var Log10Val = (float)Math.Log(wp.Value, 2);
                     if (Log10Val < 0 || float.IsNaN(Log10Val)) Log10Val = 0;
 
 
