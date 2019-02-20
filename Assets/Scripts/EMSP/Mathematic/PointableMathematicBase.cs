@@ -239,6 +239,68 @@ namespace EMSP.Mathematic
             CreatePoints(calculatedValueInfos);
         }
 
+        public void CalculateConcretePoints(List<Vector3> points)
+        {
+            IEnumerable<float> timeSteps = Timing.TimeManager.Instance.Steps;
+            Wiring wiring = WiringManager.Instance.Wiring;
+            int rangeLength = MathematicManager.Instance.RangeLength;
+
+
+            DestroyCalculatedPoints();
+
+            Bounds wiringBounds = wiring.GetBounds();
+            float maxSide = wiringBounds.MaxSide();
+            float stretchedMaxSide = maxSide + (maxSide * _stretchPercent);
+
+            float step = stretchedMaxSide / (rangeLength - 1);
+
+            List<PointableCalculatedValueInfo> calculatedValueInfos = new List<PointableCalculatedValueInfo>(points.Count);
+
+
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 point = points[i];
+
+                if (((PointableMathematicCalculatorBase)Calculator).CheckIntersection(wiring, point)) continue;
+
+                Data precomputedResultData = Calculator.Calculate(new Data()
+                        {
+                            { "amperageMode", AmperageMode.Precomputed },
+                            { "wiring", wiring },
+                            { "point", point },
+                            { "time", 0f }
+                        });
+
+                float precomputedValue = precomputedResultData.GetValue<float>("result");
+
+                PointableCalculatedValueInTime[] calculatedValuesInTime = new PointableCalculatedValueInTime[timeSteps.Count()];
+
+                for (int w = 0; w < timeSteps.Count(); w++)
+                {
+                    float time = timeSteps.ElementAt(w);
+
+                    Data calculatedResultData = Calculator.Calculate(new Data()
+                            {
+                                { "amperageMode", AmperageMode.Computational },
+                                { "wiring", wiring },
+                                { "point", point },
+                                { "time", time }
+                            });
+
+                    float calculatedValue = calculatedResultData.GetValue<float>("result");
+
+                    calculatedValuesInTime[w] = new PointableCalculatedValueInTime(time, calculatedValue);
+                }
+
+                calculatedValueInfos.Add(new PointableCalculatedValueInfo(point, precomputedValue, calculatedValuesInTime));
+            }
+
+            _pointsSize = step + (step * _pointSizeStretchPercent);
+
+            CreatePoints(calculatedValueInfos);
+        }
+
         public void Restore(PointsInfo pointsInfo)
         {
             DestroyCalculatedPoints();
@@ -255,7 +317,7 @@ namespace EMSP.Mathematic
                 calculatedValuesInfo[i] = new PointableCalculatedValueInfo(pointsInfo.Infos[i].Position, pointsInfo.Infos[i].PrecomputedValue, pointsInfo.Infos[i].CalculatedValuesInTime);
             }
 
-           
+
             // _maxCalculatedValues = GetMaxLog10CalculatedValues(calculatedValuesInfo);
 
             //float maxCalculatedValue = _maxCalculatedValues.Max;//  _amperageMode == AmperageMode.Computational ? _maxCalculatedValues.Calculated : _maxCalculatedValues.Precomputed;

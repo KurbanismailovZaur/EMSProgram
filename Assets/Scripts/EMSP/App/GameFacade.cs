@@ -501,6 +501,14 @@ namespace EMSP.App
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
         }
 
+        public void CalculateElectricFieldByConeretePoints(List<Vector3> points)
+        {
+            MathematicManager.Instance.ElectricField.CalculateConcretePoints(points);
+            MathematicManager.Instance.Show(CalculationType.ElectricField);
+
+            UpdateTimeAndTensionSlider();
+        }
+
         public void WindowContextMethods_Selected(WindowContextMethods windowContextMethods, WindowContextMethods.ActionType actionType)
         {
             switch (actionType)
