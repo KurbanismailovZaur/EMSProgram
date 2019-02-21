@@ -321,7 +321,7 @@ namespace EMSP.App
         #endregion
 
         #region Calculations context methods
-        private void Calculate(CalculationType calculationType)
+        public void Calculate(CalculationType calculationType)
         {
             MathematicManager.Instance.DestroyCalculations(calculationType);
             MathematicManager.Instance.Calculate(calculationType);

@@ -1,8 +1,12 @@
 ﻿using EMSP.Communication;
+using EMSP.UI.Toggle;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using Numba;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,7 +49,19 @@ namespace EMSP.UI.Windows.PointSelecting
         private Button _closeButton;
 
         [SerializeField]
+        private Button _importButton;
+
+        [SerializeField]
         private RectTransform _pointsContainer;
+
+        [SerializeField]
+        private ToggleBehaviour _toggleAutogeneration;
+
+        [SerializeField]
+        private ToggleBehaviour _toggleByHand;
+
+
+        private Button _addPointButton;
 
         #endregion
 
@@ -67,18 +83,19 @@ namespace EMSP.UI.Windows.PointSelecting
         public void StartSelectingPoint()
         {
             _calculateButton.onClick.RemoveAllListeners();
+            _importButton.onClick.RemoveAllListeners();
             _cancelButton.onClick.RemoveAllListeners();
             _closeButton.onClick.RemoveAllListeners();
             ShowModal();
 
-            Button addPointButton = Instantiate(_addPointButtonPrefab);
-            addPointButton.transform.SetParent(_pointsContainer, false);
-            addPointButton.onClick.AddListener(() =>
+            _addPointButton = Instantiate(_addPointButtonPrefab);
+            _addPointButton.transform.SetParent(_pointsContainer, false);
+            _addPointButton.onClick.AddListener(() =>
             {
                 PSPointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                 editPanel.transform.SetParent(_pointsContainer, false);
 
-                editPanel.Initialize(this);
+                editPanel.Initialize(this, Vector3.zero);
                 editPanel.DeletePointButton.onClick.AddListener(() =>
                 {
                     Vector3 _point = editPanel.CurrentValue;
@@ -86,7 +103,7 @@ namespace EMSP.UI.Windows.PointSelecting
                     StartCoroutine(WaitAndUpdatePointsNumber());
                     Destroy(editPanel.gameObject);
                 });
-                addPointButton.transform.SetAsLastSibling();
+                _addPointButton.transform.SetAsLastSibling();
 
                 StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
             });
@@ -95,6 +112,11 @@ namespace EMSP.UI.Windows.PointSelecting
             _calculateButton.onClick.AddListener(() =>
             {
                 Calculate();
+            });
+
+            _importButton.onClick.AddListener(() =>
+            {
+                Import();
             });
 
             _cancelButton.onClick.AddListener(() =>
@@ -166,15 +188,103 @@ namespace EMSP.UI.Windows.PointSelecting
 
         private void Calculate()
         {
-
-            List<Vector3> _points = new List<Vector3>();
-            foreach (var editPointPanel in _pointsContainer.GetComponentsInChildren<PSPointEditPanel>())
+            if (_toggleAutogeneration.State == true)
             {
-                _points.Add(editPointPanel.CurrentValue);
+                Close();
+                App.GameFacade.Instance.Calculate(Mathematic.CalculationType.ElectricField);
+            }
+            else if (_toggleByHand.State == true)
+            {
+
+                List<Vector3> _points = new List<Vector3>();
+                foreach (var editPointPanel in _pointsContainer.GetComponentsInChildren<PSPointEditPanel>())
+                {
+                    _points.Add(editPointPanel.CurrentValue);
+                }
+
+                Close();
+                App.GameFacade.Instance.CalculateElectricFieldByConeretePoints(_points);
+            }
+            else
+                throw new Exception();
+
+        }
+
+        private void Import()
+        {
+            string[] results = SFB.StandaloneFileBrowser.OpenFilePanel("Открыть Проводку", Application.dataPath, "xls", false);
+
+            if (results.Length == 0)
+            {
+                return;
             }
 
-            Close();
-            App.GameFacade.Instance.CalculateElectricFieldByConeretePoints(_points);
+            List<Vector3> _points = new List<Vector3>();
+            HSSFWorkbook workbook;
+
+            using (FileStream stream = new FileStream(results[0], FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                workbook = new HSSFWorkbook(stream);
+            }
+
+            ISheet sheet = workbook.GetSheetAt(0);
+
+            for (int i = 2; i <= sheet.LastRowNum; i++)
+            {
+                IRow row = sheet.GetRow(i);
+
+                if (!IsCorrectNodeRow(row))
+                {
+                    break;
+                }
+
+                _points.Add(ReadNode(row));
+            }
+
+
+            foreach(var p in _points)
+            {
+                PSPointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
+                editPanel.transform.SetParent(_pointsContainer, false);
+
+                editPanel.Initialize(this, p);
+                editPanel.DeletePointButton.onClick.AddListener(() =>
+                {
+                    Vector3 _point = editPanel.CurrentValue;
+
+                    StartCoroutine(WaitAndUpdatePointsNumber());
+                    Destroy(editPanel.gameObject);
+                });
+                _addPointButton.transform.SetAsLastSibling();
+
+                StartCoroutine(WaitAndMovePointsContainer(editPanel.GetComponent<RectTransform>().rect.height));
+            }
+        }
+
+        private Vector3 ReadNode(IRow row)
+        {
+            Vector3 node;
+
+            node.x = (float)row.GetCell(1).NumericCellValue;
+            node.y = (float)row.GetCell(2).NumericCellValue;
+            node.z = (float)row.GetCell(3).NumericCellValue;
+
+            return node;
+        }
+
+        private bool IsCorrectNodeRow(IRow row)
+        {
+            for (int i = 1; i < 4; i++)
+            {
+                ICell cell = row.GetCell(i);
+
+                if (cell.CellType != CellType.Numeric)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion

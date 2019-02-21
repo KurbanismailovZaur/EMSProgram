@@ -74,13 +74,13 @@ namespace EMSP.UI.Windows.PointSelecting
 
         #region Methods
 
-        public void Initialize(PointSelectingWindow wiringManager)
+        public void Initialize(PointSelectingWindow wiringManager, Vector3 point)
         {
             X.contentType = InputField.ContentType.DecimalNumber;
             Y.contentType = InputField.ContentType.DecimalNumber;
             Z.contentType = InputField.ContentType.DecimalNumber;
 
-            _currentValue = Vector3.zero;
+            _currentValue = point;
 
             StartCoroutine(UpdatePointNumberAndSelectable());
 
