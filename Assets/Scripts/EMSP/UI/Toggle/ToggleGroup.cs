@@ -54,10 +54,7 @@ namespace EMSP.UI.Toggle
         #region Methods
         private void ResolveSelectToggleBehaviour(ToggleBehaviour toggleBehaviour)
         {
-            if (toggleBehaviour == _selectedToggleBehaviour)
-            {
-                return;
-            }
+            if (toggleBehaviour == _selectedToggleBehaviour) return;
 
             if (_allowSelfSelect)
             {
