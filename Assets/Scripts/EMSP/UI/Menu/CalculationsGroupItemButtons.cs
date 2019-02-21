@@ -32,6 +32,9 @@ namespace EMSP.UI.Menu
         private Button _ElectricFieldButton;
 
         [SerializeField]
+        private Button _ElectricFieldButton2;
+
+        [SerializeField]
         private Button _inductionButton;
 
         [SerializeField]
@@ -46,6 +49,8 @@ namespace EMSP.UI.Menu
         public Button ComputationMagneticTensionInSpaceButton { get { return _computationMagneticTensionInSpaceButton; } }
 
         public Button ElectricFieldButton { get { return _ElectricFieldButton; } }
+        public Button ElectricFieldButton2 { get { return _ElectricFieldButton2; } }
+
 
         public Button InductionButton { get { return _inductionButton; } }
 
@@ -60,6 +65,7 @@ namespace EMSP.UI.Menu
         {
             _computationMagneticTensionInSpaceButton.interactable = state;
             _ElectricFieldButton.interactable = state;
+            _ElectricFieldButton2.interactable = state;
             _inductionButton.interactable = state;
             _settingButton.interactable = state;
         }
