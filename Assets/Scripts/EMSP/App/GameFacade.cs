@@ -26,6 +26,7 @@ using EMSP.Processing;
 using EMSP.Logging;
 using EMSP.UI.Windows.CalculatedInduction;
 using EMSP.Data.XLS;
+using EMSP.UI.Windows.PointSelecting;
 
 namespace EMSP.App
 {
@@ -60,6 +61,9 @@ namespace EMSP.App
 
         [SerializeField]
         private ProcessWindow _processWindow;
+
+        [SerializeField]
+        private PointSelectingWindow _pointSelectingWindow;
 
         [SerializeField]
         private OrbitController _orbitController;
@@ -330,6 +334,15 @@ namespace EMSP.App
             UpdateTimeAndTensionSlider();
         }
 
+        public void CalculateElectricFieldByConeretePoints(List<Vector3> points)
+        {
+            MathematicManager.Instance.DestroyCalculations(CalculationType.ElectricField);
+            MathematicManager.Instance.ElectricField.CalculateConcretePoints(points);
+            MathematicManager.Instance.Show(CalculationType.ElectricField);
+
+            UpdateTimeAndTensionSlider();
+        }
+
         private void UpdateTimeAndTensionSlider()
         {
             TimeManager.Instance.TimeIndex = 0;
@@ -487,7 +500,8 @@ namespace EMSP.App
                     break;
                 case CalculationsContextMethods.ActionType.ElectricField:
                     Log.WriteOperation("Starting_Calculate_ElectricField");
-                    Calculate(CalculationType.ElectricField);
+                    //Calculate(CalculationType.ElectricField);
+                    _pointSelectingWindow.StartSelectingPoint();
                     break;
                 case CalculationsContextMethods.ActionType.Induction:
                     Log.WriteOperation("Starting_Calculate_Induction");
@@ -499,14 +513,6 @@ namespace EMSP.App
             }
 
             calculationsContextMethods.Panel.HideActiveContextAndStopAutoShow();
-        }
-
-        public void CalculateElectricFieldByConeretePoints(List<Vector3> points)
-        {
-            MathematicManager.Instance.ElectricField.CalculateConcretePoints(points);
-            MathematicManager.Instance.Show(CalculationType.ElectricField);
-
-            UpdateTimeAndTensionSlider();
         }
 
         public void WindowContextMethods_Selected(WindowContextMethods windowContextMethods, WindowContextMethods.ActionType actionType)

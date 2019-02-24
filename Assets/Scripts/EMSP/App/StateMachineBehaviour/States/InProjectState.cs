@@ -137,7 +137,6 @@ namespace EMSP.App.StateMachineBehaviour.States
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = true;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = true;
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = true;
-            _calculationsGroupItemButtons.ElectricFieldButton2.interactable = true;
             _calculationsGroupItemButtons.InductionButton.interactable = true;
         }
 
@@ -148,7 +147,6 @@ namespace EMSP.App.StateMachineBehaviour.States
             _viewGroupItemButtons.WiringIsVisibilityButton.interactable = false;
             _calculationsGroupItemButtons.ComputationMagneticTensionInSpaceButton.interactable = false;
             _calculationsGroupItemButtons.ElectricFieldButton.interactable = false;
-            _calculationsGroupItemButtons.ElectricFieldButton2.interactable = false;
             _calculationsGroupItemButtons.InductionButton.interactable = false;
 
         }
