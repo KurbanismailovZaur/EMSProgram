@@ -186,6 +186,7 @@ namespace EMSP.UI.Windows.PointSelecting
             Hide();
         }
 
+
         private void Calculate()
         {
             if (_toggleAutogeneration.State == true)
@@ -242,7 +243,12 @@ namespace EMSP.UI.Windows.PointSelecting
             }
 
 
-            foreach(var p in _points)
+            for (int i = 0; i < _pointsContainer.childCount - 1; ++i)
+            {
+                Destroy(_pointsContainer.GetChild(i).gameObject);
+            }
+
+            foreach (var p in _points)
             {
                 PSPointEditPanel editPanel = Instantiate(_pointEditPanelPrefab);
                 editPanel.transform.SetParent(_pointsContainer, false);
