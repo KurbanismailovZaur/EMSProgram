@@ -13,6 +13,9 @@ namespace EMSP.UI.Windows.MaterialInfo
         public GameObject Page1;
         public GameObject Page2;
         public Button Page1ActivateButton;
+        public Button Page2ActivateButton;
+        public Color ActivePageColor;
+
 
         public RectTransform Page1Content;
         public RectTransform Page2Content;
@@ -23,14 +26,14 @@ namespace EMSP.UI.Windows.MaterialInfo
         public Button AddRowButtonPrefab;
 
 
-        private HSSFWorkbook _page1Book;
-        private string _pathToBook1;
-        private HSSFWorkbook _page2Book;
-        private string _pathToBook2;
+        private string _pathToBook;
+        private HSSFWorkbook _book;
+
 
 
         public void ShowInfo()
         {
+            OpenBook();
             ImportPage1();
             ImportPage2();
 
@@ -45,8 +48,6 @@ namespace EMSP.UI.Windows.MaterialInfo
                 matRow.Initialize(0, "нет", 0, 0, 0);
                 matRow.DeleteButton.onClick.AddListener(() =>
                 {
-
-                    StartCoroutine(WaitAndUpdatePointsNumberPage1());
                     Destroy(matRow.gameObject);
                 });
                 _addPointButtonPage1.transform.SetAsLastSibling();
@@ -62,7 +63,7 @@ namespace EMSP.UI.Windows.MaterialInfo
                 WireInfoRow wireRow = Instantiate(Page2RowPrefab);
                 wireRow.transform.SetParent(Page2Content, false);
 
-                wireRow.Initialize("нет", "нет", 0, "нет", 0, 0, 0);
+                wireRow.Initialize(this, "нет", 0, 0, 0, 0, 0, 0);
                 wireRow.DeleteButton.onClick.AddListener(() =>
                 {
                     Destroy(wireRow.gameObject);
@@ -74,7 +75,7 @@ namespace EMSP.UI.Windows.MaterialInfo
 
 
             ShowModal();
-            Page1ActivateButton.onClick.Invoke();
+            ActivatePage1();
         }
 
         public void Save()
@@ -82,24 +83,36 @@ namespace EMSP.UI.Windows.MaterialInfo
             SavePage1();
             SavePage2();
 
-            File.Delete(_pathToBook1);
-            using (FileStream stream = new FileStream(_pathToBook1, FileMode.Create))
+            File.Delete(_pathToBook);
+            using (FileStream stream = new FileStream(_pathToBook, FileMode.Create))
             {
-                _page1Book.Write(stream);
+                _book.Write(stream);
             }
-            _page1Book = null;
-
-            File.Delete(_pathToBook2);
-            using (FileStream stream = new FileStream(_pathToBook2, FileMode.Create))
-            {
-                _page2Book.Write(stream);
-            }
-            _page1Book = null;
+            _pathToBook = null;
+            _book = null;
 
 
             Page1.SetActive(true);
             Page2.SetActive(true);
             Hide();
+        }
+
+        public void ActivatePage1()
+        {
+            Page2.SetActive(false);
+            Page1.SetActive(true);
+
+            Page2ActivateButton.GetComponent<Image>().color = Color.white;
+            Page1ActivateButton.GetComponent<Image>().color = ActivePageColor;
+        }
+
+        public void ActivatePage2()
+        {
+            Page1.SetActive(false);
+            Page2.SetActive(true);
+
+            Page1ActivateButton.GetComponent<Image>().color = Color.white;
+            Page2ActivateButton.GetComponent<Image>().color = ActivePageColor;
         }
 
 
@@ -115,13 +128,36 @@ namespace EMSP.UI.Windows.MaterialInfo
 
         private void AddPage2Row(string wireName, string column1, float column2, string column3, float column4, float column5, float column6)
         {
+            int m1;
+            if(!int.TryParse(column1, out m1))
+            {
+                m1 = GetMatIDByName(column1);
+            }
+
+            int m2;
+            if (!int.TryParse(column3, out m2))
+            {
+                m2 = GetMatIDByName(column3);
+            }
+
             WireInfoRow editPanel = Instantiate(Page2RowPrefab);
             editPanel.transform.SetParent(Page2Content, false);
             editPanel.DeleteButton.interactable = false;
 
-            editPanel.Initialize(wireName, column1, column2, column3, column4, column5, column6);
+            editPanel.Initialize(this, wireName, m1, column2, m2, column4, column5, column6);
         }
 
+
+        private void OpenBook()
+        {
+            _pathToBook = Path.Combine(Application.streamingAssetsPath, "Справочники.xls");
+
+
+            using (FileStream stream = new FileStream(_pathToBook, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                _book = new HSSFWorkbook(stream);
+            }
+        }
 
 
         private void ImportPage1()
@@ -132,15 +168,9 @@ namespace EMSP.UI.Windows.MaterialInfo
             }
 
 
-            _pathToBook1 = Path.Combine(Application.streamingAssetsPath, "MatsInfo.xls");
 
 
-            using (FileStream stream = new FileStream(_pathToBook1, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                _page1Book = new HSSFWorkbook(stream);
-            }
-
-            ISheet sheet = _page1Book.GetSheetAt(0);
+            ISheet sheet = _book.GetSheetAt(0);
 
             for (int i = 3; i <= sheet.LastRowNum; i++)
             {
@@ -164,14 +194,7 @@ namespace EMSP.UI.Windows.MaterialInfo
             }
 
 
-            _pathToBook2 = Path.Combine(Application.streamingAssetsPath, "wire_mat_table.xls");
-
-            using (FileStream stream = new FileStream(_pathToBook2, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                _page2Book = new HSSFWorkbook(stream);
-            }
-
-            ISheet sheet = _page2Book.GetSheetAt(0);
+            ISheet sheet = _book.GetSheetAt(1);
 
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
@@ -193,7 +216,7 @@ namespace EMSP.UI.Windows.MaterialInfo
 
         private void SavePage1()
         {
-            ISheet sheet = _page1Book.GetSheetAt(0);
+            ISheet sheet = _book.GetSheetAt(0);
 
 
             for (int rowNum = 0; rowNum < Page1Content.childCount - 1; ++rowNum)
@@ -223,7 +246,7 @@ namespace EMSP.UI.Windows.MaterialInfo
 
         private void SavePage2()
         {
-            ISheet sheet = _page2Book.GetSheetAt(0);
+            ISheet sheet = _book.GetSheetAt(1);
 
 
             for (int rowNum = 0; rowNum < Page2Content.childCount - 1; ++rowNum)
@@ -255,16 +278,6 @@ namespace EMSP.UI.Windows.MaterialInfo
 
 
 
-        private IEnumerator WaitAndUpdatePointsNumberPage1()
-        {
-            yield return null;
-
-            foreach (var panel in Page1Content.GetComponentsInChildren<MaterialInfoRow>())
-            {
-                panel.UpdateRowNumberImmediate();
-            }
-        }
-
         private IEnumerator WaitAndMoveContainerPage1(float offset)
         {
             yield return null;
@@ -295,6 +308,43 @@ namespace EMSP.UI.Windows.MaterialInfo
                        Page2Content.anchoredPosition3D.y + offset + 5,
                        0);
             }
+        }
+
+
+        public int GetMatIDByName(string name)
+        {
+            for(int i = 0; i < Page1Content.childCount -1; ++i)
+            {
+                var info = Page1Content.GetChild(i).GetComponent<MaterialInfoRow>();
+
+                if (info.GetColumn1() == name) return info.GetColumn0();
+            }
+
+            return 0;
+        }
+
+        public string GetMatIDByName(int id)
+        {
+            for (int i = 0; i < Page1Content.childCount - 1; ++i)
+            {
+                var info = Page1Content.GetChild(i).GetComponent<MaterialInfoRow>();
+
+                if (info.GetColumn0() == id) return info.GetColumn1();
+            }
+
+            return null;
+        }
+
+        public bool HasMat(int id)
+        {
+            for (int i = 0; i < Page1Content.childCount - 1; ++i)
+            {
+                var info = Page1Content.GetChild(i).GetComponent<MaterialInfoRow>();
+
+                if (info.GetColumn0() == id) return true;
+            }
+
+            return false;
         }
     }
 }

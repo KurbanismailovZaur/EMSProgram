@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 114681036108189812}
   - component: {fileID: 114102270038897940}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Page1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,7 +472,7 @@ GameObject:
   - component: {fileID: 114242183161975582}
   - component: {fileID: 114560240060664944}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Page2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -885,7 +885,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 0.89411765, g: 0.89411765, b: 0.89411765, a: 1}
     m_HighlightedColor: {r: 0.764151, g: 0.7533375, b: 0.7533375, a: 1}
-    m_PressedColor: {r: 0.6509434, g: 0.623309, b: 0.623309, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1406,7 +1406,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 0.89411765, g: 0.89411765, b: 0.89411765, a: 1}
     m_HighlightedColor: {r: 0.764151, g: 0.7533375, b: 0.7533375, a: 1}
-    m_PressedColor: {r: 0.6509434, g: 0.623309, b: 0.623309, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1803,6 +1803,8 @@ MonoBehaviour:
   Page1: {fileID: 1024843659969796}
   Page2: {fileID: 1010981266556248}
   Page1ActivateButton: {fileID: 114102270038897940}
+  Page2ActivateButton: {fileID: 114560240060664944}
+  ActivePageColor: {r: 0.4245283, g: 0.378471, b: 0.378471, a: 1}
   Page1Content: {fileID: 224660470943078740}
   Page2Content: {fileID: 224355491933310502}
   Page1RowPrefab: {fileID: 114656613569788688, guid: dc240c1d973922346a4087adb2470f5b,
@@ -2515,7 +2517,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224357397215370082
