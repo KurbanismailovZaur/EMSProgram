@@ -150,7 +150,7 @@ namespace EMSP.UI.Windows.MaterialInfo
 
         private void OpenBook()
         {
-            _pathToBook = Path.Combine(Application.streamingAssetsPath, "Справочники.xls");
+            _pathToBook = Path.Combine(Application.streamingAssetsPath, "MatsInfo.xls");
 
 
             using (FileStream stream = new FileStream(_pathToBook, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
